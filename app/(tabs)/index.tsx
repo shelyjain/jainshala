@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useProgress } from '../../hooks/use-progress';
 import { API_URL } from '../../constants/api';
+import { fetchJson } from '../../lib/fetch-json';
 
 type Line = {
   line_number: number;
@@ -27,6 +28,7 @@ export default function HomeScreen() {
   const [sutras, setSutras] = useState<Sutra[]>([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const router = useRouter();
   const { isCompleted, completed, getStepProgress } = useProgress();
 
@@ -35,28 +37,49 @@ export default function HomeScreen() {
   );
 
   useEffect(() => {
-    fetch(`${API_URL}/sutras`)
-      .then(res => res.json())
-      .then(data => {
-        setSutras(data);
-        setLoading(false);
+    let cancelled = false;
+    setLoadError(null);
+    fetchJson<Sutra[]>(`${API_URL}/sutras`)
+      .then((data) => {
+        if (!cancelled) {
+          setSutras(data);
+          setLoading(false);
+        }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         console.error(err);
-        setLoading(false);
+        if (!cancelled) {
+          setLoadError(err instanceof Error ? err.message : 'Failed to load sutras');
+          setSutras([]);
+          setLoading(false);
+        }
       });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
-    if (query.trim() === '') {
-      fetch(`${API_URL}/sutras`)
-        .then(res => res.json())
-        .then(data => setSutras(data));
-    } else {
-      fetch(`${API_URL}/search?q=${encodeURIComponent(query)}`)
-        .then(res => res.json())
-        .then(data => setSutras(data));
-    }
+    let cancelled = false;
+    const url =
+      query.trim() === ''
+        ? `${API_URL}/sutras`
+        : `${API_URL}/search?q=${encodeURIComponent(query)}`;
+
+    fetchJson<Sutra[]>(url)
+      .then((data) => {
+        if (!cancelled) setSutras(data);
+      })
+      .catch((err: unknown) => {
+        console.error(err);
+        if (!cancelled) {
+          setLoadError(err instanceof Error ? err.message : 'Request failed');
+          setSutras([]);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [query]);
 
   if (loading) {
@@ -68,14 +91,21 @@ export default function HomeScreen() {
   }
 
   const completedCount = sutras.filter(s => isCompleted(s.id)).length;
+  const progressPct = sutras.length ? (completedCount / sutras.length) * 100 : 0;
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Jain Archive</Text>
+      {loadError ? (
+        <Text style={styles.errorText}>
+          Could not reach API at {API_URL}. From the project folder run: cd backend then uvicorn main:app --reload --host 0.0.0.0 --port 8000. Then reload the app.{'\n'}
+          {loadError}
+        </Text>
+      ) : null}
       <View style={styles.progressBar}>
         <Text style={styles.progressText}>{completedCount} / {sutras.length} sutras completed</Text>
         <View style={styles.progressTrack}>
-          <View style={[styles.progressFill, { width: `${(completedCount / sutras.length) * 100}%` }]} />
+          <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
         </View>
       </View>
       <TextInput
@@ -141,6 +171,12 @@ const styles = StyleSheet.create({
   cardCategory: { fontSize: 11, fontWeight: '600', color: '#a0522d', textTransform: 'uppercase', letterSpacing: 0.8 },
   badge: { fontSize: 12, color: '#a0522d', fontWeight: '600' },
   badgePartial: { color: '#888', fontWeight: '500' },
+  errorText: {
+    fontSize: 14,
+    color: '#b00020',
+    marginBottom: 12,
+    lineHeight: 20,
+  },
   cardTitle: { fontSize: 16, fontWeight: '600', color: '#1a1a1a', marginBottom: 6 },
   cardFirstLine: { fontSize: 13, color: '#666', fontStyle: 'italic', marginBottom: 2 },
   cardTranslation: { fontSize: 13, color: '#888', marginBottom: 10 },

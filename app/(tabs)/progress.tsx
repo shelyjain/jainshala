@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useProgress } from '../../hooks/use-progress';
 import { API_URL } from '../../constants/api';
+import { fetchJson } from '../../lib/fetch-json';
 
 type Line = {
   line_number: number;
@@ -31,16 +32,24 @@ export default function ProgressScreen() {
   );
 
   useEffect(() => {
-    fetch(`${API_URL}/sutras`)
-      .then(res => res.json())
-      .then(data => {
-        setSutras(data);
-        setLoading(false);
+    let cancelled = false;
+    fetchJson<Sutra[]>(`${API_URL}/sutras`)
+      .then((data) => {
+        if (!cancelled) {
+          setSutras(data);
+          setLoading(false);
+        }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         console.error(err);
-        setLoading(false);
+        if (!cancelled) {
+          setSutras([]);
+          setLoading(false);
+        }
       });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (loading) {
