@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useProgress } from '../../hooks/use-progress';
 import { API_URL } from '../../constants/api';
 
+
 type Line = {
   line_number: number;
   transliteration: string;
@@ -79,6 +80,9 @@ export default function SutraDetail() {
           <Text style={styles.stepBubbleText}>{stepProgress.read ? '✅ Read' : '📖 Read'}</Text>
         </View>
         <View style={styles.stepBubble}>
+          <Text style={styles.stepBubbleText}>{stepProgress.listen ? '✅ Listen' : '🎧 Listen'}</Text>
+        </View>
+        <View style={styles.stepBubble}>
           <Text style={styles.stepBubbleText}>{stepProgress.learn ? '✅ Learn' : '🧠 Learn'}</Text>
         </View>
         <View style={styles.stepBubble}>
@@ -119,18 +123,35 @@ export default function SutraDetail() {
       )}
 
       <TouchableOpacity
+        style={styles.flashcardBtn}
+        onPress={() => router.push(`/flashcard/${sutra.id}` as any)}
+      >
+        <Text style={styles.flashcardBtnText}>🃏 Flashcards</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
         style={styles.learnBtn}
         onPress={() => {
           markStep(sutra.id, 'read');
-          if (stepProgress.learn && !stepProgress.recite) {
+          if (stepProgress.recite) {
+            router.push(`/flashcard/${sutra.id}` as any);
+          } else if (stepProgress.learn) {
             router.push(`/recite/${sutra.id}` as any);
-          } else {
+          } else if (stepProgress.listen) {
             router.push(`/learn/${sutra.id}` as any);
+          } else {
+            router.push(`/flashcard/${sutra.id}` as any);
           }
         }}
       >
         <Text style={styles.learnBtnText}>
-          {done ? '🏅 Review again!' : (stepProgress.learn ? '⏭️ Continue to Recite' : '🎓 Start Learning')}
+          {done
+            ? '🏅 Review again!'
+            : stepProgress.learn
+            ? '⏭️ Continue to Recite'
+            : stepProgress.listen
+            ? '⏭️ Continue to Learn'
+            : '🎓 Start Learning'}
         </Text>
       </TouchableOpacity>
     </ScrollView>
@@ -164,4 +185,7 @@ const styles = StyleSheet.create({
   doneMessageText: { color: '#a0522d', fontWeight: '600', fontSize: 14 },
   learnBtn: { backgroundColor: '#a0522d', borderRadius: 12, padding: 18, alignItems: 'center', marginBottom: 40 },
   learnBtnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  flashcardBtn: {backgroundColor: '#fdf8f4', borderRadius: 12, padding: 18, alignItems: 'center', marginBottom: 12, borderWidth: 1.5, borderColor: '#a0522d',},
+  flashcardBtnText: {color: '#a0522d', fontSize: 16, fontWeight: '600',
+},
 });

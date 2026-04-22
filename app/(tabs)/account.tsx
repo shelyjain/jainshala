@@ -9,7 +9,17 @@ export default function AccountScreen() {
   const handleSignOut = () => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: signOut },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await signOut();
+          } catch (e) {
+            Alert.alert('Error', 'Could not sign out. Please try again.');
+          }
+        },
+      },
     ]);
   };
 

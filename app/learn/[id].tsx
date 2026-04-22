@@ -72,7 +72,7 @@ export default function LearnOrder() {
         <Text style={styles.backText}>← Back</Text>
       </TouchableOpacity>
 
-      <Text style={styles.step}>Exercise 1 of 2</Text>
+      <Text style={styles.step}>Exercise 1 of 3</Text> 
       <Text style={styles.title}>Tap lines in order</Text>
       <Text style={styles.subtitle}>{sutra.title}</Text>
 
