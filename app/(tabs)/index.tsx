@@ -121,9 +121,8 @@ export default function HomeScreen() {
         renderItem={({ item }) => {
           const done = isCompleted(item.id);
           const stepProgress = getStepProgress(item.id);
-          const stepsCount = (stepProgress.read ? 1 : 0) + (stepProgress.learn ? 1 : 0) + (stepProgress.recite ? 1 : 0);
-          
-          const isFullyDone = done || stepsCount === 3;
+          const stepsCount = (stepProgress.read ? 1 : 0) + (stepProgress.listen ? 1 : 0) + (stepProgress.learn ? 1 : 0) + (stepProgress.recite ? 1 : 0);
+          const isFullyDone = done || stepsCount === 4;
 
           return (
             <TouchableOpacity
@@ -135,7 +134,7 @@ export default function HomeScreen() {
                 {isFullyDone ? (
                   <Text style={styles.badge}>🏅 Complete</Text>
                 ) : stepsCount > 0 ? (
-                  <Text style={[styles.badge, styles.badgePartial]}>{stepsCount}/3 Completed</Text>
+                  <Text style={[styles.badge, styles.badgePartial]}>{stepsCount}/4 Completed</Text>
                 ) : null}
               </View>
               <Text style={styles.cardTitle}>{item.title}</Text>

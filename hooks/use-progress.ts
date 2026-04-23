@@ -6,6 +6,7 @@ import { auth, db } from '../lib/firebase';
 
 export type SutraProgress = {
   read: boolean;
+  listen: boolean;
   learn: boolean;
   recite: boolean;
 };
@@ -60,7 +61,7 @@ export function useProgress() {
   };
 
   const markStep = async (id: string, step: keyof SutraProgress) => {
-    const current = progressDetails[id] ?? { read: false, learn: false, recite: false };
+    const current = progressDetails[id] ?? { read: false, listen: false, learn: false, recite: false };
     const newDetails = {
       ...progressDetails,
       [id]: { ...current, [step]: true },
@@ -77,8 +78,8 @@ export function useProgress() {
   const isCompleted = (id: string) => completed.includes(id);
 
   const getStepProgress = (id: string): SutraProgress => {
-    if (isCompleted(id)) return { read: true, learn: true, recite: true };
-    return progressDetails[id] ?? { read: false, learn: false, recite: false };
+    if (isCompleted(id)) return { read: true, listen: true, learn: true, recite: true };
+    return progressDetails[id] ?? { read: false, listen: false, learn: false, recite: false };
   };
 
   return { completed, progressDetails, markComplete, isCompleted, markStep, getStepProgress };

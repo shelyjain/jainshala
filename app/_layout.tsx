@@ -1,5 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack, useRouter, useSegments } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -18,11 +19,30 @@ function AuthGuard() {
 
   useEffect(() => {
     if (loading) return;
+
     const inAuthGroup = segments[0] === 'auth';
-    if (!user && !inAuthGroup) {
-      router.replace('/auth/login');
-    } else if (user && inAuthGroup) {
-      router.replace('/');
+    const inOnboarding = segments[0] === 'onboarding';
+
+    if (!user) {
+      // Always redirect to login when signed out, no matter where we are
+      if (!inAuthGroup) {
+        router.replace('/auth/login');
+      }
+      return;
+    }
+
+    // User is logged in
+    if (inAuthGroup) {
+      AsyncStorage.getItem('onboarding_complete').then(done => {
+        router.replace(done ? '/' : '/onboarding');
+      });
+      return;
+    }
+
+    if (!inOnboarding) {
+      AsyncStorage.getItem('onboarding_complete').then(done => {
+        if (!done) router.replace('/onboarding');
+      });
     }
   }, [user, loading, segments]);
 
@@ -39,6 +59,7 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />  {/* ADD THIS */}
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
         </Stack>
         <StatusBar style="auto" />
