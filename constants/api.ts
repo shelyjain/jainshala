@@ -1,7 +1,20 @@
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 
 function stripTrailingSlash(url: string) {
   return url.replace(/\/$/, '');
+}
+
+function inferExpoHostApiUrl(): string | null {
+  const hostUri =
+    (Constants.expoConfig as any)?.hostUri ||
+    (Constants as any)?.manifest2?.extra?.expoClient?.hostUri ||
+    (Constants as any)?.manifest?.debuggerHost;
+
+  if (typeof hostUri !== 'string' || !hostUri) return null;
+  const host = hostUri.split(':')[0];
+  if (!host) return null;
+  return `http://${host}:8000`;
 }
 
 /**
@@ -16,6 +29,8 @@ function defaultApiUrl(): string {
     return 'http://localhost:8000';
   }
   if (Platform.OS === 'android') {
+    const expoHostApi = inferExpoHostApiUrl();
+    if (expoHostApi) return expoHostApi;
     return 'http://10.0.2.2:8000';
   }
   return 'http://localhost:8000';

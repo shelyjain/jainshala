@@ -1,6 +1,8 @@
+import json
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import json
 
 app = FastAPI()
 
@@ -11,8 +13,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-with open("sutras.json", "r") as f:
+BASE_DIR = Path(__file__).resolve().parent
+
+with open(BASE_DIR / "sutras.json", "r", encoding="utf-8") as f:
     sutras = json.load(f)
+
+overlay_path = BASE_DIR / "sutra_tts_overlay.json"
+if overlay_path.is_file():
+    with open(overlay_path, "r", encoding="utf-8") as f:
+        tts_overlay = json.load(f)
+
+    for sutra in sutras:
+        sid = str(sutra.get("id"))
+        overlay_lines = tts_overlay.get(sid)
+        if not isinstance(overlay_lines, list):
+            continue
+        for i, line in enumerate(sutra.get("lines", [])):
+            if i >= len(overlay_lines):
+                break
+            tts_text = str(overlay_lines[i]).strip()
+            if tts_text:
+                line["tts_devanagari"] = tts_text
 
 
 @app.get("/sutras")

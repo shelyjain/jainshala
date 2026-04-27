@@ -10,10 +10,18 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState, useEffect, useRef } from 'react';
 import { API_URL } from '../../constants/api';
 import { useProgress } from '../../hooks/use-progress';
-import {
-  ExpoSpeechRecognitionModule,
-  useSpeechRecognitionEvent,
-} from 'expo-speech-recognition';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+let speechRecognitionPkg: any = null;
+try {
+  speechRecognitionPkg = require('expo-speech-recognition');
+} catch {
+  speechRecognitionPkg = null;
+}
+
+const ExpoSpeechRecognitionModule = speechRecognitionPkg?.ExpoSpeechRecognitionModule;
+const useSpeechRecognitionEventSafe: (eventName: string, callback: (event: any) => void) => void =
+  speechRecognitionPkg?.useSpeechRecognitionEvent ?? (() => {});
 
 type Line = {
   line_number: number;
@@ -90,12 +98,14 @@ function allCorrect(results: WordResult[]): boolean {
 export default function ReciteSutra() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [sutra, setSutra] = useState<Sutra | null>(null);
   const [lineStates, setLineStates] = useState<LineState[]>([]);
   const [activeLineIndex, setActiveLineIndex] = useState<number | null>(null);
   const { markStep, getStepProgress } = useProgress();
   const stepProgress = getStepProgress(String(id));
   const isAlreadyRecited = stepProgress.recite;
+  const sttAvailable = Boolean(ExpoSpeechRecognitionModule);
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const pulseLoop = useRef<Animated.CompositeAnimation | null>(null);
@@ -115,7 +125,9 @@ export default function ReciteSutra() {
           }))
         );
       });
-    return () => { ExpoSpeechRecognitionModule.abort(); };
+    return () => {
+      ExpoSpeechRecognitionModule?.abort?.();
+    };
   }, [id]);
 
   // Pulse while listening
@@ -135,7 +147,7 @@ export default function ReciteSutra() {
     }
   }, [activeLineIndex, lineStates]);
 
-  useSpeechRecognitionEvent('result', (event) => {
+  useSpeechRecognitionEventSafe('result', (event) => {
     if (activeLineIndex === null || !sutra) return;
     const transcript = event.results?.[0]?.transcript ?? '';
     if (!transcript) return;
@@ -164,7 +176,7 @@ export default function ReciteSutra() {
     if (passed) setActiveLineIndex(null);
   });
 
-  useSpeechRecognitionEvent('end', () => {
+  useSpeechRecognitionEventSafe('end', () => {
     setActiveLineIndex(prev => {
       if (prev !== null) {
         setLineStates(ls => {
@@ -177,7 +189,7 @@ export default function ReciteSutra() {
     });
   });
 
-  useSpeechRecognitionEvent('error', (event) => {
+  useSpeechRecognitionEventSafe('error', (event) => {
     console.warn('STT error:', event.error);
     if (activeLineIndex !== null) {
       setLineStates(prev => {
@@ -190,6 +202,10 @@ export default function ReciteSutra() {
   });
 
   const startListening = async (lineIndex: number) => {
+    if (!sttAvailable) {
+      alert('Voice recitation is not available in Expo Go on this device. Use a development build to enable microphone recognition.');
+      return;
+    }
     if (activeLineIndex !== null) ExpoSpeechRecognitionModule.abort();
 
     const granted = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
@@ -213,7 +229,7 @@ export default function ReciteSutra() {
   };
 
   const stopListening = (lineIndex: number) => {
-    ExpoSpeechRecognitionModule.stop();
+    ExpoSpeechRecognitionModule?.stop?.();
     setLineStates(prev => {
       const updated = [...prev];
       updated[lineIndex] = { ...updated[lineIndex], isListening: false };
@@ -238,7 +254,11 @@ export default function ReciteSutra() {
   const allPassed = lineStates.every(s => s.passed);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(24, insets.bottom + 24) }]}
+      showsVerticalScrollIndicator
+    >
       <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
         <Text style={styles.backText}>← Back</Text>
       </TouchableOpacity>
@@ -249,6 +269,13 @@ export default function ReciteSutra() {
       <Text style={styles.hint}>
         Tap the mic and say each line aloud. 🟢 Green = correct, 🔴 Red = try again.
       </Text>
+      {!sttAvailable && (
+        <View style={styles.warningBox}>
+          <Text style={styles.warningText}>
+            Voice recitation is unavailable in Expo Go for this module. You can still continue manually with "Reveal anyway", or run a development build to enable speech recognition.
+          </Text>
+        </View>
+      )}
 
       {sutra.lines.map((line, i) => {
         const state = lineStates[i];
@@ -316,9 +343,17 @@ export default function ReciteSutra() {
                     </TouchableOpacity>
                   </Animated.View>
                 ) : (
-                  <TouchableOpacity style={styles.micBtn} onPress={() => startListening(i)}>
+                  <TouchableOpacity
+                    style={[styles.micBtn, !sttAvailable && styles.micBtnDisabled]}
+                    onPress={() => startListening(i)}
+                    disabled={!sttAvailable}
+                  >
                     <Text style={styles.micBtnText}>
-                      {state.attempts > 0 ? '🎙️ Try again' : '🎙️ Tap to recite'}
+                      {!sttAvailable
+                        ? '🎙️ Unavailable in Expo Go'
+                        : state.attempts > 0
+                          ? '🎙️ Try again'
+                          : '🎙️ Tap to recite'}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -343,7 +378,7 @@ export default function ReciteSutra() {
         </TouchableOpacity>
       )}
 
-      <View style={{ height: 40 }} />
+      <View style={{ height: 12 }} />
     </ScrollView>
   );
 }
@@ -357,6 +392,15 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: '600', color: '#1a1a1a', marginBottom: 4 },
   subtitle: { fontSize: 14, color: '#888', marginBottom: 8 },
   hint: { fontSize: 13, color: '#a0522d', marginBottom: 20, lineHeight: 20, fontStyle: 'italic' },
+  warningBox: {
+    backgroundColor: '#fff7ed',
+    borderColor: '#fdba74',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 14,
+  },
+  warningText: { color: '#9a3412', fontSize: 12, lineHeight: 18 },
 
   lineCard: {
     backgroundColor: '#fafafa',
@@ -421,6 +465,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   micBtnActive: { backgroundColor: '#fdf0e8' },
+  micBtnDisabled: { opacity: 0.5 },
   micBtnText: { color: '#a0522d', fontSize: 14, fontWeight: '600' },
   revealBtn: { alignItems: 'center', paddingVertical: 8 },
   revealBtnText: { fontSize: 13, color: '#bbb', textDecorationLine: 'underline' },

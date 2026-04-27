@@ -1,15 +1,15 @@
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import * as Speech from 'expo-speech';
+import { useEffect, useRef, useState } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
   ActivityIndicator,
   Animated,
   Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState, useEffect, useRef } from 'react';
-import * as Speech from 'expo-speech';
 import { API_URL } from '../../constants/api';
 import { useProgress } from '../../hooks/use-progress';
 
@@ -17,6 +17,7 @@ type Line = {
   line_number: number;
   transliteration: string;
   translation_en: string;
+  tts_devanagari?: string;
 };
 
 type Sutra = {
@@ -24,6 +25,54 @@ type Sutra = {
   title: string;
   lines: Line[];
 };
+
+type VoicePick = {
+  language: string;
+  voice?: string;
+};
+
+let cachedVoicePick: VoicePick | null = null;
+
+function normalizeTtsText(text: string) {
+  // Tiny prosody hints for mantra cadence.
+  return text
+    .replace(/\s+/g, ' ')
+    .replace(/[,;:]/g, ' , ')
+    .replace(/\./g, ' . ')
+    .trim();
+}
+
+async function getBestHindiVoice(): Promise<VoicePick> {
+  if (cachedVoicePick) return cachedVoicePick;
+  try {
+    const voices = await Speech.getAvailableVoicesAsync();
+    const preferred = process.env.EXPO_PUBLIC_TTS_VOICE?.trim();
+    if (preferred) {
+      const exact = voices.find(v => v.identifier === preferred || v.name === preferred);
+      if (exact) {
+        cachedVoicePick = { language: exact.language || 'hi-IN', voice: exact.identifier };
+        return cachedVoicePick;
+      }
+    }
+    const sorted = [...voices].sort((a, b) => {
+      const ah = `${a.name} ${a.identifier}`.toLowerCase();
+      const bh = `${b.name} ${b.identifier}`.toLowerCase();
+      const aHi = a.language?.toLowerCase().startsWith('hi') ? 100 : 0;
+      const bHi = b.language?.toLowerCase().startsWith('hi') ? 100 : 0;
+      const aNeural = /(neural|natural|wavenet|network|enhanced)/.test(ah) ? 10 : 0;
+      const bNeural = /(neural|natural|wavenet|network|enhanced)/.test(bh) ? 10 : 0;
+      return bHi + bNeural - (aHi + aNeural);
+    });
+    const best = sorted[0];
+    cachedVoicePick = best
+      ? { language: best.language || 'hi-IN', voice: best.identifier }
+      : { language: 'hi-IN' };
+    return cachedVoicePick;
+  } catch {
+    cachedVoicePick = { language: 'hi-IN' };
+    return cachedVoicePick;
+  }
+}
 
 export default function FlashcardScreen() {
   const { id } = useLocalSearchParams();
@@ -41,8 +90,13 @@ export default function FlashcardScreen() {
   const slideAnim = useRef(new Animated.Value(0)).current;
   const autoPlayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wordTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const speechTokenRef = useRef(0);
+  const voicePickRef = useRef<VoicePick>({ language: 'hi-IN' });
 
   useEffect(() => {
+    getBestHindiVoice().then(v => {
+      voicePickRef.current = v;
+    });
     fetch(`${API_URL}/sutra/${id}`)
       .then(res => res.json())
       .then(data => {
@@ -66,6 +120,11 @@ export default function FlashcardScreen() {
     wordTimerRefs.current = [];
   };
 
+  const nextSpeechToken = () => {
+    speechTokenRef.current += 1;
+    return speechTokenRef.current;
+  };
+
   const animateTransition = (callback: () => void) => {
     Animated.parallel([
       Animated.timing(fadeAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
@@ -80,7 +139,7 @@ export default function FlashcardScreen() {
     });
   };
 
-  const startWebWordHighlight = (text: string, onDone?: () => void) => {
+  const startWebWordHighlight = (text: string) => {
     const words = text.split(' ');
     // Estimate ~400ms per word at rate 0.85
     const msPerWord = 420;
@@ -96,28 +155,37 @@ export default function FlashcardScreen() {
 
     const doneTimer = setTimeout(() => {
       setHighlightedWordIndex(-1);
-      setIsSpeaking(false);
-      onDone?.();
     }, words.length * msPerWord + 300);
     wordTimerRefs.current.push(doneTimer);
   };
 
   const speakLine = (line: Line, onDone?: () => void) => {
+    const speechToken = nextSpeechToken();
     Speech.stop();
     clearWordTimers();
     setIsSpeaking(true);
     setHighlightedWordIndex(-1);
+    const speakText = normalizeTtsText(line.tts_devanagari?.trim() || line.transliteration);
+    const voicePick = voicePickRef.current;
 
     const isWeb = Platform.OS === 'web';
 
     if (isWeb) {
       // Web: start timer-based highlighting immediately, then speak
-      startWebWordHighlight(line.transliteration, onDone);
-      Speech.speak(line.transliteration, {
-        language: 'hi-IN',
-        rate: 0.85,
-        pitch: 1.0,
+      startWebWordHighlight(line.transliteration);
+      Speech.speak(speakText, {
+        language: voicePick.language || 'hi-IN',
+        ...(voicePick.voice ? { voice: voicePick.voice } : {}),
+        rate: 0.72,
+        pitch: 0.92,
+        onDone: () => {
+          if (speechToken !== speechTokenRef.current) return;
+          setHighlightedWordIndex(-1);
+          setIsSpeaking(false);
+          onDone?.();
+        },
         onError: () => {
+          if (speechToken !== speechTokenRef.current) return;
           clearWordTimers();
           setHighlightedWordIndex(-1);
           setIsSpeaking(false);
@@ -127,11 +195,13 @@ export default function FlashcardScreen() {
     } else {
       // iOS: use onBoundary for accurate word highlighting
       const words = line.transliteration.split(' ');
-      Speech.speak(line.transliteration, {
-        language: 'hi-IN',
-        rate: 0.85,
-        pitch: 1.0,
+      Speech.speak(speakText, {
+        language: voicePick.language || 'hi-IN',
+        ...(voicePick.voice ? { voice: voicePick.voice } : {}),
+        rate: 0.72,
+        pitch: 0.92,
         onBoundary: (e: any) => {
+          if (speechToken !== speechTokenRef.current) return;
           // e.charIndex is the char position of the word being spoken
           const charIndex = e?.charIndex ?? 0;
           let wordIdx = 0;
@@ -147,11 +217,13 @@ export default function FlashcardScreen() {
           setHighlightedWordIndex(Math.min(wordIdx, words.length - 1));
         },
         onDone: () => {
+          if (speechToken !== speechTokenRef.current) return;
           setHighlightedWordIndex(-1);
           setIsSpeaking(false);
           onDone?.();
         },
         onError: () => {
+          if (speechToken !== speechTokenRef.current) return;
           setHighlightedWordIndex(-1);
           setIsSpeaking(false);
           onDone?.();
@@ -162,6 +234,7 @@ export default function FlashcardScreen() {
 
   const goToPrev = () => {
     if (currentIndex === 0) return;
+    nextSpeechToken();
     Speech.stop();
     clearWordTimers();
     setIsSpeaking(false);
@@ -172,6 +245,7 @@ export default function FlashcardScreen() {
 
   const goToNext = () => {
     if (!sutra || currentIndex >= sutra.lines.length - 1) return;
+    nextSpeechToken();
     Speech.stop();
     clearWordTimers();
     setIsSpeaking(false);
@@ -204,6 +278,7 @@ export default function FlashcardScreen() {
 
   const togglePlay = () => {
     if (isPlaying) {
+      nextSpeechToken();
       Speech.stop();
       clearWordTimers();
       setIsSpeaking(false);
