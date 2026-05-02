@@ -10,13 +10,14 @@ import {
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppLogo } from '@/components/app-logo';
 
 const { width, height } = Dimensions.get('window');
 
 const SLIDES = [
   {
     emoji: '🕉️',
-    title: 'Welcome to Jain Archive',
+    title: 'Welcome to Jain Shala',
     subtitle: 'Your personal path through the sacred sutras of the Jain tradition.',
     color: '#fdf8f4',
     accent: '#a0522d',
@@ -160,12 +161,16 @@ export default function OnboardingScreen() {
           </View>
         )}
 
-        {/* Emoji */}
-        <Animated.Text
-          style={[styles.emoji, { transform: [{ scale: emojiScaleAnim }] }]}
+        {/* Logo on welcome slide; emoji on feature slides */}
+        <Animated.View
+          style={[styles.heroVisual, { transform: [{ scale: emojiScaleAnim }] }]}
         >
-          {slide.emoji}
-        </Animated.Text>
+          {currentIndex === 0 ? (
+            <AppLogo size={128} />
+          ) : (
+            <Text style={styles.emoji}>{slide.emoji}</Text>
+          )}
+        </Animated.View>
 
         <Text style={styles.title}>{slide.title}</Text>
         <Text style={styles.subtitle}>{slide.subtitle}</Text>
@@ -277,9 +282,14 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
+  heroVisual: {
+    marginBottom: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 88,
+  },
   emoji: {
     fontSize: 72,
-    marginBottom: 28,
   },
   title: {
     fontSize: 28,

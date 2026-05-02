@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/auth';
+import { AppLogo } from '@/components/app-logo';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
@@ -52,7 +53,9 @@ export default function SignupScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.inner}>
-        <Text style={styles.logo}>🕉️</Text>
+        <View style={styles.logoWrap}>
+          <AppLogo size={96} />
+        </View>
         <Text style={styles.heading}>Create Account</Text>
         <Text style={styles.subheading}>Start your learning journey</Text>
 
@@ -102,7 +105,7 @@ export default function SignupScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   inner: { flex: 1, padding: 28, justifyContent: 'center' },
-  logo: { fontSize: 56, textAlign: 'center', marginBottom: 12 },
+  logoWrap: { alignItems: 'center', marginBottom: 16 },
   heading: { fontSize: 28, fontWeight: '700', color: '#1a1a1a', textAlign: 'center', marginBottom: 6 },
   subheading: { fontSize: 15, color: '#888', textAlign: 'center', marginBottom: 40 },
   input: {

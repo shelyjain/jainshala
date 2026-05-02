@@ -7,8 +7,20 @@ import { auth, db } from '../lib/firebase';
 export type SutraProgress = {
   read: boolean;
   listen: boolean;
+  /** Level 1: drag lines into correct sequence */
   learn: boolean;
+  /** Level 2: fill in the blanks */
+  learn_fill: boolean;
+  /** Level 3: voice / speech recognition */
   recite: boolean;
+};
+
+const DEFAULT_PROGRESS: SutraProgress = {
+  read: false,
+  listen: false,
+  learn: false,
+  learn_fill: false,
+  recite: false,
 };
 
 export function useProgress() {
@@ -61,7 +73,7 @@ export function useProgress() {
   };
 
   const markStep = async (id: string, step: keyof SutraProgress) => {
-    const current = progressDetails[id] ?? { read: false, listen: false, learn: false, recite: false };
+    const current = { ...DEFAULT_PROGRESS, ...progressDetails[id] };
     const newDetails = {
       ...progressDetails,
       [id]: { ...current, [step]: true },
@@ -78,8 +90,9 @@ export function useProgress() {
   const isCompleted = (id: string) => completed.includes(id);
 
   const getStepProgress = (id: string): SutraProgress => {
-    if (isCompleted(id)) return { read: true, listen: true, learn: true, recite: true };
-    return progressDetails[id] ?? { read: false, listen: false, learn: false, recite: false };
+    if (isCompleted(id))
+      return { read: true, listen: true, learn: true, learn_fill: true, recite: true };
+    return { ...DEFAULT_PROGRESS, ...progressDetails[id] };
   };
 
   return { completed, progressDetails, markComplete, isCompleted, markStep, getStepProgress };

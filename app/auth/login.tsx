@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/auth';
+import { AppLogo } from '@/components/app-logo';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -48,7 +49,7 @@ export default function LoginScreen() {
     >
       <View style={styles.inner}>
         <Text style={styles.logo}>🕉️</Text>
-        <Text style={styles.heading}>Jain Archive</Text>
+        <Text style={styles.heading}>Jain Shala</Text>
         <Text style={styles.subheading}>Sign in to sync your progress</Text>
 
         <TextInput
@@ -90,7 +91,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   inner: { flex: 1, padding: 28, justifyContent: 'center' },
-  logo: { fontSize: 56, textAlign: 'center', marginBottom: 12 },
+  logoWrap: { alignItems: 'center', marginBottom: 16 },
   heading: { fontSize: 28, fontWeight: '700', color: '#1a1a1a', textAlign: 'center', marginBottom: 6 },
   subheading: { fontSize: 15, color: '#888', textAlign: 'center', marginBottom: 40 },
   input: {

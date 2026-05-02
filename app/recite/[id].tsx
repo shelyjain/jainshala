@@ -263,7 +263,7 @@ export default function ReciteSutra() {
         <Text style={styles.backText}>← Back</Text>
       </TouchableOpacity>
 
-      <Text style={styles.step}>Exercise 2 of 3</Text>
+      <Text style={styles.step}>Level 3 of 3 · Voice</Text>
       <Text style={styles.title}>Recite from memory</Text>
       <Text style={styles.subtitle}>{sutra.title}</Text>
       <Text style={styles.hint}>

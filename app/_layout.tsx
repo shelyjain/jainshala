@@ -63,6 +63,13 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="auth" options={{ headerShown: false }} />
             <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+            <Stack.Screen name="learn/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="learn-blanks/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="sutra/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="flashcard/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="recite/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="complete/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="badges" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
           </Stack>
           <StatusBar style="auto" />

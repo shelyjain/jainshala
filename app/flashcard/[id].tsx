@@ -1,5 +1,8 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Audio } from 'expo-av';
+import { File, Paths } from 'expo-file-system';
 import * as Speech from 'expo-speech';
+import { VoiceQuality } from 'expo-speech';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -33,8 +36,83 @@ type VoicePick = {
 
 let cachedVoicePick: VoicePick | null = null;
 
+let googleTtsEnabledCache: boolean | null = null;
+
+/**
+ * Uses Google Cloud audio from your backend when `/tts/google` is configured (recommended for Hindi/Devanagari).
+ * Set EXPO_PUBLIC_USE_GOOGLE_TTS=false to force on-device expo-speech only.
+ */
+function shouldUseGoogleCloudTts(): boolean {
+  const v = process.env.EXPO_PUBLIC_USE_GOOGLE_TTS?.trim().toLowerCase();
+  if (v === '0' || v === 'false' || v === 'no' || v === 'off') return false;
+  return true;
+}
+
+function getDeviceTtsProsody(): { rate: number; pitch: number } {
+  let rate = 0.66;
+  const rEnv = process.env.EXPO_PUBLIC_TTS_RATE?.trim();
+  if (rEnv) {
+    const n = Number(rEnv);
+    if (!Number.isNaN(n)) rate = Math.min(2, Math.max(0.1, n));
+  }
+  let pitch = 0.97;
+  const pEnv = process.env.EXPO_PUBLIC_TTS_PITCH?.trim();
+  if (pEnv) {
+    const n = Number(pEnv);
+    if (!Number.isNaN(n)) pitch = Math.min(2, Math.max(0.5, n));
+  }
+  return { rate, pitch };
+}
+
+function wordHighlightMsPerWord(): number {
+  const { rate } = getDeviceTtsProsody();
+  return Math.max(280, Math.round(420 * (0.72 / rate)));
+}
+
+function scoreVoiceForHindi(v: Speech.Voice): number {
+  const id = `${v.identifier} ${v.name}`.toLowerCase();
+  const lang = (v.language || '').toLowerCase();
+  let s = 0;
+  if (lang === 'hi-in') s += 220;
+  else if (lang.startsWith('hi')) s += 200;
+  else if (lang === 'mr-in') s += 45;
+  else if (lang === 'ne-np' || lang === 'ne-in') s += 40;
+  else if (lang.startsWith('en-in')) s += 18;
+
+  if (v.quality === VoiceQuality.Enhanced) s += 120;
+
+  if (
+    /(neural|generative|gemini|premium|enhanced|refined|natural|wavenet|network|google|offline-high|studio)/.test(
+      id,
+    )
+  ) {
+    s += 48;
+  }
+  if (/(compact|tiny|pico|legacy)/.test(id) && !/enhanced|neural|premium/.test(id)) s -= 35;
+  if (/standard/.test(id) && !/enhanced|neural|premium/.test(id)) s -= 10;
+
+  return s;
+}
+
+async function getGoogleTtsEnabled(): Promise<boolean> {
+  if (googleTtsEnabledCache !== null) return googleTtsEnabledCache;
+  try {
+    const r = await fetch(`${API_URL}/tts/google/status`);
+    const j = await r.json().catch(() => ({}));
+    googleTtsEnabledCache = !!(r.ok && j.enabled);
+  } catch {
+    googleTtsEnabledCache = false;
+  }
+  return googleTtsEnabledCache;
+}
+
+/** Single-spaced source text for Cloud TTS (no comma tokens — avoids speaking punctuation literally). */
+function normalizeForGoogleTts(text: string) {
+  return text.replace(/\s+/g, ' ').trim();
+}
+
 function normalizeTtsText(text: string) {
-  // Tiny prosody hints for mantra cadence.
+  // Tiny prosody hints for on-device TTS only.
   return text
     .replace(/\s+/g, ' ')
     .replace(/[,;:]/g, ' , ')
@@ -54,19 +132,14 @@ async function getBestHindiVoice(): Promise<VoicePick> {
         return cachedVoicePick;
       }
     }
-    const sorted = [...voices].sort((a, b) => {
-      const ah = `${a.name} ${a.identifier}`.toLowerCase();
-      const bh = `${b.name} ${b.identifier}`.toLowerCase();
-      const aHi = a.language?.toLowerCase().startsWith('hi') ? 100 : 0;
-      const bHi = b.language?.toLowerCase().startsWith('hi') ? 100 : 0;
-      const aNeural = /(neural|natural|wavenet|network|enhanced)/.test(ah) ? 10 : 0;
-      const bNeural = /(neural|natural|wavenet|network|enhanced)/.test(bh) ? 10 : 0;
-      return bHi + bNeural - (aHi + aNeural);
-    });
+    const sorted = [...voices].sort((a, b) => scoreVoiceForHindi(b) - scoreVoiceForHindi(a));
     const best = sorted[0];
-    cachedVoicePick = best
-      ? { language: best.language || 'hi-IN', voice: best.identifier }
-      : { language: 'hi-IN' };
+    const bestScore = best ? scoreVoiceForHindi(best) : -1;
+    if (best && bestScore > 0) {
+      cachedVoicePick = { language: best.language || 'hi-IN', voice: best.identifier };
+    } else {
+      cachedVoicePick = { language: 'hi-IN' };
+    }
     return cachedVoicePick;
   } catch {
     cachedVoicePick = { language: 'hi-IN' };
@@ -92,6 +165,39 @@ export default function FlashcardScreen() {
   const wordTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
   const speechTokenRef = useRef(0);
   const voicePickRef = useRef<VoicePick>({ language: 'hi-IN' });
+  const googleSoundRef = useRef<Audio.Sound | null>(null);
+  const googleWebUrlRef = useRef<string | null>(null);
+
+  const stopGooglePlayback = async () => {
+    if (googleSoundRef.current) {
+      try {
+        await googleSoundRef.current.stopAsync();
+        await googleSoundRef.current.unloadAsync();
+      } catch {
+        /* ignore */
+      }
+      googleSoundRef.current = null;
+    }
+    if (googleWebUrlRef.current && Platform.OS === 'web') {
+      URL.revokeObjectURL(googleWebUrlRef.current);
+      googleWebUrlRef.current = null;
+    }
+  };
+
+  const stopAllPlayback = async () => {
+    await stopGooglePlayback();
+    Speech.stop();
+  };
+
+  useEffect(() => {
+    Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      allowsRecordingIOS: false,
+      staysActiveInBackground: false,
+      shouldDuckAndroid: true,
+      playThroughEarpieceAndroid: false,
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     getBestHindiVoice().then(v => {
@@ -109,7 +215,7 @@ export default function FlashcardScreen() {
       });
 
     return () => {
-      Speech.stop();
+      void stopAllPlayback();
       if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
       clearWordTimers();
     };
@@ -141,8 +247,7 @@ export default function FlashcardScreen() {
 
   const startWebWordHighlight = (text: string) => {
     const words = text.split(' ');
-    // Estimate ~400ms per word at rate 0.85
-    const msPerWord = 420;
+    const msPerWord = wordHighlightMsPerWord();
     clearWordTimers();
     setHighlightedWordIndex(0);
 
@@ -159,25 +264,18 @@ export default function FlashcardScreen() {
     wordTimerRefs.current.push(doneTimer);
   };
 
-  const speakLine = (line: Line, onDone?: () => void) => {
-    const speechToken = nextSpeechToken();
-    Speech.stop();
-    clearWordTimers();
-    setIsSpeaking(true);
-    setHighlightedWordIndex(-1);
-    const speakText = normalizeTtsText(line.tts_devanagari?.trim() || line.transliteration);
+  const runExpoSpeech = (line: Line, speakText: string, speechToken: number, onDone?: () => void) => {
     const voicePick = voicePickRef.current;
-
     const isWeb = Platform.OS === 'web';
+    const { rate, pitch } = getDeviceTtsProsody();
 
     if (isWeb) {
-      // Web: start timer-based highlighting immediately, then speak
       startWebWordHighlight(line.transliteration);
       Speech.speak(speakText, {
         language: voicePick.language || 'hi-IN',
         ...(voicePick.voice ? { voice: voicePick.voice } : {}),
-        rate: 0.72,
-        pitch: 0.92,
+        rate,
+        pitch,
         onDone: () => {
           if (speechToken !== speechTokenRef.current) return;
           setHighlightedWordIndex(-1);
@@ -193,16 +291,14 @@ export default function FlashcardScreen() {
         },
       });
     } else {
-      // iOS: use onBoundary for accurate word highlighting
       const words = line.transliteration.split(' ');
       Speech.speak(speakText, {
         language: voicePick.language || 'hi-IN',
         ...(voicePick.voice ? { voice: voicePick.voice } : {}),
-        rate: 0.72,
-        pitch: 0.92,
+        rate,
+        pitch,
         onBoundary: (e: any) => {
           if (speechToken !== speechTokenRef.current) return;
-          // e.charIndex is the char position of the word being spoken
           const charIndex = e?.charIndex ?? 0;
           let wordIdx = 0;
           let charCount = 0;
@@ -232,10 +328,105 @@ export default function FlashcardScreen() {
     }
   };
 
+  const speakLine = (line: Line, onDone?: () => void) => {
+    const speechToken = nextSpeechToken();
+    void stopGooglePlayback();
+    Speech.stop();
+    clearWordTimers();
+    setIsSpeaking(true);
+    setHighlightedWordIndex(-1);
+    const rawLineText = line.tts_devanagari?.trim() || line.transliteration;
+    const googlePayloadText = normalizeForGoogleTts(rawLineText);
+    const speakTextDevice = normalizeTtsText(rawLineText);
+
+    void (async () => {
+      let playedGoogle = false;
+      if (shouldUseGoogleCloudTts() && (await getGoogleTtsEnabled())) {
+        try {
+          const res = await fetch(`${API_URL}/tts/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: googlePayloadText, mantra_style: true }),
+          });
+          if (!res.ok) throw new Error(`Google TTS HTTP ${res.status}`);
+
+          if (speechToken !== speechTokenRef.current) return;
+
+          clearWordTimers();
+          startWebWordHighlight(line.transliteration);
+
+          let uri: string;
+          if (Platform.OS === 'web') {
+            const blob = await res.blob();
+            uri = URL.createObjectURL(blob);
+            googleWebUrlRef.current = uri;
+          } else {
+            const buf = await res.arrayBuffer();
+            const outFile = new File(Paths.cache, `tts-${Date.now()}.mp3`);
+            outFile.write(new Uint8Array(buf));
+            uri = outFile.uri;
+          }
+
+          if (speechToken !== speechTokenRef.current) {
+            if (Platform.OS === 'web' && googleWebUrlRef.current) {
+              URL.revokeObjectURL(googleWebUrlRef.current);
+              googleWebUrlRef.current = null;
+            }
+            return;
+          }
+
+          const { sound } = await Audio.Sound.createAsync(
+            { uri },
+            { shouldPlay: true },
+            status => {
+              if (!status.isLoaded) {
+                if (status.error) {
+                  void sound.unloadAsync().catch(() => {});
+                  googleSoundRef.current = null;
+                  if (googleWebUrlRef.current && Platform.OS === 'web') {
+                    URL.revokeObjectURL(googleWebUrlRef.current);
+                    googleWebUrlRef.current = null;
+                  }
+                  if (speechToken !== speechTokenRef.current) return;
+                  clearWordTimers();
+                  setHighlightedWordIndex(-1);
+                  setIsSpeaking(false);
+                  onDone?.();
+                }
+                return;
+              }
+              if (status.didJustFinish) {
+                void sound.unloadAsync().catch(() => {});
+                googleSoundRef.current = null;
+                if (googleWebUrlRef.current && Platform.OS === 'web') {
+                  URL.revokeObjectURL(googleWebUrlRef.current);
+                  googleWebUrlRef.current = null;
+                }
+                if (speechToken !== speechTokenRef.current) return;
+                clearWordTimers();
+                setHighlightedWordIndex(-1);
+                setIsSpeaking(false);
+                onDone?.();
+              }
+            },
+          );
+          googleSoundRef.current = sound;
+          playedGoogle = true;
+        } catch (e) {
+          console.warn('Google TTS failed, using device speech', e);
+        }
+      }
+
+      if (playedGoogle) return;
+      if (speechToken !== speechTokenRef.current) return;
+      runExpoSpeech(line, speakTextDevice, speechToken, onDone);
+    })();
+  };
+
   const goToPrev = () => {
     if (currentIndex === 0) return;
     nextSpeechToken();
-    Speech.stop();
+    void stopAllPlayback();
     clearWordTimers();
     setIsSpeaking(false);
     setHighlightedWordIndex(-1);
@@ -246,7 +437,7 @@ export default function FlashcardScreen() {
   const goToNext = () => {
     if (!sutra || currentIndex >= sutra.lines.length - 1) return;
     nextSpeechToken();
-    Speech.stop();
+    void stopAllPlayback();
     clearWordTimers();
     setIsSpeaking(false);
     setHighlightedWordIndex(-1);
@@ -279,7 +470,7 @@ export default function FlashcardScreen() {
   const togglePlay = () => {
     if (isPlaying) {
       nextSpeechToken();
-      Speech.stop();
+      void stopAllPlayback();
       clearWordTimers();
       setIsSpeaking(false);
       setHighlightedWordIndex(-1);
@@ -319,7 +510,7 @@ export default function FlashcardScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => { Speech.stop(); clearWordTimers(); router.back(); }}>
+        <TouchableOpacity onPress={() => { void stopAllPlayback(); clearWordTimers(); router.back(); }}>
           <Text style={styles.backText}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle} numberOfLines={1}>{sutra.title}</Text>
@@ -362,7 +553,7 @@ export default function FlashcardScreen() {
           disabled={isSpeaking}
         >
           <Text style={styles.speakBtnText}>
-            {isSpeaking ? '🔊 Speaking...' : '🔊 Read aloud in Hindi'}
+            {isSpeaking ? '🔊 Speaking...' : '🔊 Read aloud'}
           </Text>
         </TouchableOpacity>
       </Animated.View>
