@@ -40,6 +40,8 @@ export default function SignupScreen() {
           ? 'An account with this email already exists.'
           : err.code === 'auth/invalid-email'
           ? 'Please enter a valid email address.'
+          : typeof err.message === 'string' && err.message.includes('cloud sync')
+          ? err.message
           : 'Sign up failed. Please try again.';
       Alert.alert('Error', msg);
     } finally {

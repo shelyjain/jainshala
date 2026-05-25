@@ -140,7 +140,7 @@ export default function BadgesModalScreen() {
                   <Text style={[styles.epithet, !unlocked && styles.epithetLocked]}>{epithet}</Text>
                   <Text style={[styles.sutraTitle, !unlocked && styles.sutraTitleLocked]}>{sutra.title}</Text>
                   {!unlocked && (
-                    <Text style={styles.unlockHint}>Complete read, listen, learn, fill-in & recite to earn</Text>
+                    <Text style={styles.unlockHint}>Complete read, listen, learn, fill-in & quiz to earn</Text>
                   )}
                   <Text style={[styles.category, !unlocked && styles.categoryLocked]}>{sutra.category}</Text>
                 </View>

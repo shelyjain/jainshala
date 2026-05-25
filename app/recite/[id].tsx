@@ -4,24 +4,14 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  Animated,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { API_URL } from '../../constants/api';
 import { useProgress } from '../../hooks/use-progress';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-let speechRecognitionPkg: any = null;
-try {
-  speechRecognitionPkg = require('expo-speech-recognition');
-} catch {
-  speechRecognitionPkg = null;
-}
-
-const ExpoSpeechRecognitionModule = speechRecognitionPkg?.ExpoSpeechRecognitionModule;
-const useSpeechRecognitionEventSafe: (eventName: string, callback: (event: any) => void) => void =
-  speechRecognitionPkg?.useSpeechRecognitionEvent ?? (() => {});
+import { buildMcqOptions } from '../../lib/mcq';
+import * as Haptics from 'expo-haptics';
 
 type Line = {
   line_number: number;
@@ -35,341 +25,190 @@ type Sutra = {
   lines: Line[];
 };
 
-type WordResult = {
-  word: string;
-  status: 'correct' | 'incorrect' | 'pending';
-  spoken: string;
-};
-
-type LineState = {
-  revealed: boolean;
+type LineQuizState = {
+  options: string[];
   passed: boolean;
-  wordResults: WordResult[] | null;
-  isListening: boolean;
-  attempts: number;
+  selected: string | null;
+  wrongPick: string | null;
 };
-
-function normalise(s: string): string {
-  return s.toLowerCase().replace(/[^a-z\s]/g, '').trim();
-}
-
-function levenshtein(a: string, b: string): number {
-  const m = a.length, n = b.length;
-  const dp: number[][] = Array.from({ length: m + 1 }, (_, i) =>
-    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
-  );
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      dp[i][j] =
-        a[i - 1] === b[j - 1]
-          ? dp[i - 1][j - 1]
-          : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
-    }
-  }
-  return dp[m][n];
-}
-
-function isWordMatch(expected: string, spoken: string): boolean {
-  const e = normalise(expected);
-  const s = normalise(spoken);
-  if (!e || !s) return false;
-  const maxDist = e.length > 5 ? 2 : 1;
-  return levenshtein(e, s) <= maxDist;
-}
-
-function matchWords(expected: string, spokenTranscript: string): WordResult[] {
-  const expectedWords = expected.trim().split(/\s+/);
-  const spokenWords = spokenTranscript.trim().split(/\s+/).filter(Boolean);
-  return expectedWords.map((word, i) => {
-    const spokenWord = spokenWords[i] ?? '';
-    const correct = isWordMatch(word, spokenWord);
-    return {
-      word,
-      status: spokenWord === '' ? 'pending' : correct ? 'correct' : 'incorrect',
-      spoken: spokenWord,
-    } as WordResult;
-  });
-}
-
-function allCorrect(results: WordResult[]): boolean {
-  return results.length > 0 && results.every(r => r.status === 'correct');
-}
 
 export default function ReciteSutra() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [sutra, setSutra] = useState<Sutra | null>(null);
-  const [lineStates, setLineStates] = useState<LineState[]>([]);
-  const [activeLineIndex, setActiveLineIndex] = useState<number | null>(null);
+  const [lineStates, setLineStates] = useState<LineQuizState[]>([]);
   const { markStep, getStepProgress } = useProgress();
   const stepProgress = getStepProgress(String(id));
-  const isAlreadyRecited = stepProgress.recite;
-  const sttAvailable = Boolean(ExpoSpeechRecognitionModule);
-
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const pulseLoop = useRef<Animated.CompositeAnimation | null>(null);
+  const isAlreadyDone = stepProgress.recite;
 
   useEffect(() => {
     fetch(`${API_URL}/sutra/${id}`)
       .then(res => res.json())
-      .then(data => {
+      .then((data: Sutra) => {
         setSutra(data);
+        const pool = data.lines.map(l => l.transliteration);
         setLineStates(
-          data.lines.map(() => ({
-            revealed: false,
+          data.lines.map(line => ({
+            options: buildMcqOptions(
+              line.transliteration,
+              pool.filter(t => t !== line.transliteration)
+            ),
             passed: false,
-            wordResults: null,
-            isListening: false,
-            attempts: 0,
+            selected: null,
+            wrongPick: null,
           }))
         );
       });
-    return () => {
-      ExpoSpeechRecognitionModule?.abort?.();
-    };
   }, [id]);
 
-  // Pulse while listening
-  useEffect(() => {
-    const isListening = activeLineIndex !== null && lineStates[activeLineIndex]?.isListening;
-    if (isListening) {
-      pulseLoop.current = Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, { toValue: 1.12, duration: 600, useNativeDriver: true }),
-          Animated.timing(pulseAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
-        ])
-      );
-      pulseLoop.current.start();
-    } else {
-      pulseLoop.current?.stop();
-      pulseAnim.setValue(1);
-    }
-  }, [activeLineIndex, lineStates]);
+  const handlePick = (lineIndex: number, option: string) => {
+    if (!sutra || lineStates[lineIndex]?.passed) return;
 
-  useSpeechRecognitionEventSafe('result', (event) => {
-    if (activeLineIndex === null || !sutra) return;
-    const transcript = event.results?.[0]?.transcript ?? '';
-    if (!transcript) return;
-
-    const line = sutra.lines[activeLineIndex];
-    const results = matchWords(line.transliteration, transcript);
-    const passed = allCorrect(results);
-
-    setLineStates(prev => {
-      const updated = [...prev];
-      updated[activeLineIndex] = {
-        ...updated[activeLineIndex],
-        wordResults: results,
-        passed,
-        revealed: passed,
-        isListening: false,
-        attempts: updated[activeLineIndex].attempts + 1,
-      };
-      // Check if all lines now passed
-      if (passed && updated.every(s => s.passed)) {
-        markStep(String(id), 'recite');
-      }
-      return updated;
-    });
-
-    if (passed) setActiveLineIndex(null);
-  });
-
-  useSpeechRecognitionEventSafe('end', () => {
-    setActiveLineIndex(prev => {
-      if (prev !== null) {
-        setLineStates(ls => {
-          const updated = [...ls];
-          if (updated[prev]) updated[prev] = { ...updated[prev], isListening: false };
-          return updated;
-        });
-      }
-      return prev;
-    });
-  });
-
-  useSpeechRecognitionEventSafe('error', (event) => {
-    console.warn('STT error:', event.error);
-    if (activeLineIndex !== null) {
+    const correct = sutra.lines[lineIndex].transliteration;
+    if (option === correct) {
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       setLineStates(prev => {
         const updated = [...prev];
-        updated[activeLineIndex] = { ...updated[activeLineIndex], isListening: false };
+        updated[lineIndex] = {
+          ...updated[lineIndex],
+          passed: true,
+          selected: option,
+          wrongPick: null,
+        };
+        if (updated.every(s => s.passed)) {
+          markStep(String(id), 'recite');
+        }
         return updated;
       });
-    }
-    setActiveLineIndex(null);
-  });
-
-  const startListening = async (lineIndex: number) => {
-    if (!sttAvailable) {
-      alert('Voice recitation is not available in Expo Go on this device. Use a development build to enable microphone recognition.');
-      return;
-    }
-    if (activeLineIndex !== null) ExpoSpeechRecognitionModule.abort();
-
-    const granted = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
-    if (!granted.granted) {
-      alert('Microphone permission is required to recite.');
       return;
     }
 
-    setActiveLineIndex(lineIndex);
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     setLineStates(prev => {
       const updated = [...prev];
-      updated[lineIndex] = { ...updated[lineIndex], isListening: true, wordResults: null };
+      updated[lineIndex] = {
+        ...updated[lineIndex],
+        selected: option,
+        wrongPick: option,
+      };
       return updated;
-    });
-
-    ExpoSpeechRecognitionModule.start({
-      lang: 'en-US',
-      interimResults: false,
-      maxAlternatives: 1,
     });
   };
 
-  const stopListening = (lineIndex: number) => {
-    ExpoSpeechRecognitionModule?.stop?.();
+  const retryLine = (lineIndex: number) => {
     setLineStates(prev => {
       const updated = [...prev];
-      updated[lineIndex] = { ...updated[lineIndex], isListening: false };
-      return updated;
-    });
-    setActiveLineIndex(null);
-  };
-
-  const revealManually = (lineIndex: number) => {
-    setLineStates(prev => {
-      const updated = [...prev];
-      updated[lineIndex] = { ...updated[lineIndex], revealed: true, passed: true };
-      if (updated.every(s => s.passed)) markStep(String(id), 'recite');
+      updated[lineIndex] = {
+        ...updated[lineIndex],
+        selected: null,
+        wrongPick: null,
+      };
       return updated;
     });
   };
 
   if (!sutra || lineStates.length === 0) {
-    return <View style={styles.container}><Text>Loading...</Text></View>;
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   const allPassed = lineStates.every(s => s.passed);
+  const passedCount = lineStates.filter(s => s.passed).length;
 
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={[styles.scrollContent, { paddingBottom: Math.max(24, insets.bottom + 24) }]}
+      contentContainerStyle={[
+        styles.scrollContent,
+        { paddingBottom: Math.max(24, insets.bottom + 24) },
+      ]}
       showsVerticalScrollIndicator
     >
       <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
         <Text style={styles.backText}>← Back</Text>
       </TouchableOpacity>
 
-      <Text style={styles.step}>Level 3 of 3 · Voice</Text>
-      <Text style={styles.title}>Recite from memory</Text>
+      <Text style={styles.step}>Level 3 of 3 · Quiz</Text>
+      <Text style={styles.title}>Match the meaning</Text>
       <Text style={styles.subtitle}>{sutra.title}</Text>
       <Text style={styles.hint}>
-        Tap the mic and say each line aloud. 🟢 Green = correct, 🔴 Red = try again.
+        Read each English meaning and choose the correct transliterated line. {passedCount}/
+        {sutra.lines.length} correct.
       </Text>
-      {!sttAvailable && (
-        <View style={styles.warningBox}>
-          <Text style={styles.warningText}>
-            Voice recitation is unavailable in Expo Go for this module. You can still continue manually with "Reveal anyway", or run a development build to enable speech recognition.
-          </Text>
-        </View>
-      )}
 
       {sutra.lines.map((line, i) => {
         const state = lineStates[i];
-        const isActive = activeLineIndex === i;
 
         return (
           <View
             key={line.line_number}
             style={[styles.lineCard, state.passed && styles.lineCardPassed]}
           >
-            {/* Header */}
             <View style={styles.lineCardHeader}>
               <View style={[styles.lineNumBadge, state.passed && styles.lineNumBadgePassed]}>
                 <Text style={styles.lineNumText}>{line.line_number}</Text>
               </View>
-              {state.passed && <Text style={styles.passedBadge}>✓ Recited</Text>}
-              {!state.passed && state.attempts > 0 && (
-                <Text style={styles.attemptsBadge}>
-                  {state.attempts} attempt{state.attempts !== 1 ? 's' : ''}
-                </Text>
-              )}
+              {state.passed ? (
+                <Text style={styles.passedBadge}>✓ Correct</Text>
+              ) : state.wrongPick ? (
+                <Text style={styles.wrongBadge}>Try again</Text>
+              ) : null}
             </View>
 
-            {/* Word-by-word feedback */}
-            {state.wordResults && !state.passed && (
-              <View style={styles.wordResultsRow}>
-                {state.wordResults.map((wr, wi) => (
-                  <View key={wi} style={styles.wordResultItem}>
-                    <Text
-                      style={[
-                        styles.wordResultText,
-                        wr.status === 'correct' && styles.wordCorrect,
-                        wr.status === 'incorrect' && styles.wordIncorrect,
-                        wr.status === 'pending' && styles.wordPending,
-                      ]}
-                    >
-                      {wr.status === 'incorrect' ? (wr.spoken || wr.word) : wr.word}
-                    </Text>
-                    {wr.status === 'incorrect' && (
-                      <Text style={styles.wordExpected}>({wr.word})</Text>
-                    )}
-                  </View>
-                ))}
-              </View>
-            )}
+            <Text style={styles.questionLabel}>What is the sutra line for this meaning?</Text>
+            <Text style={styles.questionText}>{line.translation_en}</Text>
 
-            {/* Revealed line */}
-            {state.revealed && (
-              <View style={styles.revealedContent}>
-                <Text style={styles.lineTranslit}>{line.transliteration}</Text>
-                <Text style={styles.lineTranslation}>{line.translation_en}</Text>
+            {state.passed ? (
+              <View style={styles.answerReveal}>
+                <Text style={styles.answerRevealText}>{line.transliteration}</Text>
               </View>
-            )}
+            ) : (
+              <View style={styles.optionsGrid}>
+                {state.options.map(option => {
+                  const isSelected = state.selected === option;
+                  const isWrong = state.wrongPick === option;
+                  const isCorrectOption = option === line.transliteration;
 
-            {/* Mic controls */}
-            {!state.passed && (
-              <View style={styles.micRow}>
-                {isActive && state.isListening ? (
-                  <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+                  return (
                     <TouchableOpacity
-                      style={[styles.micBtn, styles.micBtnActive]}
-                      onPress={() => stopListening(i)}
+                      key={option}
+                      style={[
+                        styles.optionBtn,
+                        isWrong && styles.optionBtnWrong,
+                        isSelected && isCorrectOption && styles.optionBtnCorrect,
+                      ]}
+                      onPress={() => handlePick(i, option)}
+                      activeOpacity={0.85}
                     >
-                      <Text style={styles.micBtnText}>🎙️ Listening… tap to stop</Text>
+                      <Text
+                        style={[
+                          styles.optionText,
+                          isWrong && styles.optionTextWrong,
+                        ]}
+                        numberOfLines={3}
+                      >
+                        {option}
+                      </Text>
                     </TouchableOpacity>
-                  </Animated.View>
-                ) : (
-                  <TouchableOpacity
-                    style={[styles.micBtn, !sttAvailable && styles.micBtnDisabled]}
-                    onPress={() => startListening(i)}
-                    disabled={!sttAvailable}
-                  >
-                    <Text style={styles.micBtnText}>
-                      {!sttAvailable
-                        ? '🎙️ Unavailable in Expo Go'
-                        : state.attempts > 0
-                          ? '🎙️ Try again'
-                          : '🎙️ Tap to recite'}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-
-                {state.attempts >= 3 && (
-                  <TouchableOpacity style={styles.revealBtn} onPress={() => revealManually(i)}>
-                    <Text style={styles.revealBtnText}>Reveal anyway</Text>
-                  </TouchableOpacity>
-                )}
+                  );
+                })}
               </View>
             )}
+
+            {state.wrongPick && !state.passed ? (
+              <TouchableOpacity style={styles.retryBtn} onPress={() => retryLine(i)}>
+                <Text style={styles.retryBtnText}>Clear and try again</Text>
+              </TouchableOpacity>
+            ) : null}
           </View>
         );
       })}
 
-      {(allPassed || isAlreadyRecited) && (
+      {(allPassed || isAlreadyDone) && (
         <TouchableOpacity
           style={styles.completeBtn}
           onPress={() => router.push(`/complete/${String(id)}`)}
@@ -388,19 +227,17 @@ const styles = StyleSheet.create({
   scrollContent: { padding: 20, paddingTop: 60 },
   backBtn: { marginBottom: 16 },
   backText: { fontSize: 16, color: '#555' },
-  step: { fontSize: 12, color: '#a0522d', fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 8 },
+  step: {
+    fontSize: 12,
+    color: '#a0522d',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    marginBottom: 8,
+  },
   title: { fontSize: 22, fontWeight: '600', color: '#1a1a1a', marginBottom: 4 },
   subtitle: { fontSize: 14, color: '#888', marginBottom: 8 },
   hint: { fontSize: 13, color: '#a0522d', marginBottom: 20, lineHeight: 20, fontStyle: 'italic' },
-  warningBox: {
-    backgroundColor: '#fff7ed',
-    borderColor: '#fdba74',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 14,
-  },
-  warningText: { color: '#9a3412', fontSize: 12, lineHeight: 18 },
 
   lineCard: {
     backgroundColor: '#fafafa',
@@ -417,58 +254,81 @@ const styles = StyleSheet.create({
   lineCardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
     gap: 10,
   },
   lineNumBadge: {
-    width: 28, height: 28, borderRadius: 14,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: '#a0522d',
-    alignItems: 'center', justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  lineNumBadgePassed: {
-    backgroundColor: '#4caf50',
-  },
+  lineNumBadgePassed: { backgroundColor: '#4caf50' },
   lineNumText: { color: '#fff', fontSize: 12, fontWeight: '700' },
   passedBadge: { fontSize: 12, color: '#4caf50', fontWeight: '700' },
-  attemptsBadge: { fontSize: 12, color: '#999' },
+  wrongBadge: { fontSize: 12, color: '#c62828', fontWeight: '700' },
 
-  wordResultsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginBottom: 12,
+  questionLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#888',
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    marginBottom: 6,
+  },
+  questionText: {
+    fontSize: 16,
+    color: '#1a1a1a',
+    lineHeight: 24,
+    marginBottom: 14,
+    fontWeight: '600',
+  },
+
+  optionsGrid: { gap: 10 },
+  optionBtn: {
     backgroundColor: '#fff',
+    borderWidth: 1.5,
+    borderColor: '#d8d0c8',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+  },
+  optionBtnWrong: {
+    borderColor: '#ef9a9a',
+    backgroundColor: '#ffebee',
+  },
+  optionBtnCorrect: {
+    borderColor: '#81c784',
+    backgroundColor: '#e8f5e9',
+  },
+  optionText: {
+    fontSize: 14,
+    color: '#333',
+    fontStyle: 'italic',
+    lineHeight: 20,
+    textAlign: 'center',
+  },
+  optionTextWrong: { color: '#c62828' },
+
+  answerReveal: {
+    backgroundColor: '#e8f5e9',
     borderRadius: 10,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#f0e0e0',
+    borderColor: '#a5d6a7',
   },
-  wordResultItem: { alignItems: 'center' },
-  wordResultText: { fontSize: 15, fontWeight: '600', fontStyle: 'italic' },
-  wordCorrect: { color: '#2e7d32' },
-  wordIncorrect: { color: '#c62828', textDecorationLine: 'underline' },
-  wordPending: { color: '#bbb' },
-  wordExpected: { fontSize: 10, color: '#aaa', marginTop: 2 },
-
-  revealedContent: { marginBottom: 10 },
-  lineTranslit: { fontSize: 15, color: '#1a1a1a', fontStyle: 'italic', marginBottom: 4 },
-  lineTranslation: { fontSize: 13, color: '#888' },
-
-  micRow: { gap: 8 },
-  micBtn: {
-    backgroundColor: '#fff',
-    borderWidth: 1.5,
-    borderColor: '#a0522d',
-    borderRadius: 24,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignItems: 'center',
+  answerRevealText: {
+    fontSize: 15,
+    color: '#2e7d32',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    lineHeight: 22,
   },
-  micBtnActive: { backgroundColor: '#fdf0e8' },
-  micBtnDisabled: { opacity: 0.5 },
-  micBtnText: { color: '#a0522d', fontSize: 14, fontWeight: '600' },
-  revealBtn: { alignItems: 'center', paddingVertical: 8 },
-  revealBtnText: { fontSize: 13, color: '#bbb', textDecorationLine: 'underline' },
+
+  retryBtn: { alignItems: 'center', marginTop: 10, paddingVertical: 6 },
+  retryBtnText: { fontSize: 13, color: '#a0522d', fontWeight: '600' },
 
   completeBtn: {
     backgroundColor: '#a0522d',

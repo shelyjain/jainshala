@@ -36,7 +36,7 @@ const STEPS = [
   { key: 'listen' as const, label: 'Listen', icon: '🎧', doneIcon: '✓' },
   { key: 'learn' as const, label: 'Order', icon: '🔢', doneIcon: '✓' },
   { key: 'learn_fill' as const, label: 'Fill', icon: '✏️', doneIcon: '✓' },
-  { key: 'recite' as const, label: 'Voice', icon: '🗣️', doneIcon: '✓' },
+  { key: 'recite' as const, label: 'Quiz', icon: '❓', doneIcon: '✓' },
 ];
 
 export default function SutraDetail() {
@@ -185,7 +185,7 @@ export default function SutraDetail() {
             {done
               ? 'Review learning path'
               : stepProgress.learn_fill
-                ? 'Continue to voice (level 3)'
+                ? 'Continue to quiz (level 3)'
                 : stepProgress.learn
                   ? 'Continue to fill-in-the-blanks (level 2)'
                   : stepProgress.listen

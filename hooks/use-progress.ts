@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
+import { auth } from '../lib/firebase';
+import { getUserDoc, mergeUserDoc } from '../lib/firestore-user';
 
 export type SutraProgress = {
   read: boolean;
@@ -11,7 +11,7 @@ export type SutraProgress = {
   learn: boolean;
   /** Level 2: fill in the blanks */
   learn_fill: boolean;
-  /** Level 3: voice / speech recognition */
+  /** Level 3: meaning → transliteration MCQ quiz */
   recite: boolean;
 };
 
@@ -41,14 +41,18 @@ export function useProgress() {
 
   const loadFromFirestore = async (uid: string) => {
     try {
-      const snap = await getDoc(doc(db, 'users', uid));
+      const snap = await getUserDoc(uid);
       if (snap.exists()) {
         const data = snap.data();
         setCompleted(data.completedSutras ?? []);
         setProgressDetails(data.progressDetails ?? {});
       }
-    } catch {
-      loadFromAsyncStorage();
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code;
+      if (code === 'permission-denied') {
+        console.warn('[Firestore] permission-denied on read — using local progress only.');
+      }
+      await loadFromAsyncStorage();
     }
   };
 
@@ -67,7 +71,7 @@ export function useProgress() {
 
     const uid = auth.currentUser?.uid;
     if (uid) {
-      await setDoc(doc(db, 'users', uid), { completedSutras: updated }, { merge: true });
+      await mergeUserDoc(uid, { completedSutras: updated });
     }
     await AsyncStorage.setItem('completed_sutras', JSON.stringify(updated));
   };
@@ -82,7 +86,7 @@ export function useProgress() {
 
     const uid = auth.currentUser?.uid;
     if (uid) {
-      await setDoc(doc(db, 'users', uid), { progressDetails: newDetails }, { merge: true });
+      await mergeUserDoc(uid, { progressDetails: newDetails });
     }
     await AsyncStorage.setItem('progress_details', JSON.stringify(newDetails));
   };

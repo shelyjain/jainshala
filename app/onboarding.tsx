@@ -47,9 +47,9 @@ const SLIDES = [
     step: 3,
   },
   {
-    emoji: '🗣️',
-    title: 'Recite',
-    subtitle: 'Try to recall each line yourself. Tap to reveal and check — like a self-quiz.',
+    emoji: '❓',
+    title: 'Quiz',
+    subtitle: 'Match each English meaning to the correct transliterated line — pick from four options.',
     color: '#fdf8f4',
     accent: '#a0522d',
     step: 4,
@@ -178,7 +178,7 @@ export default function OnboardingScreen() {
         {/* Visual demo for the pathway */}
         {currentIndex === 0 && (
           <View style={styles.pathwayPreview}>
-            {['📖 Read', '🎧 Listen', '🧠 Learn', '🗣️ Recite'].map((s, i) => (
+            {['📖 Read', '🎧 Listen', '🧠 Learn', '❓ Quiz'].map((s, i) => (
               <View key={i} style={styles.pathwayItem}>
                 <View style={styles.pathwayBubble}>
                   <Text style={styles.pathwayBubbleText}>{s}</Text>

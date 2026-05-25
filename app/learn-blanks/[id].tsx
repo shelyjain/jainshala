@@ -44,6 +44,26 @@ function normWord(w: string) {
   return w.toLowerCase().replace(/[^a-z]/gi, '');
 }
 
+function blankCountForLine(wordCount: number): number {
+  const maxAllowed = Math.max(1, wordCount - 1);
+  if (wordCount <= 2) return 1;
+  if (wordCount <= 3) return Math.min(2, maxAllowed);
+  if (wordCount <= 5) return Math.min(3, maxAllowed);
+  if (wordCount <= 7) return Math.min(4, maxAllowed);
+  return Math.min(5, maxAllowed);
+}
+
+/** Prefer hiding longer tokens — harder to guess from shape alone. */
+function pickBlankWordIndices(words: string[], nBlanks: number): number[] {
+  const blankCount = Math.min(nBlanks, Math.max(1, words.length - 1));
+  const ranked = [...words.keys()].sort((a, b) => {
+    const la = normWord(words[a]).length || words[a].length;
+    const lb = normWord(words[b]).length || words[b].length;
+    return lb - la || a - b;
+  });
+  return ranked.slice(0, blankCount).sort((a, b) => a - b);
+}
+
 function buildFillExercise(lines: Line[]): FillExercise | null {
   const scored = lines.map(line => {
     const words = line.transliteration.trim().split(/\s+/).filter(Boolean);
@@ -55,10 +75,8 @@ function buildFillExercise(lines: Line[]): FillExercise | null {
   if (!pickFrom.length) return null;
 
   const { line, words } = pickFrom[Math.floor(Math.random() * pickFrom.length)];
-  const nBlanks = words.length >= 6 ? 3 : words.length >= 4 ? 2 : 1;
-  const positions = shuffle(words.map((_, i) => i))
-    .slice(0, Math.min(nBlanks, words.length))
-    .sort((a, b) => a - b);
+  const nBlanks = blankCountForLine(words.length);
+  const positions = pickBlankWordIndices(words, nBlanks);
 
   const blanks: BlankSpec[] = positions.map(wordIndex => ({
     wordIndex,
@@ -73,7 +91,11 @@ function buildFillExercise(lines: Line[]): FillExercise | null {
       return nw && !answers.some(a => normWord(a) === nw);
     });
   const uniq = [...new Set(poolOthers)];
-  const distractors = shuffle(uniq).slice(0, Math.min(answers.length + 2, uniq.length));
+  const nDistractors = Math.min(
+    Math.max(answers.length * 2 + 2, answers.length + 5),
+    uniq.length,
+  );
+  const distractors = shuffle(uniq).slice(0, nDistractors);
 
   const answerChips: FillChip[] = blanks.map((b, i) => ({
     id: `a-${line.line_number}-${b.wordIndex}-${i}`,
@@ -89,7 +111,7 @@ function buildFillExercise(lines: Line[]): FillExercise | null {
   return { line, words, blanks, chips };
 }
 
-const ROUNDS_REQUIRED = 2;
+const ROUNDS_REQUIRED = 3;
 
 export default function LearnBlanksScreen() {
   const { id } = useLocalSearchParams();
@@ -100,7 +122,7 @@ export default function LearnBlanksScreen() {
   const [roundsCorrect, setRoundsCorrect] = useState(0);
   const [wrongHint, setWrongHint] = useState(false);
   const [placedChipIds, setPlacedChipIds] = useState<(string | null)[]>([]);
-  /** True as soon as both rounds pass locally (don't wait for persisted progress). */
+  /** True as soon as all rounds pass locally (don't wait for persisted progress). */
   const [sessionComplete, setSessionComplete] = useState(false);
 
   const { markStep, getStepProgress } = useProgress();
@@ -221,7 +243,7 @@ export default function LearnBlanksScreen() {
     });
   }, [exercise, placedChipIds, markStep, sutra]);
 
-  /** Only true after both rounds pass this visit — never infer from saved `learn_fill` alone (that caused empty puzzles + success banner). */
+  /** Only true after every round passes this visit — never infer from saved `learn_fill` alone (that caused empty puzzles + success banner). */
   const practiceComplete = sessionComplete || roundsCorrect >= ROUNDS_REQUIRED;
   /** Allow advancing if done now or already marked Level 2 in progress storage. */
   const canGoToLevel3 = practiceComplete || fillDone;
@@ -257,13 +279,20 @@ export default function LearnBlanksScreen() {
             <View style={styles.successTextCol}>
               <Text style={styles.successTitle}>Level 2 complete</Text>
               <Text style={styles.successSubtitle}>
-                {`Great job — continue when you're ready for voice practice.`}
+                {`Great job — continue when you're ready for the meaning quiz.`}
               </Text>
             </View>
           </View>
         )}
 
-        <Text style={styles.translationHint}>{exercise.line.translation_en}</Text>
+        {roundsCorrect === 0 && (
+          <Text style={styles.translationHint}>{exercise.line.translation_en}</Text>
+        )}
+        {roundsCorrect > 0 && !practiceComplete && (
+          <Text style={styles.translationHintMuted}>
+            English hint hidden — recall the line from earlier rounds.
+          </Text>
+        )}
 
         <View style={styles.lineWrap}>
           <Text style={styles.lineLabel}>Transliteration</Text>
@@ -337,7 +366,7 @@ export default function LearnBlanksScreen() {
             style={styles.nextBtn}
             onPress={() => router.push(`/recite/${String(id)}`)}
           >
-            <Text style={styles.nextBtnText}>Continue to Level 3 · Voice →</Text>
+            <Text style={styles.nextBtnText}>Continue to Level 3 · Quiz →</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -385,6 +414,13 @@ const styles = StyleSheet.create({
     color: '#555',
     marginBottom: 16,
     lineHeight: 22,
+    fontStyle: 'italic',
+  },
+  translationHintMuted: {
+    fontSize: 13,
+    color: '#888',
+    marginBottom: 16,
+    lineHeight: 20,
     fontStyle: 'italic',
   },
   lineWrap: {

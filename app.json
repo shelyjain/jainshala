@@ -9,6 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.jainshala.app",
       "supportsTablet": true,
       "infoPlist": {
         "NSSpeechRecognitionUsageDescription": "Used to check your recitation of Jain sutras.",
@@ -16,6 +17,11 @@
       }
     },
     "android": {
+      "package": "com.jainshala.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/jain-shala-logo.png",
         "backgroundColor": "#fdf8f4"

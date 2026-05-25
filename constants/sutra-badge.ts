@@ -23,7 +23,7 @@ const PREFIXES = [
 const ROOTS = [
   'Seeker',
   'Scholar',
-  'Voice',
+  'Quiz',
   'Path',
   'Light',
   'Jewel',

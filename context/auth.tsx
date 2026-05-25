@@ -7,8 +7,9 @@ import {
   updateProfile,
   User,
 } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
+import { serverTimestamp } from 'firebase/firestore';
+import { auth } from '../lib/firebase';
+import { mergeUserDoc } from '../lib/firestore-user';
 
 type AuthContextType = {
   user: User | null;
@@ -35,13 +36,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string, displayName: string) => {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(credential.user, { displayName });
-    await setDoc(doc(db, 'users', credential.user.uid), {
+    const saved = await mergeUserDoc(credential.user.uid, {
       email,
       displayName,
       createdAt: serverTimestamp(),
       completedSutras: [],
       progressDetails: {},
     });
+    if (!saved) {
+      throw new Error(
+        'Account created but cloud sync is blocked. In Firebase Console → Firestore → Rules, allow users/{userId} for signed-in users, then try again.'
+      );
+    }
   };
 
   const signIn = async (email: string, password: string) => {

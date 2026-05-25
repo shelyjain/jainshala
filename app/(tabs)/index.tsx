@@ -275,23 +275,6 @@ export default function HomeScreen() {
               <Text style={styles.cardTitle} numberOfLines={2}>
                 {sutra.title}
               </Text>
-              {sutra.lines[0] ? (
-                <>
-                  <Text style={styles.cardFirstLine} numberOfLines={1}>
-                    {sutra.lines[0].transliteration}
-                  </Text>
-                  <Text style={styles.cardTranslation} numberOfLines={2}>
-                    {sutra.lines[0].translation_en}
-                  </Text>
-                </>
-              ) : null}
-              <View style={styles.tagsRow}>
-                {sutra.tags.slice(0, 4).map(tag => (
-                  <View key={tag} style={styles.tag}>
-                    <Text style={styles.tagText}>{tag}</Text>
-                  </View>
-                ))}
-              </View>
             </TouchableOpacity>
           );
 
@@ -406,7 +389,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   /** Keeps row height aligned when zigzag leaves one side empty */
-  roadCardSpacer: { minHeight: 168 },
+  roadCardSpacer: { minHeight: 88 },
   spineColumn: {
     width: SPINE_W,
     alignItems: 'center',
@@ -482,7 +465,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
-    minHeight: 168,
+    minHeight: 88,
   },
   roadCardDone: {
     borderColor: '#c9a227',
@@ -511,32 +494,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
     color: '#1a1a1a',
-    marginBottom: 6,
-    minHeight: 42,
     lineHeight: 21,
   },
-  cardFirstLine: {
-    fontSize: 12,
-    color: '#666',
-    fontStyle: 'italic',
-    marginBottom: 2,
-    minHeight: 18,
-  },
-  cardTranslation: {
-    fontSize: 12,
-    color: '#888',
-    marginBottom: 8,
-    lineHeight: 17,
-    minHeight: 34,
-  },
-  tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, minHeight: 26, alignItems: 'center' },
-  tag: {
-    backgroundColor: '#f0ebe3',
-    borderRadius: 20,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  tagText: { fontSize: 10, color: '#a0522d', fontWeight: '600' },
 
   footerWrap: { marginTop: 0, marginBottom: 16 },
   finishRow: {
