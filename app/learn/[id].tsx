@@ -34,6 +34,7 @@ export default function LearnOrder() {
   const { markStep, getStepProgress } = useProgress();
   const stepProgress = getStepProgress(String(id));
   const isAlreadyLearned = stepProgress.learn;
+  const fillDone = stepProgress.learn_fill;
 
   useEffect(() => {
     fetch(`${API_URL}/sutra/${id}`)
@@ -81,6 +82,23 @@ export default function LearnOrder() {
         <Text>Loading...</Text>
       </View>
     );
+
+  if (!fillDone && !isAlreadyLearned) {
+    return (
+      <View style={[styles.container, styles.gateWrap]}>
+        <Text style={styles.gateTitle}>Level 2 first</Text>
+        <Text style={styles.gateBody}>
+          Complete the fill-in-the-blanks exercise, then return for the sequence challenge.
+        </Text>
+        <TouchableOpacity
+          style={styles.nextBtn}
+          onPress={() => router.replace(`/learn-blanks/${String(id)}` as any)}
+        >
+          <Text style={styles.nextBtnText}>Open Level 2</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   const allSelected = isCorrectOrder;
 
@@ -151,7 +169,7 @@ export default function LearnOrder() {
           <Text style={styles.backText}>← Back</Text>
         </TouchableOpacity>
 
-        <Text style={styles.step}>Level 1 of 3 · Sequence</Text>
+        <Text style={styles.step}>Level 3 of 3 · Sequence</Text>
         <Text style={styles.title}>Put lines in order</Text>
         <Text style={styles.subtitle}>{sutra.title}</Text>
 
@@ -203,10 +221,10 @@ export default function LearnOrder() {
         {(allSelected || isAlreadyLearned) && (
           <TouchableOpacity
             style={styles.nextBtn}
-            onPress={() => router.push(`/learn-blanks/${String(id)}` as any)}
+            onPress={() => router.push(`/complete/${String(id)}` as any)}
           >
             <Text style={styles.nextBtnText}>
-              {allSelected ? 'Next · Level 2 (fill in) →' : 'Skip to Level 2 →'}
+              {allSelected ? 'Complete Sutra 🏅' : 'Finish & earn badge →'}
             </Text>
           </TouchableOpacity>
         )}
@@ -228,6 +246,9 @@ export default function LearnOrder() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
+  gateWrap: { justifyContent: 'center', alignItems: 'center', padding: 24 },
+  gateTitle: { fontSize: 20, fontWeight: '700', color: '#1a1a1a', marginBottom: 10 },
+  gateBody: { fontSize: 15, color: '#666', textAlign: 'center', lineHeight: 22, marginBottom: 24 },
   headerSection: {
     paddingHorizontal: 20,
     paddingBottom: 12,

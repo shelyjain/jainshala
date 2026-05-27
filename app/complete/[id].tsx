@@ -51,7 +51,7 @@ export default function Complete() {
       <Text style={styles.badgeName}>{flair.epithet}</Text>
       <Text style={styles.subtitle}>{title}</Text>
       <Text style={styles.body}>
-        You've practiced sequence, fill-in-the-blanks, and the meaning quiz for this sutra. Find it anytime under
+        You've practiced the meaning quiz, fill-in-the-blanks, and sequence order for this sutra. Find it anytime under
         Progress — tap your badge count to see all names.
       </Text>
 

@@ -163,13 +163,13 @@ export default function LearnBlanksScreen() {
     );
   }
 
-  if (!stepProgress.learn && !stepProgress.learn_fill) {
+  if (!stepProgress.recite && !stepProgress.learn_fill) {
     return (
       <View style={[styles.centered, { paddingHorizontal: 24 }]}>
         <Text style={styles.gateTitle}>Level 1 first</Text>
-        <Text style={styles.gateBody}>Complete the sequence (drag-and-order) exercise, then come back here.</Text>
-        <TouchableOpacity style={styles.nextBtn} onPress={() => router.replace(`/learn/${String(id)}`)}>
-          <Text style={styles.nextBtnText}>Open Level 1</Text>
+        <Text style={styles.gateBody}>Complete the meaning quiz, then come back here for fill-in-the-blanks.</Text>
+        <TouchableOpacity style={styles.nextBtn} onPress={() => router.replace(`/recite/${String(id)}`)}>
+          <Text style={styles.nextBtnText}>Open Level 1 · Quiz</Text>
         </TouchableOpacity>
       </View>
     );
@@ -179,8 +179,8 @@ export default function LearnBlanksScreen() {
     return (
       <View style={styles.centered}>
         <Text>Could not build an exercise for this sutra.</Text>
-        <TouchableOpacity style={styles.nextBtn} onPress={() => router.push(`/recite/${String(id)}`)}>
-          <Text style={styles.nextBtnText}>Skip to Level 3 →</Text>
+        <TouchableOpacity style={styles.nextBtn} onPress={() => router.push(`/learn/${String(id)}`)}>
+          <Text style={styles.nextBtnText}>Skip to Level 3 · Sequence →</Text>
         </TouchableOpacity>
       </View>
     );
@@ -279,7 +279,7 @@ export default function LearnBlanksScreen() {
             <View style={styles.successTextCol}>
               <Text style={styles.successTitle}>Level 2 complete</Text>
               <Text style={styles.successSubtitle}>
-                {`Great job — continue when you're ready for the meaning quiz.`}
+                {`Great job — continue when you're ready for the sequence challenge.`}
               </Text>
             </View>
           </View>
@@ -364,9 +364,9 @@ export default function LearnBlanksScreen() {
         {canGoToLevel3 && (
           <TouchableOpacity
             style={styles.nextBtn}
-            onPress={() => router.push(`/recite/${String(id)}`)}
+            onPress={() => router.push(`/learn/${String(id)}`)}
           >
-            <Text style={styles.nextBtnText}>Continue to Level 3 · Quiz →</Text>
+            <Text style={styles.nextBtnText}>Continue to Level 3 · Sequence →</Text>
           </TouchableOpacity>
         )}
       </View>

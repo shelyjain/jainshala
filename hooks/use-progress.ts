@@ -7,11 +7,11 @@ import { getUserDoc, mergeUserDoc } from '../lib/firestore-user';
 export type SutraProgress = {
   read: boolean;
   listen: boolean;
-  /** Level 1: drag lines into correct sequence */
+  /** Level 3: drag lines into correct sequence */
   learn: boolean;
   /** Level 2: fill in the blanks */
   learn_fill: boolean;
-  /** Level 3: meaning → transliteration MCQ quiz */
+  /** Level 1: meaning → transliteration MCQ quiz */
   recite: boolean;
 };
 

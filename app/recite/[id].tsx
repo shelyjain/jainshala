@@ -118,6 +118,7 @@ export default function ReciteSutra() {
 
   const allPassed = lineStates.every(s => s.passed);
   const passedCount = lineStates.filter(s => s.passed).length;
+  const gameLevelsDone = stepProgress.learn_fill && stepProgress.learn;
 
   return (
     <ScrollView
@@ -132,7 +133,7 @@ export default function ReciteSutra() {
         <Text style={styles.backText}>← Back</Text>
       </TouchableOpacity>
 
-      <Text style={styles.step}>Level 3 of 3 · Quiz</Text>
+      <Text style={styles.step}>Level 1 of 3 · Quiz</Text>
       <Text style={styles.title}>Match the meaning</Text>
       <Text style={styles.subtitle}>{sutra.title}</Text>
       <Text style={styles.hint}>
@@ -211,9 +212,19 @@ export default function ReciteSutra() {
       {(allPassed || isAlreadyDone) && (
         <TouchableOpacity
           style={styles.completeBtn}
-          onPress={() => router.push(`/complete/${String(id)}`)}
+          onPress={() =>
+            gameLevelsDone
+              ? router.push(`/complete/${String(id)}`)
+              : router.push(`/learn-blanks/${String(id)}` as any)
+          }
         >
-          <Text style={styles.completeBtnText}>Complete Sutra 🏅</Text>
+          <Text style={styles.completeBtnText}>
+            {gameLevelsDone
+              ? 'Complete Sutra 🏅'
+              : allPassed
+                ? 'Next · Level 2 (fill in) →'
+                : 'Continue to Level 2 →'}
+          </Text>
         </TouchableOpacity>
       )}
 

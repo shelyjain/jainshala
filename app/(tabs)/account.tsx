@@ -8,7 +8,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { useAuth } from '../../context/auth';
 import { useProgress } from '../../hooks/use-progress';
 import { useEffect, useMemo, useState } from 'react';
@@ -17,6 +17,7 @@ import { fetchJson } from '../../lib/fetch-json';
 import { getSutraBadgeFlair } from '../../constants/sutra-badge';
 import { MASTER_BADGE, hasEarnedMasterBadge } from '../../constants/master-badge';
 import { AppLogo } from '@/components/app-logo';
+import { BadgeAboutModal, type BadgeAboutSelection } from '@/components/badge-about-modal';
 
 type SutraListItem = {
   id: string;
@@ -25,11 +26,11 @@ type SutraListItem = {
 };
 
 export default function AccountScreen() {
-  const router = useRouter();
   const { user, signOut } = useAuth();
   const { completed } = useProgress();
   const [sutras, setSutras] = useState<SutraListItem[]>([]);
   const [sutrasLoading, setSutrasLoading] = useState(true);
+  const [badgeAbout, setBadgeAbout] = useState<BadgeAboutSelection | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -113,18 +114,38 @@ export default function AccountScreen() {
       </View>
 
       {!sutrasLoading && hasMasterBadge && sutras.length > 0 ? (
-        <View style={styles.masterBanner}>
+        <Pressable
+          style={({ pressed }) => [styles.masterBanner, pressed && styles.masterBannerPressed]}
+          onPress={() =>
+            setBadgeAbout({
+              kind: 'master',
+              unlocked: true,
+              earnedCount: nEarned,
+              totalCount: total,
+            })
+          }
+        >
           <Text style={styles.masterBannerEmoji}>{MASTER_BADGE.emoji}</Text>
           <View style={styles.masterBannerTextCol}>
             <Text style={styles.masterBannerRibbon}>{MASTER_BADGE.ribbon}</Text>
             <Text style={styles.masterBannerTitle}>{MASTER_BADGE.title}</Text>
             <Text style={styles.masterBannerSub}>{MASTER_BADGE.subtitle}</Text>
           </View>
-        </View>
+        </Pressable>
       ) : null}
 
       {!sutrasLoading && !hasMasterBadge && sutras.length > 0 ? (
-        <View style={styles.masterTeaser}>
+        <Pressable
+          style={({ pressed }) => [styles.masterTeaser, pressed && styles.masterTeaserPressed]}
+          onPress={() =>
+            setBadgeAbout({
+              kind: 'master',
+              unlocked: false,
+              earnedCount: nEarned,
+              totalCount: total,
+            })
+          }
+        >
           <View style={styles.masterTeaserMedallion}>
             <Text style={styles.masterTeaserEmoji}>{MASTER_BADGE.emoji}</Text>
             <View style={styles.masterTeaserLock}>
@@ -135,7 +156,7 @@ export default function AccountScreen() {
             <Text style={styles.masterTeaserName}>{MASTER_BADGE.title}</Text>
             <Text style={styles.masterTeaserHint}>Earn every sutra badge below to unlock.</Text>
           </View>
-        </View>
+        </Pressable>
       ) : null}
 
       <View style={styles.badgeSection}>
@@ -175,7 +196,17 @@ export default function AccountScreen() {
                   !unlocked && styles.badgeChipLocked,
                   pressed && styles.badgeChipPressed,
                 ]}
-                onPress={() => router.push(`/sutra/${sutra.id}` as any)}
+                onPress={() =>
+                  setBadgeAbout({
+                    kind: 'sutra',
+                    sutraId: sutra.id,
+                    epithet: flair.epithet,
+                    emoji: flair.emoji,
+                    sutraTitle: sutra.title,
+                    category: sutra.category,
+                    unlocked,
+                  })
+                }
               >
                 <View style={styles.chipTopRow}>
                   <View style={styles.medallionWrap}>
@@ -222,6 +253,12 @@ export default function AccountScreen() {
       <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
         <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
+
+      <BadgeAboutModal
+        visible={badgeAbout !== null}
+        selection={badgeAbout}
+        onClose={() => setBadgeAbout(null)}
+      />
     </ScrollView>
   );
 }
@@ -270,6 +307,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#c9a227',
   },
+  masterBannerPressed: { opacity: 0.92 },
   masterBannerEmoji: { fontSize: 44 },
   masterBannerTextCol: { flex: 1 },
   masterBannerRibbon: {
@@ -294,6 +332,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5ded4',
   },
+  masterTeaserPressed: { opacity: 0.92 },
   masterTeaserMedallion: {
     width: 52,
     height: 52,

@@ -34,9 +34,9 @@ type Sutra = {
 const STEPS = [
   { key: 'read' as const, label: 'Read', icon: '📖', doneIcon: '✓' },
   { key: 'listen' as const, label: 'Listen', icon: '🎧', doneIcon: '✓' },
-  { key: 'learn' as const, label: 'Order', icon: '🔢', doneIcon: '✓' },
-  { key: 'learn_fill' as const, label: 'Fill', icon: '✏️', doneIcon: '✓' },
   { key: 'recite' as const, label: 'Quiz', icon: '❓', doneIcon: '✓' },
+  { key: 'learn_fill' as const, label: 'Fill', icon: '✏️', doneIcon: '✓' },
+  { key: 'learn' as const, label: 'Order', icon: '🔢', doneIcon: '✓' },
 ];
 
 export default function SutraDetail() {
@@ -167,14 +167,14 @@ export default function SutraDetail() {
           style={styles.primaryBtn}
           onPress={() => {
             markStep(sutra.id, 'read');
-            if (stepProgress.recite) {
+            if (stepProgress.learn) {
               router.push(`/flashcard/${sutra.id}` as any);
             } else if (stepProgress.learn_fill) {
-              router.push(`/recite/${sutra.id}` as any);
-            } else if (stepProgress.learn) {
+              router.push(`/learn/${sutra.id}` as any);
+            } else if (stepProgress.recite) {
               router.push(`/learn-blanks/${sutra.id}` as any);
             } else if (stepProgress.listen) {
-              router.push(`/learn/${sutra.id}` as any);
+              router.push(`/recite/${sutra.id}` as any);
             } else {
               router.push(`/flashcard/${sutra.id}` as any);
             }
@@ -185,11 +185,11 @@ export default function SutraDetail() {
             {done
               ? 'Review learning path'
               : stepProgress.learn_fill
-                ? 'Continue to quiz (level 3)'
-                : stepProgress.learn
+                ? 'Continue to sequence (level 3)'
+                : stepProgress.recite
                   ? 'Continue to fill-in-the-blanks (level 2)'
                   : stepProgress.listen
-                    ? 'Continue to sequence (level 1)'
+                    ? 'Continue to quiz (level 1)'
                     : 'Start learning'}
           </Text>
         </TouchableOpacity>

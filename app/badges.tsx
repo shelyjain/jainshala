@@ -7,6 +7,8 @@ import { API_URL } from '../constants/api';
 import { fetchJson } from '../lib/fetch-json';
 import { getSutraBadgeFlair } from '../constants/sutra-badge';
 import { MASTER_BADGE, hasEarnedMasterBadge } from '../constants/master-badge';
+import { BadgeShareBar } from '@/components/badge-share-bar';
+import { BadgeAboutModal, type BadgeAboutSelection } from '@/components/badge-about-modal';
 
 type Line = {
   line_number: number;
@@ -32,6 +34,7 @@ export default function BadgesModalScreen() {
   const { completed } = useProgress();
   const [sutras, setSutras] = useState<Sutra[]>([]);
   const [loading, setLoading] = useState(true);
+  const [badgeAbout, setBadgeAbout] = useState<BadgeAboutSelection | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -91,6 +94,18 @@ export default function BadgesModalScreen() {
         {earnedCount} of {sutras.length} sutra badges earned
       </Text>
 
+      {earnedCount > 0 && sutras.length > 0 ? (
+        <View style={styles.summaryShareWrap}>
+          <BadgeShareBar
+            payload={{
+              emoji: '🏅',
+              earnedCount,
+              totalCount: sutras.length,
+            }}
+          />
+        </View>
+      ) : null}
+
       {sutras.length === 0 ? (
         <View style={styles.emptyWrap}>
           <Text style={styles.emptyEmoji}>📭</Text>
@@ -104,14 +119,26 @@ export default function BadgesModalScreen() {
           ListHeaderComponent={
             <View style={styles.listHeaderWrap}>
               {hasMasterBadge ? (
-                <View style={styles.masterHero}>
+                <TouchableOpacity
+                  style={styles.masterHero}
+                  activeOpacity={0.9}
+                  onPress={() =>
+                    setBadgeAbout({
+                      kind: 'master',
+                      unlocked: true,
+                      earnedCount,
+                      totalCount: sutras.length,
+                    })
+                  }
+                >
                   <View style={styles.masterRibbon}>
                     <Text style={styles.masterRibbonText}>{MASTER_BADGE.ribbon}</Text>
                   </View>
                   <Text style={styles.masterEmoji}>{MASTER_BADGE.emoji}</Text>
                   <Text style={styles.masterTitle}>{MASTER_BADGE.title}</Text>
                   <Text style={styles.masterSubtitle}>{MASTER_BADGE.subtitle}</Text>
-                </View>
+                  <Text style={styles.tapHint}>Tap for about & share</Text>
+                </TouchableOpacity>
               ) : null}
               <Text style={styles.lead}>
                 Each sutra has a named badge. Locked rows show the icon dimmed with a lock until you finish all steps.
@@ -123,33 +150,51 @@ export default function BadgesModalScreen() {
             const { sutra, unlocked } = item;
             const { epithet, emoji } = getSutraBadgeFlair(sutra.id);
             return (
-              <TouchableOpacity
-                style={[styles.badgeCard, !unlocked && styles.badgeCardLocked]}
-                activeOpacity={0.85}
-                onPress={() => router.push(`/sutra/${sutra.id}` as any)}
-              >
-                <View style={styles.medallionWrap}>
-                  <Text style={[styles.badgeEmoji, !unlocked && styles.badgeEmojiBehindLock]}>{emoji}</Text>
-                  {!unlocked && (
-                    <View style={styles.lockCornerBadge}>
-                      <Text style={styles.lockCornerIcon}>🔒</Text>
-                    </View>
-                  )}
-                </View>
-                <View style={styles.badgeTextCol}>
-                  <Text style={[styles.epithet, !unlocked && styles.epithetLocked]}>{epithet}</Text>
-                  <Text style={[styles.sutraTitle, !unlocked && styles.sutraTitleLocked]}>{sutra.title}</Text>
-                  {!unlocked && (
-                    <Text style={styles.unlockHint}>Complete read, listen, learn, fill-in & quiz to earn</Text>
-                  )}
-                  <Text style={[styles.category, !unlocked && styles.categoryLocked]}>{sutra.category}</Text>
-                </View>
-                <Text style={styles.rowChevron}>→</Text>
-              </TouchableOpacity>
+              <View style={[styles.badgeCard, !unlocked && styles.badgeCardLocked]}>
+                <TouchableOpacity
+                  style={styles.badgeCardMain}
+                  activeOpacity={0.85}
+                  onPress={() =>
+                    setBadgeAbout({
+                      kind: 'sutra',
+                      sutraId: sutra.id,
+                      epithet,
+                      emoji,
+                      sutraTitle: sutra.title,
+                      category: sutra.category,
+                      unlocked,
+                    })
+                  }
+                >
+                  <View style={styles.medallionWrap}>
+                    <Text style={[styles.badgeEmoji, !unlocked && styles.badgeEmojiBehindLock]}>{emoji}</Text>
+                    {!unlocked && (
+                      <View style={styles.lockCornerBadge}>
+                        <Text style={styles.lockCornerIcon}>🔒</Text>
+                      </View>
+                    )}
+                  </View>
+                  <View style={styles.badgeTextCol}>
+                    <Text style={[styles.epithet, !unlocked && styles.epithetLocked]}>{epithet}</Text>
+                    <Text style={[styles.sutraTitle, !unlocked && styles.sutraTitleLocked]}>{sutra.title}</Text>
+                    {!unlocked && (
+                      <Text style={styles.unlockHint}>Complete read, listen, quiz, fill-in & order to earn</Text>
+                    )}
+                    <Text style={[styles.category, !unlocked && styles.categoryLocked]}>{sutra.category}</Text>
+                  </View>
+                  <Text style={styles.rowChevron}>→</Text>
+                </TouchableOpacity>
+              </View>
             );
           }}
         />
       )}
+
+      <BadgeAboutModal
+        visible={badgeAbout !== null}
+        selection={badgeAbout}
+        onClose={() => setBadgeAbout(null)}
+      />
     </View>
   );
 }
@@ -169,7 +214,8 @@ const styles = StyleSheet.create({
     paddingVertical: Platform.OS === 'ios' ? 4 : 2,
   },
   title: { fontSize: 28, fontWeight: '700', color: '#1a1a1a', marginBottom: 6 },
-  countLine: { fontSize: 14, color: '#888', marginBottom: 12 },
+  countLine: { fontSize: 14, color: '#888', marginBottom: 4 },
+  summaryShareWrap: { marginBottom: 12 },
   listHeaderWrap: { marginBottom: 8 },
   masterHero: {
     alignItems: 'center',
@@ -216,6 +262,13 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     paddingHorizontal: 8,
   },
+  tapHint: {
+    fontSize: 12,
+    color: '#a0522d',
+    fontWeight: '600',
+    marginTop: 10,
+    textAlign: 'center',
+  },
   lead: {
     fontSize: 14,
     color: '#555',
@@ -224,14 +277,16 @@ const styles = StyleSheet.create({
   },
   listContent: { paddingTop: 4 },
   badgeCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#fdf8f4',
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
     borderColor: '#e8d5c4',
+  },
+  badgeCardMain: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 14,
   },
   badgeCardLocked: {

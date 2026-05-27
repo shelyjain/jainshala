@@ -39,20 +39,28 @@ const SLIDES = [
     step: 2,
   },
   {
-    emoji: '🧠',
-    title: 'Learn',
-    subtitle: 'Put the lines in the correct order from memory. Tap them one by one until you get it right.',
+    emoji: '❓',
+    title: 'Quiz · Level 1',
+    subtitle: 'Match each English meaning to the correct transliterated line — pick from four options.',
     color: '#fdf8f4',
     accent: '#a0522d',
     step: 3,
   },
   {
-    emoji: '❓',
-    title: 'Quiz',
-    subtitle: 'Match each English meaning to the correct transliterated line — pick from four options.',
+    emoji: '✏️',
+    title: 'Fill · Level 2',
+    subtitle: 'Restore missing words in each line from the word bank.',
     color: '#fdf8f4',
     accent: '#a0522d',
     step: 4,
+  },
+  {
+    emoji: '🔢',
+    title: 'Order · Level 3',
+    subtitle: 'Put every line in the correct sequence — the hardest challenge.',
+    color: '#fdf8f4',
+    accent: '#a0522d',
+    step: 5,
   },
   {
     emoji: '🏅',
@@ -178,7 +186,7 @@ export default function OnboardingScreen() {
         {/* Visual demo for the pathway */}
         {currentIndex === 0 && (
           <View style={styles.pathwayPreview}>
-            {['📖 Read', '🎧 Listen', '🧠 Learn', '❓ Quiz'].map((s, i) => (
+            {['📖 Read', '🎧 Listen', '❓ Quiz', '✏️ Fill', '🔢 Order'].map((s, i) => (
               <View key={i} style={styles.pathwayItem}>
                 <View style={styles.pathwayBubble}>
                   <Text style={styles.pathwayBubbleText}>{s}</Text>

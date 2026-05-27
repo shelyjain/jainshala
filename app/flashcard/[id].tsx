@@ -590,10 +590,10 @@ export default function FlashcardScreen() {
             style={styles.continueBtn}
             onPress={() => {
               markStep(String(id), 'listen');
-              router.push(`/learn/${id}` as any);
+              router.push(`/recite/${id}` as any);
             }}
           >
-            <Text style={styles.continueBtnText}>Continue to Learn →</Text>
+            <Text style={styles.continueBtnText}>Continue to Level 1 · Quiz →</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => {
             setHighlightedWordIndex(-1);
