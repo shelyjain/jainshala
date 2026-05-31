@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { useAuth } from '../../context/auth';
@@ -18,6 +19,7 @@ import { getSutraBadgeFlair } from '../../constants/sutra-badge';
 import { MASTER_BADGE, hasEarnedMasterBadge } from '../../constants/master-badge';
 import { AppLogo } from '@/components/app-logo';
 import { BadgeAboutModal, type BadgeAboutSelection } from '@/components/badge-about-modal';
+import { UserAvatar } from '@/components/user-avatar';
 
 type SutraListItem = {
   id: string;
@@ -66,24 +68,38 @@ export default function AccountScreen() {
     }));
   }, [sutras, completed]);
 
+  const performSignOut = async () => {
+    try {
+      await signOut();
+    } catch {
+      if (Platform.OS === 'web') {
+        window.alert('Could not sign out. Please try again.');
+      } else {
+        Alert.alert('Error', 'Could not sign out. Please try again.');
+      }
+    }
+  };
+
   const handleSignOut = () => {
+    if (Platform.OS === 'web') {
+      if (window.confirm('Are you sure you want to sign out?')) {
+        void performSignOut();
+      }
+      return;
+    }
+
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Sign Out',
         style: 'destructive',
-        onPress: async () => {
-          try {
-            await signOut();
-          } catch (e) {
-            Alert.alert('Error', 'Could not sign out. Please try again.');
-          }
+        onPress: () => {
+          void performSignOut();
         },
       },
     ]);
   };
 
-  const initial = (user?.displayName || user?.email || 'U')[0].toUpperCase();
   const nEarned = sutras.filter(s => completed.includes(s.id)).length;
   const total = sutras.length;
   const lockedCount = total - nEarned;
@@ -106,9 +122,12 @@ export default function AccountScreen() {
       </View>
 
       <View style={styles.profileCard}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{initial}</Text>
-        </View>
+        <UserAvatar
+          photoURL={user?.photoURL}
+          displayName={user?.displayName}
+          email={user?.email}
+          size={72}
+        />
         <Text style={styles.name}>{user?.displayName || 'Learner'}</Text>
         <Text style={styles.email}>{user?.email}</Text>
       </View>
@@ -282,17 +301,8 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     borderWidth: 1,
     borderColor: '#e8d5c4',
+    gap: 14,
   },
-  avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: '#a0522d',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 14,
-  },
-  avatarText: { fontSize: 30, color: '#fff', fontWeight: '700' },
   name: { fontSize: 20, fontWeight: '700', color: '#1a1a1a', marginBottom: 4 },
   email: { fontSize: 14, color: '#888' },
 

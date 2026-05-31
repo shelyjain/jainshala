@@ -200,6 +200,9 @@ export default function FlashcardScreen() {
   }, []);
 
   useEffect(() => {
+    setCurrentIndex(0);
+    setIsPlaying(false);
+    setLoading(true);
     getBestHindiVoice().then(v => {
       voicePickRef.current = v;
     });
@@ -207,10 +210,12 @@ export default function FlashcardScreen() {
       .then(res => res.json())
       .then(data => {
         setSutra(data);
+        setCurrentIndex(0);
         setLoading(false);
       })
       .catch(err => {
         console.error(err);
+        setSutra(null);
         setLoading(false);
       });
 
@@ -446,9 +451,11 @@ export default function FlashcardScreen() {
 
   useEffect(() => {
     if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
-    if (!isPlaying || !sutra) return;
+    if (!isPlaying || !sutra?.lines?.length) return;
 
-    const line = sutra.lines[currentIndex];
+    const line = sutra.lines[Math.min(currentIndex, sutra.lines.length - 1)];
+    if (!line) return;
+
     speakLine(line, () => {
       autoPlayRef.current = setTimeout(() => {
         setCurrentIndex(prev => {
@@ -482,8 +489,9 @@ export default function FlashcardScreen() {
   };
 
   const handleSpeakNow = () => {
-    if (!sutra) return;
-    speakLine(sutra.lines[currentIndex]);
+    if (!sutra?.lines?.length) return;
+    const line = sutra.lines[Math.min(currentIndex, sutra.lines.length - 1)];
+    if (line) speakLine(line);
   };
 
   if (loading) {
@@ -494,7 +502,7 @@ export default function FlashcardScreen() {
     );
   }
 
-  if (!sutra) {
+  if (!sutra || !Array.isArray(sutra.lines) || sutra.lines.length === 0) {
     return (
       <View style={styles.centered}>
         <Text>Sutra not found</Text>
@@ -502,9 +510,18 @@ export default function FlashcardScreen() {
     );
   }
 
-  const currentLine = sutra.lines[currentIndex];
-  const progress = (currentIndex + 1) / sutra.lines.length;
-  const isLast = currentIndex === sutra.lines.length - 1;
+  const safeIndex = Math.min(Math.max(currentIndex, 0), sutra.lines.length - 1);
+  const currentLine = sutra.lines[safeIndex];
+  if (!currentLine) {
+    return (
+      <View style={styles.centered}>
+        <Text>Sutra not found</Text>
+      </View>
+    );
+  }
+
+  const progress = (safeIndex + 1) / sutra.lines.length;
+  const isLast = safeIndex === sutra.lines.length - 1;
   const words = currentLine.transliteration.split(' ');
 
   return (
@@ -519,7 +536,7 @@ export default function FlashcardScreen() {
       <View style={styles.progressBarTrack}>
         <View style={[styles.progressBarFill, { width: `${progress * 100}%` as any }]} />
       </View>
-      <Text style={styles.progressLabel}>{currentIndex + 1} of {sutra.lines.length}</Text>
+      <Text style={styles.progressLabel}>{safeIndex + 1} of {sutra.lines.length}</Text>
 
       <Animated.View
         style={[styles.card, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}

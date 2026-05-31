@@ -38,6 +38,7 @@ export default function ReciteSutra() {
   const insets = useSafeAreaInsets();
   const [sutra, setSutra] = useState<Sutra | null>(null);
   const [lineStates, setLineStates] = useState<LineQuizState[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const { markStep, getStepProgress } = useProgress();
   const stepProgress = getStepProgress(String(id));
   const isAlreadyDone = stepProgress.recite;
@@ -59,6 +60,7 @@ export default function ReciteSutra() {
             wrongPick: null,
           }))
         );
+        setCurrentIndex(0);
       });
   }, [id]);
 
@@ -108,6 +110,11 @@ export default function ReciteSutra() {
     });
   };
 
+  const goToNextQuestion = () => {
+    if (!sutra) return;
+    setCurrentIndex(prev => Math.min(prev + 1, sutra.lines.length - 1));
+  };
+
   if (!sutra || lineStates.length === 0) {
     return (
       <View style={styles.container}>
@@ -119,6 +126,9 @@ export default function ReciteSutra() {
   const allPassed = lineStates.every(s => s.passed);
   const passedCount = lineStates.filter(s => s.passed).length;
   const gameLevelsDone = stepProgress.learn_fill && stepProgress.learn;
+  const line = sutra.lines[currentIndex];
+  const state = lineStates[currentIndex];
+  const isLastQuestion = currentIndex === sutra.lines.length - 1;
 
   return (
     <ScrollView
@@ -141,73 +151,100 @@ export default function ReciteSutra() {
         {sutra.lines.length} correct.
       </Text>
 
-      {sutra.lines.map((line, i) => {
-        const state = lineStates[i];
-
-        return (
+      <View style={styles.progressRow}>
+        <Text style={styles.progressLabel}>
+          Question {currentIndex + 1} of {sutra.lines.length}
+        </Text>
+        <View style={styles.progressTrack}>
           <View
-            key={line.line_number}
-            style={[styles.lineCard, state.passed && styles.lineCardPassed]}
-          >
-            <View style={styles.lineCardHeader}>
-              <View style={[styles.lineNumBadge, state.passed && styles.lineNumBadgePassed]}>
-                <Text style={styles.lineNumText}>{line.line_number}</Text>
-              </View>
-              {state.passed ? (
-                <Text style={styles.passedBadge}>✓ Correct</Text>
-              ) : state.wrongPick ? (
-                <Text style={styles.wrongBadge}>Try again</Text>
-              ) : null}
-            </View>
+            style={[
+              styles.progressFill,
+              { width: `${((currentIndex + (state.passed ? 1 : 0)) / sutra.lines.length) * 100}%` },
+            ]}
+          />
+        </View>
+      </View>
 
-            <Text style={styles.questionLabel}>What is the sutra line for this meaning?</Text>
-            <Text style={styles.questionText}>{line.translation_en}</Text>
+      <View style={styles.dotsRow}>
+        {sutra.lines.map((_, i) => (
+          <View
+            key={i}
+            style={[
+              styles.dot,
+              lineStates[i].passed && styles.dotPassed,
+              i === currentIndex && styles.dotActive,
+            ]}
+          />
+        ))}
+      </View>
 
-            {state.passed ? (
-              <View style={styles.answerReveal}>
-                <Text style={styles.answerRevealText}>{line.transliteration}</Text>
-              </View>
-            ) : (
-              <View style={styles.optionsGrid}>
-                {state.options.map(option => {
-                  const isSelected = state.selected === option;
-                  const isWrong = state.wrongPick === option;
-                  const isCorrectOption = option === line.transliteration;
-
-                  return (
-                    <TouchableOpacity
-                      key={option}
-                      style={[
-                        styles.optionBtn,
-                        isWrong && styles.optionBtnWrong,
-                        isSelected && isCorrectOption && styles.optionBtnCorrect,
-                      ]}
-                      onPress={() => handlePick(i, option)}
-                      activeOpacity={0.85}
-                    >
-                      <Text
-                        style={[
-                          styles.optionText,
-                          isWrong && styles.optionTextWrong,
-                        ]}
-                        numberOfLines={3}
-                      >
-                        {option}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            )}
-
-            {state.wrongPick && !state.passed ? (
-              <TouchableOpacity style={styles.retryBtn} onPress={() => retryLine(i)}>
-                <Text style={styles.retryBtnText}>Clear and try again</Text>
-              </TouchableOpacity>
-            ) : null}
+      <View
+        key={line.line_number}
+        style={[styles.lineCard, state.passed && styles.lineCardPassed]}
+      >
+        <View style={styles.lineCardHeader}>
+          <View style={[styles.lineNumBadge, state.passed && styles.lineNumBadgePassed]}>
+            <Text style={styles.lineNumText}>{line.line_number}</Text>
           </View>
-        );
-      })}
+          {state.passed ? (
+            <Text style={styles.passedBadge}>✓ Correct</Text>
+          ) : state.wrongPick ? (
+            <Text style={styles.wrongBadge}>Try again</Text>
+          ) : null}
+        </View>
+
+        <Text style={styles.questionLabel}>What is the sutra line for this meaning?</Text>
+        <Text style={styles.questionText}>{line.translation_en}</Text>
+
+        {state.passed ? (
+          <View style={styles.answerReveal}>
+            <Text style={styles.answerRevealText}>{line.transliteration}</Text>
+          </View>
+        ) : (
+          <View style={styles.optionsGrid}>
+            {state.options.map(option => {
+              const isSelected = state.selected === option;
+              const isWrong = state.wrongPick === option;
+              const isCorrectOption = option === line.transliteration;
+
+              return (
+                <TouchableOpacity
+                  key={option}
+                  style={[
+                    styles.optionBtn,
+                    isWrong && styles.optionBtnWrong,
+                    isSelected && isCorrectOption && styles.optionBtnCorrect,
+                  ]}
+                  onPress={() => handlePick(currentIndex, option)}
+                  activeOpacity={0.85}
+                >
+                  <Text
+                    style={[
+                      styles.optionText,
+                      isWrong && styles.optionTextWrong,
+                    ]}
+                    numberOfLines={3}
+                  >
+                    {option}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+
+        {state.wrongPick && !state.passed ? (
+          <TouchableOpacity style={styles.retryBtn} onPress={() => retryLine(currentIndex)}>
+            <Text style={styles.retryBtnText}>Clear and try again</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
+
+      {state.passed && !isLastQuestion ? (
+        <TouchableOpacity style={styles.nextBtn} onPress={goToNextQuestion}>
+          <Text style={styles.nextBtnText}>Next question →</Text>
+        </TouchableOpacity>
+      ) : null}
 
       {(allPassed || isAlreadyDone) && (
         <TouchableOpacity
@@ -248,7 +285,46 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 22, fontWeight: '600', color: '#1a1a1a', marginBottom: 4 },
   subtitle: { fontSize: 14, color: '#888', marginBottom: 8 },
-  hint: { fontSize: 13, color: '#a0522d', marginBottom: 20, lineHeight: 20, fontStyle: 'italic' },
+  hint: { fontSize: 13, color: '#a0522d', marginBottom: 16, lineHeight: 20, fontStyle: 'italic' },
+
+  progressRow: { marginBottom: 10 },
+  progressLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#555',
+    marginBottom: 8,
+  },
+  progressTrack: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#eee',
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#a0522d',
+    borderRadius: 3,
+  },
+
+  dotsRow: {
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 18,
+    flexWrap: 'wrap',
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#ddd',
+  },
+  dotActive: {
+    backgroundColor: '#a0522d',
+    transform: [{ scale: 1.2 }],
+  },
+  dotPassed: {
+    backgroundColor: '#4caf50',
+  },
 
   lineCard: {
     backgroundColor: '#fafafa',
@@ -340,6 +416,17 @@ const styles = StyleSheet.create({
 
   retryBtn: { alignItems: 'center', marginTop: 10, paddingVertical: 6 },
   retryBtnText: { fontSize: 13, color: '#a0522d', fontWeight: '600' },
+
+  nextBtn: {
+    borderWidth: 1.5,
+    borderColor: '#a0522d',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 12,
+    backgroundColor: '#fffaf6',
+  },
+  nextBtnText: { color: '#a0522d', fontSize: 16, fontWeight: '600' },
 
   completeBtn: {
     backgroundColor: '#a0522d',

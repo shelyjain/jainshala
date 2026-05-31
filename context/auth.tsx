@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -9,13 +10,15 @@ import {
 } from 'firebase/auth';
 import { serverTimestamp } from 'firebase/firestore';
 import { auth } from '../lib/firebase';
-import { mergeUserDoc } from '../lib/firestore-user';
+import { getUserDocSafe, mergeUserDoc } from '../lib/firestore-user';
+import { completeGoogleRedirectSignIn } from '../lib/google-sign-in';
 
 type AuthContextType = {
   user: User | null;
   loading: boolean;
   signUp: (email: string, password: string, displayName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  syncUserProfile: (user: User) => Promise<boolean>;
   signOut: () => Promise<void>;
 };
 
@@ -54,6 +57,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
+  const syncUserProfile = async (firebaseUser: User): Promise<boolean> => {
+    const profileFields = {
+      email: firebaseUser.email ?? '',
+      displayName: firebaseUser.displayName ?? '',
+      photoURL: firebaseUser.photoURL ?? '',
+    };
+
+    const snap = await getUserDocSafe(firebaseUser.uid);
+    const docExists = snap?.exists() ?? false;
+
+    const saved = await mergeUserDoc(
+      firebaseUser.uid,
+      docExists
+        ? profileFields
+        : {
+            ...profileFields,
+            createdAt: serverTimestamp(),
+            completedSutras: [],
+            progressDetails: {},
+          },
+    );
+
+    return saved;
+  };
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+
+    void (async () => {
+      try {
+        const result = await completeGoogleRedirectSignIn();
+        if (result?.user) {
+          await syncUserProfile(result.user);
+        }
+      } catch (error) {
+        console.error('Google redirect sign-in failed:', error);
+      }
+    })();
+  }, []);
+
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
@@ -64,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, syncUserProfile, signOut }}>
       {children}
     </AuthContext.Provider>
   );

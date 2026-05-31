@@ -12,14 +12,19 @@ import {
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/auth';
+import { useGoogleSignIn } from '../../hooks/use-google-sign-in';
 import { AppLogo } from '@/components/app-logo';
+import { GoogleSignInButton } from '@/components/google-sign-in-button';
+import { firebaseAuthErrorMessage, isAuthCancellation, showUserAlert } from '../../lib/user-alert';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { signUp, syncUserProfile } = useAuth();
+  const { signInWithGoogle, ready: googleReady } = useGoogleSignIn();
   const router = useRouter();
 
   const handleSignup = async () => {
@@ -49,6 +54,26 @@ export default function SignupScreen() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    try {
+      const credential = await signInWithGoogle();
+      const synced = await syncUserProfile(credential.user);
+      if (!synced) {
+        showUserAlert(
+          'Signed in',
+          'Google sign-in worked, but cloud sync is blocked. In Firebase Console → Firestore → Rules, publish the rules from firestore.rules in this project, then try again.',
+        );
+      }
+    } catch (err: unknown) {
+      if (!isAuthCancellation(err)) {
+        showUserAlert('Google sign-in failed', firebaseAuthErrorMessage(err, 'Google sign-in failed.'));
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -60,6 +85,19 @@ export default function SignupScreen() {
         </View>
         <Text style={styles.heading}>Create Account</Text>
         <Text style={styles.subheading}>Start your learning journey</Text>
+
+        <GoogleSignInButton
+          onPress={handleGoogleSignIn}
+          loading={googleLoading}
+          disabled={!googleReady}
+          label="Sign up with Google"
+        />
+
+        <View style={styles.dividerRow}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>or</Text>
+          <View style={styles.dividerLine} />
+        </View>
 
         <TextInput
           style={styles.input}
@@ -108,6 +146,14 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   inner: { flex: 1, padding: 28, justifyContent: 'center' },
   logoWrap: { alignItems: 'center', marginBottom: 16 },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 20,
+  },
+  dividerLine: { flex: 1, height: 1, backgroundColor: '#e8e8e8' },
+  dividerText: { fontSize: 13, color: '#999', fontWeight: '600' },
   heading: { fontSize: 28, fontWeight: '700', color: '#1a1a1a', textAlign: 'center', marginBottom: 6 },
   subheading: { fontSize: 15, color: '#888', textAlign: 'center', marginBottom: 40 },
   input: {
