@@ -9,8 +9,10 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useAuth } from '../../context/auth';
+import { useUserProfile } from '../../hooks/use-user-profile';
+import { isAdminPortalUnlocked } from '../../lib/admin-unlock';
 import { useProgress } from '../../hooks/use-progress';
 import { useEffect, useMemo, useState } from 'react';
 import { API_URL } from '../../constants/api';
@@ -25,14 +27,23 @@ type SutraListItem = {
   id: string;
   title: string;
   category: string;
+  badgeEpithet?: string;
+  badgeEmoji?: string;
 };
 
 export default function AccountScreen() {
+  const router = useRouter();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useUserProfile();
   const { completed } = useProgress();
   const [sutras, setSutras] = useState<SutraListItem[]>([]);
   const [sutrasLoading, setSutrasLoading] = useState(true);
   const [badgeAbout, setBadgeAbout] = useState<BadgeAboutSelection | null>(null);
+  const [adminPortalOpen, setAdminPortalOpen] = useState(false);
+
+  useEffect(() => {
+    void isAdminPortalUnlocked().then(setAdminPortalOpen);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -64,7 +75,7 @@ export default function AccountScreen() {
     return sorted.map(sutra => ({
       sutra,
       unlocked: completed.includes(sutra.id),
-      flair: getSutraBadgeFlair(sutra.id),
+      flair: getSutraBadgeFlair(sutra.id, sutra),
     }));
   }, [sutras, completed]);
 
@@ -268,6 +279,12 @@ export default function AccountScreen() {
           </Link>
         </View>
       </View>
+
+      {adminPortalOpen && isAdmin ? (
+        <TouchableOpacity onPress={() => router.push('/admin')} style={styles.adminLinkWrap}>
+          <Text style={styles.adminLink}>Admin portal</Text>
+        </TouchableOpacity>
+      ) : null}
 
       <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
         <Text style={styles.signOutText}>Sign Out</Text>
@@ -555,6 +572,12 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
 
+  adminLinkWrap: { alignItems: 'center', marginBottom: 16 },
+  adminLink: {
+    color: '#a0522d',
+    fontWeight: '700',
+    fontSize: 15,
+  },
   signOutBtn: {
     borderWidth: 1.5,
     borderColor: '#cc3333',

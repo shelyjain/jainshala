@@ -13,12 +13,19 @@ export default function Complete() {
   const [title, setTitle] = useState('');
   const [catalogIds, setCatalogIds] = useState<string[]>([]);
   const { markComplete, completed } = useProgress();
-  const flair = getSutraBadgeFlair(String(id ?? ''));
+  const [badgeOverride, setBadgeOverride] = useState<{ badgeEpithet?: string; badgeEmoji?: string }>();
+  const flair = getSutraBadgeFlair(String(id ?? ''), badgeOverride);
 
   useEffect(() => {
     fetch(`${API_URL}/sutra/${id}`)
       .then(res => res.json())
-      .then(data => setTitle(data.title));
+      .then(data => {
+        setTitle(data.title);
+        setBadgeOverride({
+          badgeEpithet: data.badgeEpithet,
+          badgeEmoji: data.badgeEmoji,
+        });
+      });
 
     if (id) {
       markComplete(String(id));

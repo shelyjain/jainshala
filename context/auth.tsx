@@ -11,6 +11,7 @@ import {
 import { serverTimestamp } from 'firebase/firestore';
 import { auth } from '../lib/firebase';
 import { getUserDocSafe, mergeUserDoc } from '../lib/firestore-user';
+import { DEFAULT_ROLES } from '../lib/user-roles';
 import { completeGoogleRedirectSignIn } from '../lib/google-sign-in';
 
 type AuthContextType = {
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       displayName,
       createdAt: serverTimestamp(),
+      roles: DEFAULT_ROLES,
       completedSutras: [],
       progressDetails: {},
     });
@@ -74,6 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         : {
             ...profileFields,
             createdAt: serverTimestamp(),
+            roles: DEFAULT_ROLES,
             completedSutras: [],
             progressDetails: {},
           },

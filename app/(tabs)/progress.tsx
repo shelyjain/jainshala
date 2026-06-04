@@ -28,6 +28,8 @@ type Sutra = {
   category: string;
   lines: Line[];
   tags: string[];
+  badgeEpithet?: string;
+  badgeEmoji?: string;
 };
 
 type BadgeRow = { sutra: Sutra; unlocked: boolean };
@@ -171,7 +173,7 @@ export default function ProgressScreen() {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => {
           const { sutra, unlocked } = item;
-          const flair = getSutraBadgeFlair(sutra.id);
+          const flair = getSutraBadgeFlair(sutra.id, sutra);
           return (
             <TouchableOpacity
               style={[styles.badgeRow, !unlocked && styles.badgeRowLocked]}

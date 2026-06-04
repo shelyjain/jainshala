@@ -15,7 +15,7 @@ except ImportError:
     pass
 
 import httpx
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
@@ -149,35 +149,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-with open(BASE_DIR / "sutras.json", "r", encoding="utf-8") as f:
-    sutras = json.load(f)
+from firestore_db import get_sutra_catalog
 
-overlay_path = BASE_DIR / "sutra_tts_overlay.json"
-if overlay_path.is_file():
-    with open(overlay_path, "r", encoding="utf-8") as f:
-        tts_overlay = json.load(f)
 
-    for sutra in sutras:
-        sid = str(sutra.get("id"))
-        overlay_lines = tts_overlay.get(sid)
-        if not isinstance(overlay_lines, list):
-            continue
-        for i, line in enumerate(sutra.get("lines", [])):
-            if i >= len(overlay_lines):
-                break
-            tts_text = str(overlay_lines[i]).strip()
-            if tts_text:
-                line["tts_devanagari"] = tts_text
+def _catalog() -> list[dict]:
+    return get_sutra_catalog()
 
 
 @app.get("/sutras")
 def get_all_sutras():
-    return sutras
+    return _catalog()
 
 
 @app.get("/sutra/{id}")
 def get_sutra(id: str):
-    sutra = next((s for s in sutras if s["id"] == id), None)
+    sutra = next((s for s in _catalog() if str(s.get("id")) == id), None)
     if not sutra:
         return {"error": "Sutra not found"}
     return sutra
@@ -286,11 +272,12 @@ def google_tts_synthesize(body: GoogleTtsRequest):
 
 @app.get("/search")
 def search_sutras(q: str = ""):
+    catalog = _catalog()
     if not q:
-        return sutras
+        return catalog
     q = q.lower()
     results = []
-    for s in sutras:
+    for s in catalog:
         if (
             q in s["title"].lower()
             or q in s["interpretation"].lower()
@@ -302,3 +289,73 @@ def search_sutras(q: str = ""):
         ):
             results.append(s)
     return results
+
+
+# --- Admin user management (service account; client sends Firebase ID token) ---
+
+from admin_auth import require_admin
+from firestore_db import _init_firestore
+
+
+class SetRolesBody(BaseModel):
+    roles: list[str] = Field(..., min_length=1)
+
+
+@app.get("/admin/users")
+def admin_list_users(_admin_uid: str = Depends(require_admin)):
+    db = _init_firestore()
+    if db is None:
+        raise HTTPException(status_code=503, detail="Firestore not configured")
+
+    rows = []
+    for doc in db.collection("users").stream():
+        data = doc.to_dict() or {}
+        roles = data.get("roles")
+        if not isinstance(roles, list):
+            roles = ["user"]
+        rows.append(
+            {
+                "uid": doc.id,
+                "email": data.get("email", ""),
+                "displayName": data.get("displayName", ""),
+                "roles": roles,
+            }
+        )
+    rows.sort(key=lambda r: (str(r.get("email", "")), str(r.get("displayName", ""))))
+    return rows
+
+
+@app.post("/admin/users/{uid}/roles")
+def admin_set_user_roles(
+    uid: str,
+    body: SetRolesBody,
+    _admin_uid: str = Depends(require_admin),
+):
+    db = _init_firestore()
+    if db is None:
+        raise HTTPException(status_code=503, detail="Firestore not configured")
+
+    roles = [r for r in body.roles if r in ("user", "admin")]
+    if "user" not in roles:
+        roles = ["user", *roles]
+
+    db.collection("users").document(uid).set({"roles": roles}, merge=True)
+    return {"uid": uid, "roles": roles}
+
+
+@app.post("/admin/users/{uid}/grant-admin")
+def admin_grant(uid: str, _admin_uid: str = Depends(require_admin)):
+    db = _init_firestore()
+    if db is None:
+        raise HTTPException(status_code=503, detail="Firestore not configured")
+    db.collection("users").document(uid).set({"roles": ["user", "admin"]}, merge=True)
+    return {"uid": uid, "roles": ["user", "admin"]}
+
+
+@app.post("/admin/users/{uid}/revoke-admin")
+def admin_revoke(uid: str, _admin_uid: str = Depends(require_admin)):
+    db = _init_firestore()
+    if db is None:
+        raise HTTPException(status_code=503, detail="Firestore not configured")
+    db.collection("users").document(uid).set({"roles": ["user"]}, merge=True)
+    return {"uid": uid, "roles": ["user"]}

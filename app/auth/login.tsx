@@ -9,8 +9,10 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { isAdminPortalUnlocked } from '../../lib/admin-unlock';
 import { useRouter } from 'expo-router';
+import { AdminLogoTap } from '@/components/admin-logo-tap';
 import { useAuth } from '../../context/auth';
 import { useGoogleSignIn } from '../../hooks/use-google-sign-in';
 import { GoogleSignInButton } from '@/components/google-sign-in-button';
@@ -21,7 +23,14 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [adminUnlocked, setAdminUnlocked] = useState(false);
   const { signIn, syncUserProfile } = useAuth();
+
+  useEffect(() => {
+    void isAdminPortalUnlocked().then(v => {
+      if (v) setAdminUnlocked(true);
+    });
+  }, []);
   const { signInWithGoogle, ready: googleReady } = useGoogleSignIn();
   const router = useRouter();
 
@@ -72,7 +81,14 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.inner}>
-        <Text style={styles.logo}>🕉️</Text>
+        <View style={styles.logoWrap}>
+          <AdminLogoTap
+            size={96}
+            onUnlocked={() => {
+              setAdminUnlocked(true);
+            }}
+          />
+        </View>
         <Text style={styles.heading}>Jain Shala</Text>
         <Text style={styles.subheading}>Sign in to sync your progress</Text>
 
@@ -119,6 +135,12 @@ export default function LoginScreen() {
             Don't have an account? <Text style={styles.linkBold}>Sign up</Text>
           </Text>
         </TouchableOpacity>
+
+        {adminUnlocked ? (
+          <TouchableOpacity onPress={() => router.push('/admin')} style={styles.adminLinkWrap}>
+            <Text style={styles.adminLink}>Admin portal</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </KeyboardAvoidingView>
   );
@@ -128,7 +150,12 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   inner: { flex: 1, padding: 28, justifyContent: 'center' },
   logoWrap: { alignItems: 'center', marginBottom: 16 },
-  logo: { fontSize: 48, textAlign: 'center', marginBottom: 12 },
+  adminLinkWrap: { marginTop: 20, alignItems: 'center' },
+  adminLink: {
+    color: '#a0522d',
+    fontWeight: '700',
+    fontSize: 14,
+  },
   dividerRow: {
     flexDirection: 'row',
     alignItems: 'center',

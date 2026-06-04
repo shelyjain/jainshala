@@ -9,11 +9,12 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { isAdminPortalUnlocked } from '../../lib/admin-unlock';
 import { useRouter } from 'expo-router';
+import { AdminLogoTap } from '@/components/admin-logo-tap';
 import { useAuth } from '../../context/auth';
 import { useGoogleSignIn } from '../../hooks/use-google-sign-in';
-import { AppLogo } from '@/components/app-logo';
 import { GoogleSignInButton } from '@/components/google-sign-in-button';
 import { firebaseAuthErrorMessage, isAuthCancellation, showUserAlert } from '../../lib/user-alert';
 
@@ -23,7 +24,14 @@ export default function SignupScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [adminUnlocked, setAdminUnlocked] = useState(false);
   const { signUp, syncUserProfile } = useAuth();
+
+  useEffect(() => {
+    void isAdminPortalUnlocked().then(v => {
+      if (v) setAdminUnlocked(true);
+    });
+  }, []);
   const { signInWithGoogle, ready: googleReady } = useGoogleSignIn();
   const router = useRouter();
 
@@ -81,7 +89,7 @@ export default function SignupScreen() {
     >
       <View style={styles.inner}>
         <View style={styles.logoWrap}>
-          <AppLogo size={96} />
+          <AdminLogoTap size={96} onUnlocked={() => setAdminUnlocked(true)} />
         </View>
         <Text style={styles.heading}>Create Account</Text>
         <Text style={styles.subheading}>Start your learning journey</Text>
@@ -137,6 +145,12 @@ export default function SignupScreen() {
             Already have an account? <Text style={styles.linkBold}>Sign in</Text>
           </Text>
         </TouchableOpacity>
+
+        {adminUnlocked ? (
+          <TouchableOpacity onPress={() => router.push('/admin')} style={styles.adminLinkWrap}>
+            <Text style={styles.adminLink}>Admin portal</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </KeyboardAvoidingView>
   );
@@ -177,4 +191,10 @@ const styles = StyleSheet.create({
   btnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
   link: { textAlign: 'center', color: '#888', fontSize: 14 },
   linkBold: { color: '#a0522d', fontWeight: '600' },
+  adminLinkWrap: { marginTop: 20, alignItems: 'center' },
+  adminLink: {
+    color: '#a0522d',
+    fontWeight: '700',
+    fontSize: 14,
+  },
 });

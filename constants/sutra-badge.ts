@@ -55,7 +55,21 @@ export type SutraBadgeFlair = {
   emoji: string;
 };
 
-export function getSutraBadgeFlair(sutraId: string): SutraBadgeFlair {
+export type SutraBadgeOverride = {
+  badgeEpithet?: string;
+  badgeEmoji?: string;
+};
+
+export function getSutraBadgeFlair(
+  sutraId: string,
+  override?: SutraBadgeOverride
+): SutraBadgeFlair {
+  const customEpithet = override?.badgeEpithet?.trim();
+  const customEmoji = override?.badgeEmoji?.trim();
+  if (customEpithet && customEmoji) {
+    return { epithet: customEpithet, emoji: customEmoji };
+  }
+
   const h = hashString(sutraId);
   const epithet = `${PREFIXES[h % PREFIXES.length]} ${ROOTS[(h >>> 8) % ROOTS.length]}`;
   const emoji = GLYPHS[h % GLYPHS.length];
