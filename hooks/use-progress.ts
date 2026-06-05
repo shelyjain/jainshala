@@ -44,8 +44,17 @@ export function useProgress() {
       const snap = await getUserDoc(uid);
       if (snap.exists()) {
         const data = snap.data();
-        setCompleted(data.completedSutras ?? []);
-        setProgressDetails(data.progressDetails ?? {});
+        const firestoreCompleted = data.completedSutras ?? [];
+        const firestoreDetails = data.progressDetails ?? {};
+        
+        setCompleted(firestoreCompleted);
+        setProgressDetails(firestoreDetails);
+
+        // Auto-heal / sync user badgeCount in background if missing or out of date
+        const expectedCount = firestoreCompleted.length;
+        if (data.badgeCount === undefined || data.badgeCount !== expectedCount) {
+          void mergeUserDoc(uid, { badgeCount: expectedCount });
+        }
       }
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code;
@@ -71,7 +80,7 @@ export function useProgress() {
 
     const uid = auth.currentUser?.uid;
     if (uid) {
-      await mergeUserDoc(uid, { completedSutras: updated });
+      await mergeUserDoc(uid, { completedSutras: updated, badgeCount: updated.length });
     }
     await AsyncStorage.setItem('completed_sutras', JSON.stringify(updated));
   };

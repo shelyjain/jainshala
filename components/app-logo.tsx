@@ -6,7 +6,7 @@ const SOURCE = require('@/assets/images/jain-shala-logo.png');
 type AppLogoProps = {
   /** Width and height in dp (square asset scales with contain). */
   size?: number;
-  style?: StyleProp<ViewStyle>;
+  style?: any;
 };
 
 export function AppLogo({ size = 112, style }: AppLogoProps) {

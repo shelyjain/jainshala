@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { GoogleAuthProvider, signInWithCredential, UserCredential } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth } from '../lib/firebase';
 
 WebBrowser.maybeCompleteAuthSession();
 

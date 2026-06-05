@@ -62,6 +62,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="leaderboard"
+        options={{
+          title: 'Leaderboard',
+          tabBarIcon: ({ color }) => <IconSymbol size={TAB_ICON} name="trophy.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="account"
         options={{
           title: 'Account',

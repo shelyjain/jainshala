@@ -45,6 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       createdAt: serverTimestamp(),
       completedSutras: [],
       progressDetails: {},
+      badgeCount: 0,
     });
     if (!saved) {
       throw new Error(
@@ -76,6 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             createdAt: serverTimestamp(),
             completedSutras: [],
             progressDetails: {},
+            badgeCount: 0,
           },
     );
 
