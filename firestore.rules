@@ -26,7 +26,8 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if signedIn();
+      allow get: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if signedIn();
       allow create: if signedIn() && request.auth.uid == userId;
       allow update: if signedIn() && (
         (request.auth.uid == userId && rolesUnchanged())

@@ -21,6 +21,8 @@ type Sutra = {
   title: string;
   category: string;
   lines: Line[];
+  badgeEpithet?: string;
+  badgeEmoji?: string;
 };
 
 type BadgeRow = {
@@ -148,7 +150,7 @@ export default function BadgesModalScreen() {
           contentContainerStyle={[styles.listContent, { paddingBottom: insets.bottom + 24 }]}
           renderItem={({ item }) => {
             const { sutra, unlocked } = item;
-            const { epithet, emoji } = getSutraBadgeFlair(sutra.id);
+            const { epithet, emoji } = getSutraBadgeFlair(sutra.id, sutra);
             return (
               <View style={[styles.badgeCard, !unlocked && styles.badgeCardLocked]}>
                 <TouchableOpacity

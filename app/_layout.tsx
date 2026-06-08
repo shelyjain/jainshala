@@ -1,5 +1,5 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Stack, useRouter, usePathname } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { AuthProvider, useAuth } from '@/context/auth';
+import { isAdminPortalUnlocked } from '@/lib/admin-unlock';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -16,18 +17,18 @@ export const unstable_settings = {
 
 function AuthGuard() {
   const { user, loading } = useAuth();
-  const segments = useSegments();
+  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     if (loading) return;
 
-    const inAuthGroup = segments[0] === 'auth';
-    const inOnboarding = segments[0] === 'onboarding';
+    const inAuthGroup = pathname.startsWith('/auth');
+    const inOnboarding = pathname.startsWith('/onboarding');
+    const inAdmin = pathname.startsWith('/admin');
 
     if (!user) {
-      // Always redirect to login when signed out, no matter where we are
-      if (!inAuthGroup) {
+      if (!inAuthGroup && !inAdmin) {
         router.replace('/auth/login');
       }
       return;
@@ -35,18 +36,24 @@ function AuthGuard() {
 
     // User is logged in
     if (inAuthGroup) {
-      AsyncStorage.getItem('onboarding_complete').then(done => {
-        router.replace(done ? '/' : '/onboarding');
-      });
+      Promise.all([AsyncStorage.getItem('onboarding_complete'), isAdminPortalUnlocked()]).then(
+        ([done, adminUnlocked]) => {
+          if (adminUnlocked) {
+            router.replace('/admin');
+            return;
+          }
+          router.replace(done ? '/' : '/onboarding');
+        }
+      );
       return;
     }
 
-    if (!inOnboarding) {
+    if (!inOnboarding && !inAdmin) {
       AsyncStorage.getItem('onboarding_complete').then(done => {
         if (!done) router.replace('/onboarding');
       });
     }
-  }, [user, loading, segments]);
+  }, [user, loading, pathname, router]);
 
   return null;
 }
@@ -70,6 +77,7 @@ export default function RootLayout() {
             <Stack.Screen name="recite/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="complete/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="badges" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="admin" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
           </Stack>
           <StatusBar style="auto" />

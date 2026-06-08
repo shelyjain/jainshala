@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
 
 export function userDocRef(uid: string) {
@@ -24,6 +24,28 @@ export async function getUserDocSafe(uid: string) {
     }
     throw err;
   }
+}
+
+/** Live profile updates (roles, progress, etc.). */
+export function subscribeUserDoc(
+  uid: string,
+  onUpdate: (data: Record<string, unknown> | null, error: 'permission' | null) => void
+): () => void {
+  return onSnapshot(
+    userDocRef(uid),
+    snap => {
+      onUpdate(snap.exists() ? (snap.data() as Record<string, unknown>) : null, null);
+    },
+    err => {
+      if (isFirestorePermissionError(err)) {
+        console.warn('[Firestore] permission-denied on subscribe — deploy firestore.rules.');
+        onUpdate(null, 'permission');
+        return;
+      }
+      console.error('[Firestore] subscribe error:', err);
+      onUpdate(null, null);
+    }
+  );
 }
 
 /** Writes merge fields; returns false if Firestore rules blocked the write. */
