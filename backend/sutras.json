@@ -2,58 +2,156 @@
   {
     "id": "1",
     "title": "Shree Namaskara Mahamantra (Navkar Mantra)",
-    "category": "Navkar Mantra",
+    "category": "Navkar Mantra, Pratikraman 1, Pratikraman 2",
     "sutra_number": 1,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Namo Arihantanam", "translation_en": "I bow to the Arihants" },
-      { "line_number": 2, "transliteration": "Namo Siddhanam", "translation_en": "I bow to the Siddhas" },
-      { "line_number": 3, "transliteration": "Namo Ayariyanam", "translation_en": "I bow to the Acharyas" },
-      { "line_number": 4, "transliteration": "Namo Uvajjhayanam", "translation_en": "I bow to the Upadhyayas" },
-      { "line_number": 5, "transliteration": "Namo Loe Savva Sahunam", "translation_en": "I bow to all the Sadhus in the world" },
-      { "line_number": 6, "transliteration": "Eso Pancha Namukkaro", "translation_en": "These five salutations" },
-      { "line_number": 7, "transliteration": "Savva Pavappanasano", "translation_en": "Are the destroyer of all sins" },
-      { "line_number": 8, "transliteration": "Mangalanam Cha Savvesim", "translation_en": "And among all auspicious things" },
-      { "line_number": 9, "transliteration": "Padhamam Havai Mangalam", "translation_en": "This is the first and foremost auspicious" }
+      {
+        "line_number": 1,
+        "transliteration": "Namo Arihantanam",
+        "translation_en": "I bow to the Arihants"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Namo Siddhanam",
+        "translation_en": "I bow to the Siddhas"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Namo Ayariyanam",
+        "translation_en": "I bow to the Acharyas"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Namo Uvajjhayanam",
+        "translation_en": "I bow to the Upadhyayas"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Namo Loe Savva Sahunam",
+        "translation_en": "I bow to all the Sadhus in the world"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Eso Pancha Namukkaro",
+        "translation_en": "These five salutations"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Savva Pavappanasano",
+        "translation_en": "Are the destroyer of all sins"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Mangalanam Cha Savvesim",
+        "translation_en": "And among all auspicious things"
+      },
+      {
+        "line_number": 9,
+        "transliteration": "Padhamam Havai Mangalam",
+        "translation_en": "This is the first and foremost auspicious"
+      }
     ],
     "interpretation": "By this sutra, obeisance is offered to the five supreme beings — the Arihants (living liberated ones), the Siddhas (fully liberated souls), the Acharyas (spiritual leaders), the Upadhyayas (scripture teachers), and the Sadhus (monks and nuns). These five salutations together destroy all sins and karmas, and are declared to be the most auspicious of all auspicious things in the three worlds.",
-    "tags": ["navkar", "salutation", "five-parameshthi", "mangal"]
+    "tags": [
+      "navkar",
+      "salutation",
+      "five-parameshthi",
+      "mangal"
+    ],
+    "sutra_number_p2": 1
   },
   {
     "id": "2",
     "title": "Shree Panchindiya Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 2,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Panchindiya Samvarano", "translation_en": "One who restrains the five senses" },
-      { "line_number": 2, "transliteration": "Taha Navaviha Bambhachera Guttidharo", "translation_en": "Who observes the nine types of celibacy" },
-      { "line_number": 3, "transliteration": "Chauviha Kasaya Mukko", "translation_en": "Who is free from the four passions" },
-      { "line_number": 4, "transliteration": "Ia Attharasa Gunehi Samjutto", "translation_en": "And is endowed with eighteen qualities" },
-      { "line_number": 5, "transliteration": "Pancha Mahavvaya Jutto", "translation_en": "Who is equipped with the five great vows" },
-      { "line_number": 6, "transliteration": "Pancha Vihayara Palana Samattho", "translation_en": "Who is capable of observing the five ways of conduct" },
-      { "line_number": 7, "transliteration": "Pancha Samio Tigutto", "translation_en": "Who observes five carefulness and three controls" },
-      { "line_number": 8, "transliteration": "Chhatteesa Guno Guroo Majjha", "translation_en": "Such a Guru possesses thirty-six qualities" }
+      {
+        "line_number": 1,
+        "transliteration": "Panchindiya Samvarano",
+        "translation_en": "One who restrains the five senses"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Taha Navaviha Bambhachera Guttidharo",
+        "translation_en": "Who observes the nine types of celibacy"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Chauviha Kasaya Mukko",
+        "translation_en": "Who is free from the four passions"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Ia Attharasa Gunehi Samjutto",
+        "translation_en": "And is endowed with eighteen qualities"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Pancha Mahavvaya Jutto",
+        "translation_en": "Who is equipped with the five great vows"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Pancha Vihayara Palana Samattho",
+        "translation_en": "Who is capable of observing the five ways of conduct"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Pancha Samio Tigutto",
+        "translation_en": "Who observes five carefulness and three controls"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Chhatteesa Guno Guroo Majjha",
+        "translation_en": "Such a Guru possesses thirty-six qualities"
+      }
     ],
     "interpretation": "This sutra describes the thirty-six qualities of Shri Acharya Maharaja — including restraint of the five senses, nine types of celibacy, freedom from the four passions, the five great vows, five carefulness and three controls. It is uttered to consecrate the Sthapanacharya at the beginning of any sacred rite.",
-    "tags": ["acharya", "thirty-six-qualities", "celibacy", "vows"]
+    "tags": [
+      "acharya",
+      "thirty-six-qualities",
+      "celibacy",
+      "vows"
+    ],
+    "sutra_number_p2": 2
   },
   {
     "id": "3",
     "title": "Shree Khamasamana Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 3,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Ichchhami Khamasamano", "translation_en": "I wish to offer obeisance" },
-      { "line_number": 2, "transliteration": "Vandium Javanijjae", "translation_en": "Having bowed, with permission granted" },
-      { "line_number": 3, "transliteration": "Niseehiae Matthaenam Vandami", "translation_en": "With restraint, I salute with my head bowed" }
+      {
+        "line_number": 1,
+        "transliteration": "Ichchhami Khamasamano",
+        "translation_en": "I wish to offer obeisance"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Vandium Javanijjae",
+        "translation_en": "Having bowed, with permission granted"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Niseehiae Matthaenam Vandami",
+        "translation_en": "With restraint, I salute with my head bowed"
+      }
     ],
     "interpretation": "This sutra is uttered while offering obeisance to Lord Jineshvara and the Shramana. It expresses the devotee's sincere wish to bow with proper permission and humility, surrendering the ego completely.",
-    "tags": ["obeisance", "salutation", "humility", "jineshvara"]
+    "tags": [
+      "obeisance",
+      "salutation",
+      "humility",
+      "jineshvara"
+    ],
+    "sutra_number_p2": 3
   },
   {
     "id": "4",
@@ -63,331 +161,2292 @@
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Ichchhakara Suharaee", "translation_en": "With willingness, I ask of your wellbeing" },
-      { "line_number": 2, "transliteration": "Sukha Tapa Shareera Nirabadha", "translation_en": "Is your penance comfortable? Is your body free from trouble?" },
-      { "line_number": 3, "transliteration": "Sukha Sanjama Jatra Nirvaho Chho Jee", "translation_en": "Are you able to maintain your vows comfortably?" },
-      { "line_number": 4, "transliteration": "Swami Shata Chhejee", "translation_en": "O Master, are you well?" },
-      { "line_number": 5, "transliteration": "Bhata Paneeno Labha Dejo Jee", "translation_en": "Please grant us the privilege of offering food and water" }
+      {
+        "line_number": 1,
+        "transliteration": "Ichchhakara Suharaee",
+        "translation_en": "With willingness, I ask of your wellbeing"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Sukha Tapa Shareera Nirabadha",
+        "translation_en": "Is your penance comfortable? Is your body free from trouble?"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Sukha Sanjama Jatra Nirvaho Chho Jee",
+        "translation_en": "Are you able to maintain your vows comfortably?"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Swami Shata Chhejee",
+        "translation_en": "O Master, are you well?"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Bhata Paneeno Labha Dejo Jee",
+        "translation_en": "Please grant us the privilege of offering food and water"
+      }
     ],
     "interpretation": "By this sutra, the devotee asks the Guru Maharaja about their welfare in all ways — the comfort of their penance, the health of their body, and the maintenance of their vows. An entreaty is also made to accept food and water as an act of devoted service.",
-    "tags": ["guru", "wellbeing", "devotion", "service"]
+    "tags": [
+      "guru",
+      "wellbeing",
+      "devotion",
+      "service"
+    ]
   },
   {
     "id": "5",
     "title": "Shree Abbhutthio Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 5,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Ichchhakarena Sandisaha Bhagavan", "translation_en": "With willingness, O Lord, I ask for permission" },
-      { "line_number": 2, "transliteration": "Abbhutthiomi Abbhintara Devesiam Khameun", "translation_en": "I wish to confess and ask forgiveness for the day's transgressions" },
-      { "line_number": 3, "transliteration": "Jan Kinchi Apattiam Parapattiam", "translation_en": "Whatever fault was mine or caused by others" },
-      { "line_number": 4, "transliteration": "Tubbhe Janaha Aham Na Janami", "translation_en": "What you know, I may not know" },
-      { "line_number": 5, "transliteration": "Tassa Michchhami Mi Dukkadam", "translation_en": "For all of that, let my sins be forgiven" }
+      {
+        "line_number": 1,
+        "transliteration": "Ichchhakarena Sandisaha Bhagavan",
+        "translation_en": "With willingness, O Lord, I ask for permission"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Abbhutthiomi Abbhintara Devesiam Khameun",
+        "translation_en": "I wish to confess and ask forgiveness for the day's transgressions"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Jan Kinchi Apattiam Parapattiam",
+        "translation_en": "Whatever fault was mine or caused by others"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Tubbhe Janaha Aham Na Janami",
+        "translation_en": "What you know, I may not know"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Tassa Michchhami Mi Dukkadam",
+        "translation_en": "For all of that, let my sins be forgiven"
+      }
     ],
     "interpretation": "By means of this sutra, the devotee asks forgiveness for any impoliteness or improper conduct shown towards the Guru Maharaja — whether known or unknown, intentional or unintentional, in food, water, service, speech or action.",
-    "tags": ["forgiveness", "confession", "guru", "repentance"]
+    "tags": [
+      "forgiveness",
+      "confession",
+      "guru",
+      "repentance"
+    ],
+    "sutra_number_p2": 35
   },
   {
     "id": "6",
     "title": "Shree Iriyavahiyam Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 6,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Iriyavahiyam Padikkamami", "translation_en": "I repent for the sins of harm caused while walking" },
-      { "line_number": 2, "transliteration": "Ichchhami Padikkamium", "translation_en": "I wish to repent" },
-      { "line_number": 3, "transliteration": "Iriyavahiyae Virahanae Gamanagamane", "translation_en": "For harm caused through coming and going" },
-      { "line_number": 4, "transliteration": "Panakkamane Beeyakkamane Hariyakkamane", "translation_en": "For harm to living beings in water, seeds, and green plants" },
-      { "line_number": 5, "transliteration": "Osa Uttinga Panaga Daga Matti Makkada Santana Sankamane", "translation_en": "For harm to dew, moss, one-sensed beings, spiders and cobwebs while crossing" },
-      { "line_number": 6, "transliteration": "Je Me Jeeva Virahiya Egindiya Beindiya Teindiya Chaurindiya Panchindiya", "translation_en": "Whatever living beings — one through five-sensed — I may have harmed" },
-      { "line_number": 7, "transliteration": "Tassa Michchhami Dukkadam", "translation_en": "For all of that, let my sins be forgiven" }
+      {
+        "line_number": 1,
+        "transliteration": "Iriyavahiyam Padikkamami",
+        "translation_en": "I repent for the sins of harm caused while walking"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Ichchhami Padikkamium",
+        "translation_en": "I wish to repent"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Iriyavahiyae Virahanae Gamanagamane",
+        "translation_en": "For harm caused through coming and going"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Panakkamane Beeyakkamane Hariyakkamane",
+        "translation_en": "For harm to living beings in water, seeds, and green plants"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Osa Uttinga Panaga Daga Matti Makkada Santana Sankamane",
+        "translation_en": "For harm to dew, moss, one-sensed beings, spiders and cobwebs while crossing"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Je Me Jeeva Virahiya Egindiya Beindiya Teindiya Chaurindiya Panchindiya",
+        "translation_en": "Whatever living beings — one through five-sensed — I may have harmed"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Tassa Michchhami Dukkadam",
+        "translation_en": "For all of that, let my sins be forgiven"
+      }
     ],
     "interpretation": "This sutra seeks repentance for the unintentional harm caused to any living beings while walking, moving, coming or going. Jainism recognizes that even daily movement can harm tiny organisms, and this sutra expresses deep remorse for such unavoidable harm, reinforcing the principle of Ahimsa (non-violence).",
-    "tags": ["ahimsa", "repentance", "living-beings", "non-violence"]
+    "tags": [
+      "ahimsa",
+      "repentance",
+      "living-beings",
+      "non-violence"
+    ],
+    "sutra_number_p2": 4
   },
   {
     "id": "7",
     "title": "Shree Tassa Uttari Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 7,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Tassa Uttaree Karanaenam", "translation_en": "For the purpose of further atonement" },
-      { "line_number": 2, "transliteration": "Payachchhitta Karanaenam", "translation_en": "For the purpose of penance" },
-      { "line_number": 3, "transliteration": "Visohi Karanaenam", "translation_en": "For the purpose of purification" },
-      { "line_number": 4, "transliteration": "Visalli Karanaenam", "translation_en": "For removing the dart of sin" },
-      { "line_number": 5, "transliteration": "Pavanam Kammanam Nigghayanatthae", "translation_en": "For the annihilation of sinful karmas" },
-      { "line_number": 6, "transliteration": "Thami Kaaussaggam", "translation_en": "I undertake Kayotsarga" }
+      {
+        "line_number": 1,
+        "transliteration": "Tassa Uttaree Karanaenam",
+        "translation_en": "For the purpose of further atonement"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Payachchhitta Karanaenam",
+        "translation_en": "For the purpose of penance"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Visohi Karanaenam",
+        "translation_en": "For the purpose of purification"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Visalli Karanaenam",
+        "translation_en": "For removing the dart of sin"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Pavanam Kammanam Nigghayanatthae",
+        "translation_en": "For the annihilation of sinful karmas"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Thami Kaaussaggam",
+        "translation_en": "I undertake Kayotsarga"
+      }
     ],
     "interpretation": "This sutra introduces the Kayotsarga meditation by stating five purposes: atonement, penance, purification, removal of the dart of sin, and annihilation of sinful karmas. It is recited before entering the still meditation posture, preparing the mind and body for deep spiritual practice.",
-    "tags": ["kayotsarga", "atonement", "purification", "karma"]
+    "tags": [
+      "kayotsarga",
+      "atonement",
+      "purification",
+      "karma"
+    ],
+    "sutra_number_p2": 5
   },
   {
     "id": "8",
     "title": "Shree Annattha Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 8,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Annattha Oosasienam Neesasienam", "translation_en": "Except for breathing in and breathing out" },
-      { "line_number": 2, "transliteration": "Khasienam Chheienam Jambhaienam", "translation_en": "Except for coughing, sneezing and yawning" },
-      { "line_number": 3, "transliteration": "Udduenam Vayanisaggenam", "translation_en": "Except for releasing gas and natural body release" },
-      { "line_number": 4, "transliteration": "Bhamalee Pittamuchchhae", "translation_en": "Except for dizziness and nausea" },
-      { "line_number": 5, "transliteration": "Suhumehin Anga Sanchalehin", "translation_en": "Except for subtle movements of the limbs" },
-      { "line_number": 6, "transliteration": "Suhumehin Khela Sanchalehin", "translation_en": "Except for subtle movements of saliva" },
-      { "line_number": 7, "transliteration": "Suhumehin Ditthi Sanchalehin", "translation_en": "Except for subtle movements of the eyes" },
-      { "line_number": 8, "transliteration": "Evamaiehim Agarehim Abhaggo Avirahio Hujja Me Kaaussaggo", "translation_en": "With these exemptions, may my Kayotsarga remain unbroken and undisturbed" },
-      { "line_number": 9, "transliteration": "Java Arihantanam Bhagavantanam Namukkarenam Na Paremi", "translation_en": "Until I complete the Navkar salutation to the Arihant Bhagavants" },
-      { "line_number": 10, "transliteration": "Tava Kayam Thanaenam Monenam Jhanenam Appanam Vosirami", "translation_en": "Until then I remain in stillness, silence and meditation, relinquishing the body" }
+      {
+        "line_number": 1,
+        "transliteration": "Annattha Oosasienam Neesasienam",
+        "translation_en": "Except for breathing in and breathing out"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Khasienam Chheienam Jambhaienam",
+        "translation_en": "Except for coughing, sneezing and yawning"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Udduenam Vayanisaggenam",
+        "translation_en": "Except for releasing gas and natural body release"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Bhamalee Pittamuchchhae",
+        "translation_en": "Except for dizziness and nausea"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Suhumehin Anga Sanchalehin",
+        "translation_en": "Except for subtle movements of the limbs"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Suhumehin Khela Sanchalehin",
+        "translation_en": "Except for subtle movements of saliva"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Suhumehin Ditthi Sanchalehin",
+        "translation_en": "Except for subtle movements of the eyes"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Evamaiehim Agarehim Abhaggo Avirahio Hujja Me Kaaussaggo",
+        "translation_en": "With these exemptions, may my Kayotsarga remain unbroken and undisturbed"
+      },
+      {
+        "line_number": 9,
+        "transliteration": "Java Arihantanam Bhagavantanam Namukkarenam Na Paremi",
+        "translation_en": "Until I complete the Navkar salutation to the Arihant Bhagavants"
+      },
+      {
+        "line_number": 10,
+        "transliteration": "Tava Kayam Thanaenam Monenam Jhanenam Appanam Vosirami",
+        "translation_en": "Until then I remain in stillness, silence and meditation, relinquishing the body"
+      }
     ],
     "interpretation": "This sutra lists the sixteen natural bodily exemptions that do not break the Kayotsarga meditation — breathing, coughing, sneezing, and subtle involuntary movements. It establishes the proper decorum for performing Kayotsarga with firmness, committing to remain still and silent until the Navkar Mantra recitation is complete.",
-    "tags": ["kayotsarga", "meditation", "exemptions", "stillness"]
+    "tags": [
+      "kayotsarga",
+      "meditation",
+      "exemptions",
+      "stillness"
+    ],
+    "sutra_number_p2": 6
   },
   {
     "id": "9",
     "title": "Shree Logassa Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 9,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Logassa Ujjoagare Dhamma Titthayare Jine", "translation_en": "The Jinas who are the illuminators of the world and founders of dharma" },
-      { "line_number": 2, "transliteration": "Arihante Kittaissam Chauveesam Pi Kevali", "translation_en": "I glorify the twenty-four omniscient Arihants" },
-      { "line_number": 3, "transliteration": "Usabha Majiam Cha Vande Sambhava Abhinandanam Cha Sumaim Cha", "translation_en": "I bow to Rushabha and Ajita; I bow to Sambhava, Abhinandana and Sumati" },
-      { "line_number": 4, "transliteration": "Paumappaham Suvasam Jinam Cha Chandappaham Vande", "translation_en": "I bow to Padmaprabha, Suparshva and Chandraprabha" },
-      { "line_number": 5, "transliteration": "Suvihi Cha Puppadantam Seetal Sijjans Vasupujjam Cha", "translation_en": "I bow to Suvidhina, Shitala, Shreyansa and Vasupujya" },
-      { "line_number": 6, "transliteration": "Vimalamanantam Cha Jinam Dhammam Santim Cha Vandami", "translation_en": "I bow to Vimala, Ananta, Dharma and Shanti" },
-      { "line_number": 7, "transliteration": "Kunthu Aram Cha Mallim Vande Munisuvvayam Namijinam Cha", "translation_en": "I bow to Kunthu, Ara, Malli, Munisuvrata and Nami" },
-      { "line_number": 8, "transliteration": "Vandami Ritthanemim Pasam Taha Vaddhamanam Cha", "translation_en": "I bow to Neminatha, Parshvanatha and Vardhamana" },
-      { "line_number": 9, "transliteration": "Evam Mae Abhithuya Vihuya Rayamala Pahina Jaramarana Chauveesam Pi Jinavara Titthayara Me Paseeyantu", "translation_en": "Thus glorified by me — may these twenty-four Jina lords, freed from passion, age and death, be gracious unto me" },
-      { "line_number": 10, "transliteration": "Kittiya Vandiya Mahiya Je E Logassa Uttama Siddha Arugga Bohilabham Samahi Vara Muttamam Dintu", "translation_en": "The praised and honored Siddhas — may they grant us good health, enlightenment and the highest Samadhi" },
-      { "line_number": 11, "transliteration": "Chandesu Nimmalayara Aichchesu Ahiyam Payasayara Sagaravara Gambhira Siddha Siddhim Mama Disantu", "translation_en": "Purer than the moon, brighter than the sun, deeper than the great ocean — may the Siddhas show me liberation" }
+      {
+        "line_number": 1,
+        "transliteration": "Logassa Ujjoagare Dhamma Titthayare Jine",
+        "translation_en": "The Jinas who are the illuminators of the world and founders of dharma"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Arihante Kittaissam Chauveesam Pi Kevali",
+        "translation_en": "I glorify the twenty-four omniscient Arihants"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Usabha Majiam Cha Vande Sambhava Abhinandanam Cha Sumaim Cha",
+        "translation_en": "I bow to Rushabha and Ajita; I bow to Sambhava, Abhinandana and Sumati"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Paumappaham Suvasam Jinam Cha Chandappaham Vande",
+        "translation_en": "I bow to Padmaprabha, Suparshva and Chandraprabha"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Suvihi Cha Puppadantam Seetal Sijjans Vasupujjam Cha",
+        "translation_en": "I bow to Suvidhina, Shitala, Shreyansa and Vasupujya"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Vimalamanantam Cha Jinam Dhammam Santim Cha Vandami",
+        "translation_en": "I bow to Vimala, Ananta, Dharma and Shanti"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Kunthu Aram Cha Mallim Vande Munisuvvayam Namijinam Cha",
+        "translation_en": "I bow to Kunthu, Ara, Malli, Munisuvrata and Nami"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Vandami Ritthanemim Pasam Taha Vaddhamanam Cha",
+        "translation_en": "I bow to Neminatha, Parshvanatha and Vardhamana"
+      },
+      {
+        "line_number": 9,
+        "transliteration": "Evam Mae Abhithuya Vihuya Rayamala Pahina Jaramarana Chauveesam Pi Jinavara Titthayara Me Paseeyantu",
+        "translation_en": "Thus glorified by me — may these twenty-four Jina lords, freed from passion, age and death, be gracious unto me"
+      },
+      {
+        "line_number": 10,
+        "transliteration": "Kittiya Vandiya Mahiya Je E Logassa Uttama Siddha Arugga Bohilabham Samahi Vara Muttamam Dintu",
+        "translation_en": "The praised and honored Siddhas — may they grant us good health, enlightenment and the highest Samadhi"
+      },
+      {
+        "line_number": 11,
+        "transliteration": "Chandesu Nimmalayara Aichchesu Ahiyam Payasayara Sagaravara Gambhira Siddha Siddhim Mama Disantu",
+        "translation_en": "Purer than the moon, brighter than the sun, deeper than the great ocean — may the Siddhas show me liberation"
+      }
     ],
     "interpretation": "The Logassa Sutra glorifies all twenty-four Tirthankaras by name, from Rushabhadeva to Mahavira, and all Siddhas of the three phases of time. It offers a prayer for the attainment of salvation through the three gems of right faith, right knowledge and right conduct — asking the liberated souls for good health, spiritual enlightenment and the highest state of meditation.",
-    "tags": ["logassa", "twenty-four-tirthankar", "glorification", "liberation", "siddha"]
+    "tags": [
+      "logassa",
+      "twenty-four-tirthankar",
+      "glorification",
+      "liberation",
+      "siddha"
+    ],
+    "sutra_number_p2": 7
   },
   {
     "id": "10",
     "title": "Shree Karemi Bhante Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 10,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Karemi Bhante Samaiyam", "translation_en": "O Lord, I undertake Samayika" },
-      { "line_number": 2, "transliteration": "Savajjam Jogam Pachchhakkhami", "translation_en": "I renounce all sinful activities" },
-      { "line_number": 3, "transliteration": "Java Niyamam Pajjuvasami", "translation_en": "As long as I observe this vow I remain in restraint" },
-      { "line_number": 4, "transliteration": "Duviham Tivihenam Manenam Vayae Kaenam", "translation_en": "In two ways and three ways — by mind, speech and body" },
-      { "line_number": 5, "transliteration": "Na Karemi Na Karavemi", "translation_en": "I will not do sin, nor cause others to do sin" },
-      { "line_number": 6, "transliteration": "Tassa Bhante Padikkamami Nindami Garihami", "translation_en": "O Lord, I repent, I condemn, I confess" },
-      { "line_number": 7, "transliteration": "Appanam Vosirami", "translation_en": "I relinquish my ego" }
+      {
+        "line_number": 1,
+        "transliteration": "Karemi Bhante Samaiyam",
+        "translation_en": "O Lord, I undertake Samayika"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Savajjam Jogam Pachchhakkhami",
+        "translation_en": "I renounce all sinful activities"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Java Niyamam Pajjuvasami",
+        "translation_en": "As long as I observe this vow I remain in restraint"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Duviham Tivihenam Manenam Vayae Kaenam",
+        "translation_en": "In two ways and three ways — by mind, speech and body"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Na Karemi Na Karavemi",
+        "translation_en": "I will not do sin, nor cause others to do sin"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Tassa Bhante Padikkamami Nindami Garihami",
+        "translation_en": "O Lord, I repent, I condemn, I confess"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Appanam Vosirami",
+        "translation_en": "I relinquish my ego"
+      }
     ],
     "interpretation": "The Karemi Bhante Sutra is the formal vow of Samayika — a 48-minute period of complete equanimity. The practitioner vows to renounce all sinful activities of mind, speech and body, neither committing nor causing others to commit any harm. It concludes with repentance for past sins and a surrender of the ego, placing the soul in a monk-like state for the duration of the Samayika.",
-    "tags": ["samayika", "vow", "equanimity", "non-violence", "ego"]
+    "tags": [
+      "samayika",
+      "vow",
+      "equanimity",
+      "non-violence",
+      "ego"
+    ],
+    "sutra_number_p2": 8
   },
   {
     "id": "11",
     "title": "Shree Samaiya Vayajutto Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 11,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Samaiya Vayajutto Java Mane Hoi Niyama Sanjutto", "translation_en": "One who is engaged in Samayika, as long as the mind remains restrained" },
-      { "line_number": 2, "transliteration": "Chhinnai Asuham Kammam Samaiya Jattiyavara", "translation_en": "Cuts off inauspicious karma — as many times as Samayika is performed" },
-      { "line_number": 3, "transliteration": "Samano Iva Savao Havai Jamha Eenam Karanaenam Bahuso Samaiyam Kujja", "translation_en": "A layperson becomes like a monk during Samayika — therefore one should perform it as many times as possible" },
-      { "line_number": 4, "transliteration": "Michchha Mi Dukkadam", "translation_en": "Let my sins be forgiven for any violations" }
+      {
+        "line_number": 1,
+        "transliteration": "Samaiya Vayajutto Java Mane Hoi Niyama Sanjutto",
+        "translation_en": "One who is engaged in Samayika, as long as the mind remains restrained"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Chhinnai Asuham Kammam Samaiya Jattiyavara",
+        "translation_en": "Cuts off inauspicious karma — as many times as Samayika is performed"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Samano Iva Savao Havai Jamha Eenam Karanaenam Bahuso Samaiyam Kujja",
+        "translation_en": "A layperson becomes like a monk during Samayika — therefore one should perform it as many times as possible"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Michchha Mi Dukkadam",
+        "translation_en": "Let my sins be forgiven for any violations"
+      }
     ],
     "interpretation": "This sutra reveals the profound spiritual significance of Samayika. During the practice, a layperson attains the spiritual status equivalent to a monk or nun, and every performance cuts off inauspicious karmas. The sutra encourages performing Samayika as frequently as possible and closes with seeking forgiveness for any faults.",
-    "tags": ["samayika", "karma", "monk", "layperson", "spiritual-equality"]
+    "tags": [
+      "samayika",
+      "karma",
+      "monk",
+      "layperson",
+      "spiritual-equality"
+    ],
+    "sutra_number_p2": 9
   },
   {
     "id": "12",
     "title": "Shree Jagachintamani Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 12,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Ichchhakarena Sandisaha Bhagavan Chaityavandana Karum Ichchham", "translation_en": "With willingness O Lord, I ask permission — I wish to perform Chaitya-Vandana" },
-      { "line_number": 2, "transliteration": "Jaga Chintamani Jaga Naha Jaga Guru", "translation_en": "O wish-fulfilling gem of the world, O lord of the world, O teacher of the world" },
-      { "line_number": 3, "transliteration": "Jaga Rakkhanam Jaga Bandhava Jaga Satthavaha", "translation_en": "O protector of the world, O friend of the world, O guide of the world" },
-      { "line_number": 4, "transliteration": "Chauveesampi Jinavara Jayantu Appadihaya Sasanam", "translation_en": "May all twenty-four Jina lords be victorious with their unhindered teachings" }
+      {
+        "line_number": 1,
+        "transliteration": "Ichchhakarena Sandisaha Bhagavan Chaityavandana Karum Ichchham",
+        "translation_en": "With willingness O Lord, I ask permission — I wish to perform Chaitya-Vandana"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Jaga Chintamani Jaga Naha Jaga Guru",
+        "translation_en": "O wish-fulfilling gem of the world, O lord of the world, O teacher of the world"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Jaga Rakkhanam Jaga Bandhava Jaga Satthavaha",
+        "translation_en": "O protector of the world, O friend of the world, O guide of the world"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Chauveesampi Jinavara Jayantu Appadihaya Sasanam",
+        "translation_en": "May all twenty-four Jina lords be victorious with their unhindered teachings"
+      }
     ],
     "interpretation": "This Chaitya-Vandana composed by Shri Gautama Swami glorifies all Tirthankara Bhagavants and describes the vast numbers of Jina idols and pilgrimage places across the three worlds. It opens with six beautiful epithets for the Lord and concludes with a prayer for the victory of the unobstructed Jain teachings.",
-    "tags": ["chaitya-vandana", "tirthankar", "glorification", "twenty-four"]
+    "tags": [
+      "chaitya-vandana",
+      "tirthankar",
+      "glorification",
+      "twenty-four"
+    ],
+    "sutra_number_p2": 10
   },
   {
     "id": "13",
     "title": "Shree Jankinchi Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 13,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Jankinchi Nama Tittham", "translation_en": "Whatever Jina pilgrimage centers exist by name" },
-      { "line_number": 2, "transliteration": "Sagge Payali Manuse Loe", "translation_en": "In heaven, the nether world, or the human world" },
-      { "line_number": 3, "transliteration": "Jaim Jina Bimbhaim Taim Savvaim Vandami", "translation_en": "All those Jina idols — I salute every single one of them" }
+      {
+        "line_number": 1,
+        "transliteration": "Jankinchi Nama Tittham",
+        "translation_en": "Whatever Jina pilgrimage centers exist by name"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Sagge Payali Manuse Loe",
+        "translation_en": "In heaven, the nether world, or the human world"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Jaim Jina Bimbhaim Taim Savvaim Vandami",
+        "translation_en": "All those Jina idols — I salute every single one of them"
+      }
     ],
     "interpretation": "By this sutra, salutation is offered universally to every Jaina pilgrimage center and Jina idol existing anywhere in the three worlds. The devotee transcends physical limitations, offering reverence to every temple simultaneously through pure intention.",
-    "tags": ["pilgrimage", "salutation", "three-worlds", "jina-idols"]
+    "tags": [
+      "pilgrimage",
+      "salutation",
+      "three-worlds",
+      "jina-idols"
+    ],
+    "sutra_number_p2": 11
   },
   {
     "id": "14",
     "title": "Shree Namutthunam Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 14,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Namutthunam Arihantanam Bhagavantanam", "translation_en": "Salutation to the Arihant Bhagavants" },
-      { "line_number": 2, "transliteration": "Aiyaranam Titthayaranam Sayamsambuddhanam", "translation_en": "The founders of the ford, the self-enlightened ones" },
-      { "line_number": 3, "transliteration": "Purisuttamanam Purisa Seehanam Purisa Vara Pundariyanam", "translation_en": "The best among men, the lions among men, the pure lotuses among men" },
-      { "line_number": 4, "transliteration": "Loguttamanam Loganaanam Loga Hiyanam Loga Paevanam Logapajjoagaranam", "translation_en": "The best in the world, lords of the world, benefactors of the world, lights of the world, illuminators of the world" },
-      { "line_number": 5, "transliteration": "Abhayadayanam Chakkhudayanam Maggadayanam Saranadayanam Bohidayanam", "translation_en": "Givers of fearlessness, givers of vision, givers of the path, givers of refuge, givers of enlightenment" },
-      { "line_number": 6, "transliteration": "Savvanoonam Savvadarisinam", "translation_en": "The omniscient ones, the all-seeing ones" },
-      { "line_number": 7, "transliteration": "Namo Jinanam Jiabhayunam", "translation_en": "Salutation to the Jinas, the conquerors of existence and fear" }
+      {
+        "line_number": 1,
+        "transliteration": "Namutthunam Arihantanam Bhagavantanam",
+        "translation_en": "Salutation to the Arihant Bhagavants"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Aiyaranam Titthayaranam Sayamsambuddhanam",
+        "translation_en": "The founders of the ford, the self-enlightened ones"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Purisuttamanam Purisa Seehanam Purisa Vara Pundariyanam",
+        "translation_en": "The best among men, the lions among men, the pure lotuses among men"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Loguttamanam Loganaanam Loga Hiyanam Loga Paevanam Logapajjoagaranam",
+        "translation_en": "The best in the world, lords of the world, benefactors of the world, lights of the world, illuminators of the world"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Abhayadayanam Chakkhudayanam Maggadayanam Saranadayanam Bohidayanam",
+        "translation_en": "Givers of fearlessness, givers of vision, givers of the path, givers of refuge, givers of enlightenment"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Savvanoonam Savvadarisinam",
+        "translation_en": "The omniscient ones, the all-seeing ones"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Namo Jinanam Jiabhayunam",
+        "translation_en": "Salutation to the Jinas, the conquerors of existence and fear"
+      }
     ],
     "interpretation": "By this sutra, Shakrendra (king of gods) glorifies Lord Arihanta with an extensive list of superior qualities and epithets — celebrating their role as supreme guides, protectors and enlighteners of all living beings across the three worlds.",
-    "tags": ["arihant", "omniscience", "glorification", "epithets"]
+    "tags": [
+      "arihant",
+      "omniscience",
+      "glorification",
+      "epithets"
+    ],
+    "sutra_number_p2": 12
   },
   {
     "id": "15",
     "title": "Shree Javanti Cheiim Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 15,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Javanti Cheiim Uddhe A Ahe A Tiriyaloe A", "translation_en": "All the Jina temples that exist — in the upper, lower and middle worlds" },
-      { "line_number": 2, "transliteration": "Savvaim Taim Vande", "translation_en": "I offer salutation to all of them" },
-      { "line_number": 3, "transliteration": "Iha Santo Tattha Santaim", "translation_en": "Being present here in spirit and there in form" }
+      {
+        "line_number": 1,
+        "transliteration": "Javanti Cheiim Uddhe A Ahe A Tiriyaloe A",
+        "translation_en": "All the Jina temples that exist — in the upper, lower and middle worlds"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Savvaim Taim Vande",
+        "translation_en": "I offer salutation to all of them"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Iha Santo Tattha Santaim",
+        "translation_en": "Being present here in spirit and there in form"
+      }
     ],
     "interpretation": "By this sutra, salutation is offered to all Jina temples across the three worlds. The devotee transcends physical limitations, offering reverence to every temple simultaneously through pure intention and devotion.",
-    "tags": ["temples", "salutation", "three-worlds", "reverence"]
+    "tags": [
+      "temples",
+      "salutation",
+      "three-worlds",
+      "reverence"
+    ],
+    "sutra_number_p2": 13
   },
   {
     "id": "16",
     "title": "Shree Javanta Ke Vi Sahoo Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 16,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Javanta Ke Vi Sahoo", "translation_en": "To all the Sadhus who are living" },
-      { "line_number": 2, "transliteration": "Bharaheravaya Mahavidehe A", "translation_en": "In the regions of Bharata, Airavata and Mahavidha" },
-      { "line_number": 3, "transliteration": "Savvesim Tesim Panao", "translation_en": "I bow to all of them" },
-      { "line_number": 4, "transliteration": "Tivihenam Tidanda Virayenam", "translation_en": "With three-fold restraint, having given up the three rods of body, speech and mind" }
+      {
+        "line_number": 1,
+        "transliteration": "Javanta Ke Vi Sahoo",
+        "translation_en": "To all the Sadhus who are living"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Bharaheravaya Mahavidehe A",
+        "translation_en": "In the regions of Bharata, Airavata and Mahavidha"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Savvesim Tesim Panao",
+        "translation_en": "I bow to all of them"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Tivihenam Tidanda Virayenam",
+        "translation_en": "With three-fold restraint, having given up the three rods of body, speech and mind"
+      }
     ],
     "interpretation": "By means of this sutra, obeisance is offered to all the Shramanas present across all regions of the universe — Bharata, Airavata and Mahavidha Kshetra — honoring their complete triple restraint of body, speech and mind.",
-    "tags": ["sadhu", "obeisance", "regions", "three-fold"]
+    "tags": [
+      "sadhu",
+      "obeisance",
+      "regions",
+      "three-fold"
+    ],
+    "sutra_number_p2": 14
   },
   {
     "id": "17",
     "title": "Shree Namorhat Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 17,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Namo Arhat Siddhacharya Upadhyaya Sarvasadhubhyah", "translation_en": "Salutation to the Arhats, Siddhas, Acharyas, Upadhyayas and all Sadhus" }
+      {
+        "line_number": 1,
+        "transliteration": "Namo Arhat Siddhacharya Upadhyaya Sarvasadhubhyah",
+        "translation_en": "Salutation to the Arhats, Siddhas, Acharyas, Upadhyayas and all Sadhus"
+      }
     ],
     "interpretation": "By means of this sutra excerpted from the Poorva scripture by Shri Siddhasena Divakara Soori, obeisance is offered simultaneously to all five Parameshthi — the five supreme beings of the Jain faith — in a single, complete Sanskrit salutation.",
-    "tags": ["five-parameshthi", "salutation", "navkar"]
+    "tags": [
+      "five-parameshthi",
+      "salutation",
+      "navkar"
+    ],
+    "sutra_number_p2": 15
   },
   {
     "id": "18",
     "title": "Shree Uvasaggaharam Stotra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 18,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Uvasaggaharam Pasam Pasam Vandami Kamma Ghana Mukkam", "translation_en": "I bow to Lord Parshvanatha, the remover of all impediments, freed from masses of karma" },
-      { "line_number": 2, "transliteration": "Visahara Visa Ninnasam Mangala Kallana Avasam", "translation_en": "Destroyer of all poison, the abode of auspiciousness and welfare" },
-      { "line_number": 3, "transliteration": "Visahara Fuling Mantam Kanthe Dharei Jo Saya Manuao", "translation_en": "Whoever always wears the Visahara Fulinga mantra at their throat" },
-      { "line_number": 4, "transliteration": "Tassa Gaha Roga Marie Dujjha Jara Janti Uvasamam", "translation_en": "Their possession, disease and calamities are pacified" },
-      { "line_number": 5, "transliteration": "Tuha Sammatte Laddhe Chintamani Kappapayavabbhahie Pavanti Avigghenam Jeeva Ayaramaram Thanam", "translation_en": "Having attained your right faith, like a wish-fulfilling tree, living beings attain the eternal state without obstacle" },
-      { "line_number": 6, "transliteration": "Ia Santhuo Mahayasa Bhattibhara Nibbharenam Hiyaenam Ta Deva Dijja Bohi Bhave Bhave Pasa Jinachand", "translation_en": "Thus praised O greatly renowned Lord, with a heart full of devotion — O God, grant me enlightenment! O Parshva, O moon among Jinas, in every birth." }
+      {
+        "line_number": 1,
+        "transliteration": "Uvasaggaharam Pasam Pasam Vandami Kamma Ghana Mukkam",
+        "translation_en": "I bow to Lord Parshvanatha, the remover of all impediments, freed from masses of karma"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Visahara Visa Ninnasam Mangala Kallana Avasam",
+        "translation_en": "Destroyer of all poison, the abode of auspiciousness and welfare"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Visahara Fuling Mantam Kanthe Dharei Jo Saya Manuao",
+        "translation_en": "Whoever always wears the Visahara Fulinga mantra at their throat"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Tassa Gaha Roga Marie Dujjha Jara Janti Uvasamam",
+        "translation_en": "Their possession, disease and calamities are pacified"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Tuha Sammatte Laddhe Chintamani Kappapayavabbhahie Pavanti Avigghenam Jeeva Ayaramaram Thanam",
+        "translation_en": "Having attained your right faith, like a wish-fulfilling tree, living beings attain the eternal state without obstacle"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Ia Santhuo Mahayasa Bhattibhara Nibbharenam Hiyaenam Ta Deva Dijja Bohi Bhave Bhave Pasa Jinachand",
+        "translation_en": "Thus praised O greatly renowned Lord, with a heart full of devotion — O God, grant me enlightenment! O Parshva, O moon among Jinas, in every birth."
+      }
     ],
     "interpretation": "Composed by Shri Bhadra Bahu Swami, this stotra glorifies Lord Parshvanatha as the supreme remover of all obstacles — physical, spiritual and karmic. It is especially recited for protection from disease, evil forces and calamities. The stotra expresses complete surrender and devotion to Parshvanatha across all lifetimes, asking for the ultimate gift of enlightenment.",
-    "tags": ["parshvanatha", "protection", "disease", "karma", "enlightenment"]
+    "tags": [
+      "parshvanatha",
+      "protection",
+      "disease",
+      "karma",
+      "enlightenment"
+    ],
+    "sutra_number_p2": 16
   },
   {
     "id": "19",
     "title": "Shree Jaya Veeyaraya Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 19,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Jaya Veeyaraya Jaga Guru", "translation_en": "Victory to the Veetaraga, the world teacher" },
-      { "line_number": 2, "transliteration": "Hou Mamam Tuha Pabhavao Bhayavam Bhavanivveo Magganusariya Itta Phala Siddhi", "translation_en": "Through your power O Lord, may I attain detachment from the world and follow the path to desired fruits" },
-      { "line_number": 3, "transliteration": "Loga Viruddhachhao Gurujana Pua Parattha Karanam Cha", "translation_en": "May I avoid what is opposed to the world's welfare and serve the elders for the benefit of others" },
-      { "line_number": 4, "transliteration": "Suhaguru Jogo Tavvayanam Sevanam Abhava Mkhandha", "translation_en": "May I have the company of a good guru, follow his teachings and serve him without interruption" },
-      { "line_number": 5, "transliteration": "Dukkhakkhao Kammakkhao Samahi Maranam Cha Bohilabho A", "translation_en": "May there be destruction of sorrow, destruction of karma, peaceful death and attainment of enlightenment" },
-      { "line_number": 6, "transliteration": "Tuha Naha Panam Karanam Sarva Mangala Mangalyam Sarva Kalyana Karanam Pradhanam Sarva Dharmanam Jainam Jayati Sasanam", "translation_en": "Bowing to you O Lord — the most auspicious of all auspicious, the cause of all welfare, the foremost of all religions — may the Jain teachings always be victorious" }
+      {
+        "line_number": 1,
+        "transliteration": "Jaya Veeyaraya Jaga Guru",
+        "translation_en": "Victory to the Veetaraga, the world teacher"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Hou Mamam Tuha Pabhavao Bhayavam Bhavanivveo Magganusariya Itta Phala Siddhi",
+        "translation_en": "Through your power O Lord, may I attain detachment from the world and follow the path to desired fruits"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Loga Viruddhachhao Gurujana Pua Parattha Karanam Cha",
+        "translation_en": "May I avoid what is opposed to the world's welfare and serve the elders for the benefit of others"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Suhaguru Jogo Tavvayanam Sevanam Abhava Mkhandha",
+        "translation_en": "May I have the company of a good guru, follow his teachings and serve him without interruption"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Dukkhakkhao Kammakkhao Samahi Maranam Cha Bohilabho A",
+        "translation_en": "May there be destruction of sorrow, destruction of karma, peaceful death and attainment of enlightenment"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Tuha Naha Panam Karanam Sarva Mangala Mangalyam Sarva Kalyana Karanam Pradhanam Sarva Dharmanam Jainam Jayati Sasanam",
+        "translation_en": "Bowing to you O Lord — the most auspicious of all auspicious, the cause of all welfare, the foremost of all religions — may the Jain teachings always be victorious"
+      }
     ],
     "interpretation": "This sutra offers the most complete spiritual prayer in Pratikraman — asking the Veetaraga Lord for every essential element of the path: detachment, right guidance, good company, destruction of karma, peaceful death, and enlightenment. It concludes with a declaration of the supremacy and eternal victory of the Jain teachings.",
-    "tags": ["veetaraga", "liberation", "karma", "prayer", "jain-teachings", "enlightenment"]
+    "tags": [
+      "veetaraga",
+      "liberation",
+      "karma",
+      "prayer",
+      "jain-teachings",
+      "enlightenment"
+    ],
+    "sutra_number_p2": 17
   },
   {
     "id": "20",
     "title": "Shree Arihanta Cheiynam Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 20,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Arihanta Cheiyenam Karemi Kaaussaggam", "translation_en": "I perform Kayotsarga for the adoration of Arihanta idols" },
-      { "line_number": 2, "transliteration": "Vandana Vattiaye Puyana Vattiaye", "translation_en": "For the purpose of salutation and worship" },
-      { "line_number": 3, "transliteration": "Sakkara Vattiaye Sammana Vattiaye", "translation_en": "For the purpose of honor and respect" },
-      { "line_number": 4, "transliteration": "Bohilabha Vattiaye Niruvasagga Vattiaye", "translation_en": "For attainment of enlightenment and removal of obstacles" },
-      { "line_number": 5, "transliteration": "Saddhaae Mehaae Dhiiaae Dharanae Anuppehae Vaddhamanieae", "translation_en": "With faith, with devotion, with steadiness, with holding, with contemplation, with growth" },
-      { "line_number": 6, "transliteration": "Thami Kaaussaggam", "translation_en": "I undertake Kayotsarga" }
+      {
+        "line_number": 1,
+        "transliteration": "Arihanta Cheiyenam Karemi Kaaussaggam",
+        "translation_en": "I perform Kayotsarga for the adoration of Arihanta idols"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Vandana Vattiaye Puyana Vattiaye",
+        "translation_en": "For the purpose of salutation and worship"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Sakkara Vattiaye Sammana Vattiaye",
+        "translation_en": "For the purpose of honor and respect"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Bohilabha Vattiaye Niruvasagga Vattiaye",
+        "translation_en": "For attainment of enlightenment and removal of obstacles"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Saddhaae Mehaae Dhiiaae Dharanae Anuppehae Vaddhamanieae",
+        "translation_en": "With faith, with devotion, with steadiness, with holding, with contemplation, with growth"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Thami Kaaussaggam",
+        "translation_en": "I undertake Kayotsarga"
+      }
     ],
     "interpretation": "This sutra describes the complete set of emotions and intentions while performing Kayotsarga before the Jina idols. It lists six purposes — salutation, worship, honor, respect, enlightenment and removal of obstacles — and six inner qualities that must accompany the meditation, making it a deeply intentional spiritual practice.",
-    "tags": ["kayotsarga", "arihant", "worship", "enlightenment", "meditation"]
+    "tags": [
+      "kayotsarga",
+      "arihant",
+      "worship",
+      "enlightenment",
+      "meditation"
+    ],
+    "sutra_number_p2": 18
   },
   {
     "id": "21",
     "title": "Shree Kallyanakanda Stuti",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 21,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Kallayanakandham Padhamam Jinindham Santim Tao Nemijinam Munindham", "translation_en": "The root of all auspiciousness — first Jina Rushabhadeva, then Shantinatha, then Nemijina the lord of monks" },
-      { "line_number": 2, "transliteration": "Pasam Payasam Sugunikkathnam Bhattiei Vande Siri Vaddhamanam", "translation_en": "Parshvanatha of excellent qualities — and with devotion I bow to Shri Vardhamana" },
-      { "line_number": 3, "transliteration": "Apara Samsara Samudda Param Patta Sivam Dintu Suikka Saram", "translation_en": "Having crossed the limitless ocean of worldly existence, those who attained liberation — may they grant us the pure essence of well-being" },
-      { "line_number": 4, "transliteration": "Savve Jininda Suravinda Vanda Kallyana Valline Visala Kanda", "translation_en": "All Jinas worshipped by Indra — the great root of auspiciousness, the vast stem of the creeper of welfare" },
-      { "line_number": 5, "transliteration": "Nimmana Magge Varajana Kappam Panasiya Sesa Kuvai Dappam", "translation_en": "On the path to liberation, the best among men, destroying the pride of all remaining false knowledge" },
-      { "line_number": 6, "transliteration": "Mayam Jinanam Saranam Buhanam Namami Nichcham Tijagappahanum", "translation_en": "I take refuge in the Jinas, the wise ones — I bow always to the lords of the three worlds" }
+      {
+        "line_number": 1,
+        "transliteration": "Kallayanakandham Padhamam Jinindham Santim Tao Nemijinam Munindham",
+        "translation_en": "The root of all auspiciousness — first Jina Rushabhadeva, then Shantinatha, then Nemijina the lord of monks"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Pasam Payasam Sugunikkathnam Bhattiei Vande Siri Vaddhamanam",
+        "translation_en": "Parshvanatha of excellent qualities — and with devotion I bow to Shri Vardhamana"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Apara Samsara Samudda Param Patta Sivam Dintu Suikka Saram",
+        "translation_en": "Having crossed the limitless ocean of worldly existence, those who attained liberation — may they grant us the pure essence of well-being"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Savve Jininda Suravinda Vanda Kallyana Valline Visala Kanda",
+        "translation_en": "All Jinas worshipped by Indra — the great root of auspiciousness, the vast stem of the creeper of welfare"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Nimmana Magge Varajana Kappam Panasiya Sesa Kuvai Dappam",
+        "translation_en": "On the path to liberation, the best among men, destroying the pride of all remaining false knowledge"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Mayam Jinanam Saranam Buhanam Namami Nichcham Tijagappahanum",
+        "translation_en": "I take refuge in the Jinas, the wise ones — I bow always to the lords of the three worlds"
+      }
     ],
     "interpretation": "This stuti glorifies five key Tirthankaras — Rushabhadeva, Shantinatha, Neminatha, Parshvanatha and Mahavira — then extends the glorification to all twenty-four Jinas. It celebrates the knowledge of the scriptures and honors the goddess of learning, forming a complete devotional hymn that praises the path from worldly existence to liberation.",
-    "tags": ["stuti", "five-tirthankar", "glorification", "devotion", "liberation"]
+    "tags": [
+      "stuti",
+      "five-tirthankar",
+      "glorification",
+      "devotion",
+      "liberation"
+    ],
+    "sutra_number_p2": 19
   },
   {
     "id": "22",
     "title": "Shree Sansaradava Sutra",
-    "category": "Pratikraman 1",
+    "category": "Pratikraman 1, Pratikraman 2",
     "sutra_number": 22,
     "original_gu": "",
     "original_hi": "",
     "lines": [
-      { "line_number": 1, "transliteration": "Samsaradavanala Daha Niram Sammoha Dhooli Harane Samira", "translation_en": "Like water quenching the forest fire of worldly existence, like wind dispersing the dust of delusion" },
-      { "line_number": 2, "transliteration": "Mayarasa Darana Sara Siram Namami Viram Girisara Dhiram", "translation_en": "Like the pure stream cutting through maya — I bow to Mahavira, firm as a mountain" },
-      { "line_number": 3, "transliteration": "Bhavavanaama Sura Danava Manavena Choola Vilola Kamalavali Malitani", "translation_en": "The lotus garlands swayed by gods, demons and humans and offered with devotion" },
-      { "line_number": 4, "transliteration": "Sampurita Abhinata Loka Sameehitani Kamam Namami Jinaraja Padani Tani", "translation_en": "Fulfilling all the desires of the world — I bow to the feet of the Jinaraja" },
-      { "line_number": 5, "transliteration": "Bodhagatham Supada Padavee Nirapoorabhi Ramam Jivahimsa Viralalaharee Sangamagaha Deham", "translation_en": "Deep in knowledge, beautiful in conduct, the body immersed in the rare stream of non-violence" },
-      { "line_number": 6, "transliteration": "Saram Veera Gama Jalanidhi Sadaram Sadhu Seve", "translation_en": "I reverently serve the Sadhu — the essence who has crossed the ocean of Mahavira's path" }
+      {
+        "line_number": 1,
+        "transliteration": "Samsaradavanala Daha Niram Sammoha Dhooli Harane Samira",
+        "translation_en": "Like water quenching the forest fire of worldly existence, like wind dispersing the dust of delusion"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Mayarasa Darana Sara Siram Namami Viram Girisara Dhiram",
+        "translation_en": "Like the pure stream cutting through maya — I bow to Mahavira, firm as a mountain"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Bhavavanaama Sura Danava Manavena Choola Vilola Kamalavali Malitani",
+        "translation_en": "The lotus garlands swayed by gods, demons and humans and offered with devotion"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Sampurita Abhinata Loka Sameehitani Kamam Namami Jinaraja Padani Tani",
+        "translation_en": "Fulfilling all the desires of the world — I bow to the feet of the Jinaraja"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Bodhagatham Supada Padavee Nirapoorabhi Ramam Jivahimsa Viralalaharee Sangamagaha Deham",
+        "translation_en": "Deep in knowledge, beautiful in conduct, the body immersed in the rare stream of non-violence"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Saram Veera Gama Jalanidhi Sadaram Sadhu Seve",
+        "translation_en": "I reverently serve the Sadhu — the essence who has crossed the ocean of Mahavira's path"
+      }
     ],
     "interpretation": "This dual Sanskrit-Prakrit eulogy composed by Shri Haribhadra Soori glorifies Mahaveer Swami, all Jinas, Jinagama and Shruta Devi (goddess of knowledge). The opening verses use vivid natural metaphors — fire, wind and stream — to describe how Mahavira's teachings quench the suffering of worldly life and dispel the delusion of maya.",
-    "tags": ["mahavira", "samsara", "liberation", "stuti", "ahimsa", "knowledge"]
+    "tags": [
+      "mahavira",
+      "samsara",
+      "liberation",
+      "stuti",
+      "ahimsa",
+      "knowledge"
+    ],
+    "sutra_number_p2": 20
+  },
+  {
+    "id": "23",
+    "title": "Shree Pukkhara Vara Divaddhe Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 21,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Pukkhara-vara-diva-ddhe, dhayai-sande a jambu-dive a",
+        "translation_en": "In the best island Pushkaradvipa, in Dhatakikhanda, and in Jambudvipa"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Bharaheravaya-videhe, dhammei-gare namamsami",
+        "translation_en": "In Bharata, Airavata and Videha — I bow to the founders of dharma"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Tama-timira-padala-viddham-sanassa",
+        "translation_en": "That which destroys the veil of darkness of ignorance"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Sura-gana-narinda-mahiassa",
+        "translation_en": "Adored by celestial beings and kings"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Sima-dharassa vande",
+        "translation_en": "I worship the sacred doctrine containing the rules of conduct"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Papphodia-moha-jalassa",
+        "translation_en": "That which tears apart the net of delusion"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Jai-jara-marana-soga-panasanassa",
+        "translation_en": "That which ends the sorrows of birth, old age, and death"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Kallana-pukkha-lavisala-suha-vahassa",
+        "translation_en": "That which brings the full and ample bliss of final release"
+      },
+      {
+        "line_number": 9,
+        "transliteration": "Ko deva-danava-narinda-gana-chchiassa",
+        "translation_en": "Worshiped by gods, demons and kings"
+      },
+      {
+        "line_number": 10,
+        "transliteration": "Dhammassa sara-muva labbha kare pamayam?",
+        "translation_en": "How can one who understands its essence ever become careless?"
+      },
+      {
+        "line_number": 11,
+        "transliteration": "Siddhe bho! Payao namo jina-mae",
+        "translation_en": "O people! Pay salutations to the Holy Writ of Lord Tirthankara"
+      },
+      {
+        "line_number": 12,
+        "transliteration": "Nandi saya sanjame",
+        "translation_en": "Which is proven most beneficial in the path of right conduct"
+      },
+      {
+        "line_number": 13,
+        "transliteration": "Dhammo vaddhau sasao vijayao",
+        "translation_en": "Let this sacred doctrine be triumphant and victorious"
+      },
+      {
+        "line_number": 14,
+        "transliteration": "Dhammuttram vaddhau",
+        "translation_en": "May it prosper the dignity of all tenets"
+      },
+      {
+        "line_number": 15,
+        "transliteration": "Suassa bhagavao karemi kassaggam vanda-navattiyae",
+        "translation_en": "O Lord! To worship the Holy Writ, I will practice the body-abandonment posture"
+      }
+    ],
+    "interpretation": "This sutra is a hymn in praise of Jain dharma and the Tirthankars residing in the two and a half islands (Adhai Dvip). It glorifies the sacred doctrine as the destroyer of ignorance and delusion, the ender of birth, death and sorrow, and the bringer of supreme bliss. It calls upon all beings — gods, demons and humans — to recognize the priceless essence of this dharma and never be careless about it.",
+    "tags": [
+      "dharma",
+      "two-half-islands",
+      "glorification",
+      "shruta",
+      "doctrine"
+    ]
+  },
+  {
+    "id": "24",
+    "title": "Shree Siddhanam Buddhanam Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 22,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Siddhanam Buddhanam",
+        "translation_en": "To the Siddhas, the enlightened ones"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Para-gayanam Parampara-gayanam",
+        "translation_en": "Who have crossed over, who have gone beyond in succession"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Loagga-muvagayanam",
+        "translation_en": "Who have reached the summit of the universe"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Namo Saya Savva-Siddhanam",
+        "translation_en": "I pay homage always to all the Siddhas"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Jo Devana Vi Devo",
+        "translation_en": "He who is the god of gods"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Jam Deva Panjali Namamsanti",
+        "translation_en": "To whom gods bow with folded hands"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Tam Deva-Deva-Mahiam",
+        "translation_en": "That great Lord among gods"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Sirasa Vande Mahaviram",
+        "translation_en": "I bow my head to Lord Mahavira"
+      },
+      {
+        "line_number": 9,
+        "transliteration": "Ikko Vi Namukkaro",
+        "translation_en": "Even one salutation"
+      },
+      {
+        "line_number": 10,
+        "transliteration": "Jinavara-Vasahassa Vaddhamanassa",
+        "translation_en": "To the supreme Jina, Vardhaman Mahavira"
+      },
+      {
+        "line_number": 11,
+        "transliteration": "Sansara-Sagarao",
+        "translation_en": "Across the ocean of worldly existence"
+      },
+      {
+        "line_number": 12,
+        "transliteration": "Tarei Naram Va Narim Va",
+        "translation_en": "Carries a man or a woman across"
+      },
+      {
+        "line_number": 13,
+        "transliteration": "Ujjinta-Sela-Sihare",
+        "translation_en": "On the summit of Mount Girnar"
+      },
+      {
+        "line_number": 14,
+        "transliteration": "Dikkha Nanam Nisihia Jassa",
+        "translation_en": "Where He received initiation and perfect knowledge"
+      },
+      {
+        "line_number": 15,
+        "transliteration": "Tam Dhamma-Chakka-Vattim",
+        "translation_en": "That monarch who turned the wheel of dharma"
+      },
+      {
+        "line_number": 16,
+        "transliteration": "Arittha-Nemim Namamsami",
+        "translation_en": "I bow to Arishtanemi (Lord Neminath)"
+      },
+      {
+        "line_number": 17,
+        "transliteration": "Cattari Attha Dasa Do Ya",
+        "translation_en": "Four, eight, ten and two (twenty-four)"
+      },
+      {
+        "line_number": 18,
+        "transliteration": "Vandiya Jinavara Cauvvisam",
+        "translation_en": "I salute all twenty-four supreme Jinas"
+      },
+      {
+        "line_number": 19,
+        "transliteration": "Paramattha-Nitthi-Attha",
+        "translation_en": "Who have attained the supreme state of liberation"
+      },
+      {
+        "line_number": 20,
+        "transliteration": "Siddha Siddhim Mama Disantu",
+        "translation_en": "May the Siddhas grant me salvation"
+      }
+    ],
+    "interpretation": "This sutra is a prayer to all enlightened Siddhas, Lord Mahavira, Lord Neminath and all twenty-four Tirthankaras installed at Ashtapada Tirtha. It declares that even a single perfect salutation to Lord Mahavira is powerful enough to carry any soul across the ocean of worldly existence — emphasizing the immeasurable merit of sincere devotion.",
+    "tags": [
+      "siddha",
+      "mahavira",
+      "neminath",
+      "twenty-four-tirthankar",
+      "salvation"
+    ]
+  },
+  {
+    "id": "25",
+    "title": "Shree Vaiyavacchagaranam Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 23,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Veyavachcha-garanam",
+        "translation_en": "In rendering service to monks and nuns"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Aseyana-piune",
+        "translation_en": "In welcoming and in worship"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Acharupasane",
+        "translation_en": "In approaching the Acharya"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Gana-samuchchhee",
+        "translation_en": "In congregational conduct"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Anitthe",
+        "translation_en": "In departure and leave-taking"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Padikkame Desiam Savvam",
+        "translation_en": "I confess for all these transgressions"
+      }
+    ],
+    "interpretation": "This sutra confesses and seeks forgiveness for any lapses in rendering proper seva (service) to monks and nuns — the five types of spiritual service including welcoming, worship, seating, congregational gathering, and departure. It recognizes that serving the Sangha is a sacred duty and any shortcoming therein warrants repentance.",
+    "tags": [
+      "seva",
+      "monks",
+      "nuns",
+      "service",
+      "repentance"
+    ]
+  },
+  {
+    "id": "26",
+    "title": "Shree Bhagwanadi Vanadan Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 24,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Bhagavanham Indamahitam",
+        "translation_en": "The Lord Bhagavan who is worshipped by Indra"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Savvanuham Sahanam Padhamanham",
+        "translation_en": "The omniscient, the most patient, the foremost"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Asamagga Nanadamsanam",
+        "translation_en": "Possessing incomparable knowledge and perception"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Jinam Padhamam Namamsami",
+        "translation_en": "I salute the first Jina"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Veyavichchassa Gunam",
+        "translation_en": "The virtues of the all-knowing one"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Namami Nichcham Tijagappahanum",
+        "translation_en": "I always bow to the Lord of the three worlds"
+      }
+    ],
+    "interpretation": "This sutra offers salutation to the first Lord (Adinath/Rishabhadeva) and all Tirthankaras, honoring their supreme qualities of omniscience, patience, and unmatched knowledge. It is a concise act of vandana (obeisance) to the Bhagavants as the foremost beings worthy of worship.",
+    "tags": [
+      "bhagavan",
+      "vandana",
+      "adinath",
+      "obeisance",
+      "omniscience"
+    ]
+  },
+  {
+    "id": "27",
+    "title": "Shree Devasiya Padikkamane Thau Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 25,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Devasiya Padikkamane Thau",
+        "translation_en": "In the evening confession I stand"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Jaha-jaena Paliyam Taha Paliyam",
+        "translation_en": "Whatever was observed properly has been observed"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Jaha Jaena Na Paliyam",
+        "translation_en": "Whatever was not observed properly"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Taha Michchha Mi Dukkadam",
+        "translation_en": "For that, let my sins be forgiven"
+      }
+    ],
+    "interpretation": "This brief but powerful sutra formally acknowledges the evening (Devasiya) Pratikraman. It states that whatever vows were properly observed have been duly kept, and for whatever was not properly observed, forgiveness is sincerely sought. It is the pivotal transitional declaration that opens the formal confession portion of the rite.",
+    "tags": [
+      "devasiya",
+      "confession",
+      "forgiveness",
+      "evening-pratikraman"
+    ]
+  },
+  {
+    "id": "28",
+    "title": "Shree Icchami Thami Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 26,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Ichchhami Thami Kaaussaggam",
+        "translation_en": "I wish to perform Kayotsarga"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Jo Me Devasia Aiyaro",
+        "translation_en": "For whatever transgressions I committed during the day"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Suhumo Va Bayaro Va",
+        "translation_en": "Whether subtle or gross"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Tam Nindami",
+        "translation_en": "I condemn them"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Tam Cha Garihami",
+        "translation_en": "I reproach them"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Appanam Vosirami",
+        "translation_en": "I relinquish my ego"
+      }
+    ],
+    "interpretation": "This sutra is the formal declaration of intent to perform Kayotsarga specifically for the daily transgressions. The practitioner acknowledges all faults committed during the day — whether subtle or gross — condemns and reproaches them, and surrenders the ego as preparation for the standing meditation.",
+    "tags": [
+      "kayotsarga",
+      "daily-transgressions",
+      "confession",
+      "ego-surrender"
+    ]
+  },
+  {
+    "id": "29",
+    "title": "Shree Nannami Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 27,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Nanammi Dansanammi",
+        "translation_en": "In knowledge, in faith"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Charittammi Ya Tavakiriyasu",
+        "translation_en": "In conduct and in austerity"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Savvao Vi Avirahanam Hoju",
+        "translation_en": "May there be no lapse at all"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Mahavira Sayasidde",
+        "translation_en": "O Mahavira, O ever-accomplished one"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Khama Khamavane Devo",
+        "translation_en": "O Lord of forgiveness"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Saranattham Tujjha",
+        "translation_en": "For the purpose of refuge in you"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Tuha Ya Saranam Gachchhami",
+        "translation_en": "I take refuge in you"
+      }
+    ],
+    "interpretation": "This sutra is a prayer to Lord Mahavira seeking perfection in the four pillars of spiritual life: right knowledge, right faith, right conduct and right austerity. The devotee prays that there be absolutely no lapse in any of these, and takes complete refuge in the ever-accomplished Mahavira as the ultimate protector and guide.",
+    "tags": [
+      "mahavira",
+      "knowledge",
+      "faith",
+      "conduct",
+      "austerity",
+      "refuge"
+    ]
+  },
+  {
+    "id": "30",
+    "title": "Shree Suguru Vandana Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 28,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Siddhe Bujjhamanassa",
+        "translation_en": "Following the path of the Siddhas"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Vihi Karemanassa",
+        "translation_en": "Performing the sacred rites"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Samane Saddahe",
+        "translation_en": "With faith in the Shramana tradition"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Tiviham Tivihenam Manavayakayenam Na Atikamami",
+        "translation_en": "By thought, word and body in threefold ways, I do not transgress"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Vandami Namamsami",
+        "translation_en": "I salute and bow"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Sakkare Sammane",
+        "translation_en": "I honor and respect"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Kallanam Kittijjasu",
+        "translation_en": "May there be welfare and auspiciousness"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Bohimam Iyammi Bhave A",
+        "translation_en": "May I attain enlightenment in this life"
+      }
+    ],
+    "interpretation": "The Suguru Vandana Sutra is a devotional prayer of obeisance to the true Guru (Suguru). The practitioner commits to following the Siddha path without transgression by thought, word or body, and prays for auspiciousness and enlightenment in this very lifetime. It reinforces the centrality of the Guru-disciple relationship in spiritual progress.",
+    "tags": [
+      "suguru",
+      "vandana",
+      "guru-devotion",
+      "enlightenment",
+      "obeisance"
+    ]
+  },
+  {
+    "id": "31",
+    "title": "Shree Devasiyam Aaloum Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 29,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Ichchhakarena Sandisaha Bhagavan",
+        "translation_en": "With your permission O Lord"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Devasiyam Aaloum?",
+        "translation_en": "May I perform the evening's reflective confession?"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Savvam Savvam",
+        "translation_en": "All of it, every bit of it"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Je Padikkamanijjam Padikkamami",
+        "translation_en": "Whatever is worthy of confession, I confess it all"
+      }
+    ],
+    "interpretation": "This sutra formally initiates the Alochana (reflective confession) portion of the evening Pratikraman. The devotee asks permission from the Lord to review and confess all the day's transgressions, establishing the introspective and soul-cleansing nature of the rite. It marks the transition from ritualistic recitation to deep personal self-examination.",
+    "tags": [
+      "alochana",
+      "confession",
+      "self-reflection",
+      "evening",
+      "introspection"
+    ]
+  },
+  {
+    "id": "32",
+    "title": "Shree Saat Lakh Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 30,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Saat Lakkha Ya Chaurasee Lakkha Joninam",
+        "translation_en": "Among the 8.4 million forms of life"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Santhu Me Tivihena Tividham",
+        "translation_en": "May there be peace through my threefold conduct"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Savvajivesim",
+        "translation_en": "Toward all living beings"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Khamanao Khamavenam",
+        "translation_en": "I forgive all, I ask forgiveness from all"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Mittee Me Savva Bhuesu",
+        "translation_en": "I have friendship with all beings"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Veramam Majjham Na Kenai",
+        "translation_en": "I have enmity with none"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Tassa Michchha Mi Dukkadam",
+        "translation_en": "For all of that, let my sins be forgiven"
+      }
+    ],
+    "interpretation": "This sutra acknowledges the vastness of life — 8.4 million birth forms — and extends universal forgiveness and friendship to all living beings without exception. It is one of the most inclusive declarations in Pratikraman, expressing the Jain ideal of unconditional non-violence and universal compassion across all species and realms of existence.",
+    "tags": [
+      "universal-forgiveness",
+      "ahimsa",
+      "all-living-beings",
+      "friendship",
+      "compassion"
+    ]
+  },
+  {
+    "id": "33",
+    "title": "Shree Adhar Paapsthanak Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 31,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Panaivaya",
+        "translation_en": "Violence"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Mrusavaya",
+        "translation_en": "Falsehood"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Adattadana",
+        "translation_en": "Stealing"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Maithuna",
+        "translation_en": "Unchastity"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Pariggahe",
+        "translation_en": "Possessiveness"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Koha Mana Maya Lobha",
+        "translation_en": "Anger, pride, deceit, greed"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Raga Dose",
+        "translation_en": "Attachment, aversion"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Kalaha Abhakkhana",
+        "translation_en": "Quarrel, false accusation"
+      },
+      {
+        "line_number": 9,
+        "transliteration": "Paisunna",
+        "translation_en": "Gossip"
+      },
+      {
+        "line_number": 10,
+        "transliteration": "Rai Arai",
+        "translation_en": "Liking and disliking"
+      },
+      {
+        "line_number": 11,
+        "transliteration": "Para Parivaya",
+        "translation_en": "Fault-finding in others"
+      },
+      {
+        "line_number": 12,
+        "transliteration": "Maya Mosa Viha",
+        "translation_en": "Deceit, falsehood, wrong belief"
+      },
+      {
+        "line_number": 13,
+        "transliteration": "Mithyatva Sannidhi",
+        "translation_en": "False belief and hoarding"
+      },
+      {
+        "line_number": 14,
+        "transliteration": "Atthaarasa Papasthanakanam Padikkamami",
+        "translation_en": "I confess for all eighteen sinful activities"
+      }
+    ],
+    "interpretation": "This sutra systematically enumerates the eighteen sinful activities (paap sthanaks) in Jain ethics — from the five major transgressions (violence, falsehood, stealing, unchastity, possessiveness) through the four passions and other moral failings including gossip, fault-finding, wrong belief and hoarding. The practitioner confesses and seeks forgiveness for all of them.",
+    "tags": [
+      "eighteen-sins",
+      "paap-sthanak",
+      "confession",
+      "ethics",
+      "passions"
+    ]
+  },
+  {
+    "id": "34",
+    "title": "Shree Savvassavi Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 32,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Savvassavi Munisu Sannao",
+        "translation_en": "I bow reverently to all the monks and nuns"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Bhaddam Bhaddantao Me",
+        "translation_en": "May there be auspiciousness"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Jai Chauveesam Titthanam",
+        "translation_en": "Victory to the twenty-four Tirthankaras"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Agga Dhammo Sayanam Jinanam",
+        "translation_en": "The foremost dharma is the self-restraint of the Jinas"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Padhamam Havaijja Mangalam",
+        "translation_en": "May this be the foremost auspiciousness"
+      }
+    ],
+    "interpretation": "This sutra offers collective obeisance to all the monks and nuns of the Jain Sangha, invoking auspiciousness. It affirms the primacy of the dharma taught by all twenty-four Tirthankaras and emphasizes self-restraint as the foundation of Jain practice, closing with a prayer for supreme mangal (auspiciousness).",
+    "tags": [
+      "monks",
+      "nuns",
+      "obeisance",
+      "auspiciousness",
+      "dharma"
+    ]
+  },
+  {
+    "id": "35",
+    "title": "Shree Icchami Padikkamiu Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 33,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Ichchhami Padikkamium",
+        "translation_en": "I wish to confess"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Iriyavahiyae Virahanae",
+        "translation_en": "For harm caused while walking"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Gamanagamane",
+        "translation_en": "In coming and going"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Panakkamane Beeyakkamane Hariyakkamane",
+        "translation_en": "For crushing living beings in water, seeds and green plants"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Tassa Michchha Mi Dukkadam",
+        "translation_en": "For all of that, let my sins be forgiven"
+      }
+    ],
+    "interpretation": "This sutra is a condensed repentance for harm caused during daily movement — similar to the full Iriyavahiyam but recited at this point in Pratikraman as a renewed acknowledgment of the unavoidable violence of daily life. It reinforces the practitioner's continuous commitment to Ahimsa and mindful movement.",
+    "tags": [
+      "ahimsa",
+      "repentance",
+      "walking",
+      "daily-harm"
+    ]
+  },
+  {
+    "id": "36",
+    "title": "Shree Vandittu Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 34,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Vandittu savva-siddhe",
+        "translation_en": "Bowing to all the Siddhas"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Dhammayarie a savva-sahu a",
+        "translation_en": "And all Dharmacharyas and Sadhus"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Ichchhami padikkamiun, savaga-dhammaiarassa",
+        "translation_en": "I wish to confess for transgressions while following layman's vows"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Jo me vayaiyaro, nane taha dansane charitte a",
+        "translation_en": "Whatever transgressions I committed in right knowledge, faith and conduct"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Suhumo va bayaro va",
+        "translation_en": "Whether subtle or gross"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Tam ninde tam cha garihami",
+        "translation_en": "I condemn and reproach them"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Duvihe pariggahammi",
+        "translation_en": "In two types of possessions"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Savajje bahuvihe a arambhe",
+        "translation_en": "In sinful and manifold harmful activities"
+      },
+      {
+        "line_number": 9,
+        "transliteration": "Karavane a karane",
+        "translation_en": "Whether done by me or caused to be done"
+      },
+      {
+        "line_number": 10,
+        "transliteration": "Padikkame desiam savvam",
+        "translation_en": "I confess for all of it"
+      },
+      {
+        "line_number": 11,
+        "transliteration": "Jam baddhamindiehim",
+        "translation_en": "Whatever was bound by the senses"
+      },
+      {
+        "line_number": 12,
+        "transliteration": "Chauhim kasaehim appasatthehim",
+        "translation_en": "By the four passions with despicable intentions"
+      },
+      {
+        "line_number": 13,
+        "transliteration": "Ragena va dosena va",
+        "translation_en": "Due to attachment or aversion"
+      },
+      {
+        "line_number": 14,
+        "transliteration": "Tam ninde tam cha garihami",
+        "translation_en": "I condemn and reproach them"
+      },
+      {
+        "line_number": 15,
+        "transliteration": "Agamane-niggamane",
+        "translation_en": "In coming and going"
+      },
+      {
+        "line_number": 16,
+        "transliteration": "Thane chankamane anabhoge",
+        "translation_en": "In standing, strolling and purposelessness"
+      },
+      {
+        "line_number": 17,
+        "transliteration": "Abhioge a nioge",
+        "translation_en": "Due to fear or pressure from authorities"
+      },
+      {
+        "line_number": 18,
+        "transliteration": "Padikkame desiam savvam",
+        "translation_en": "I confess for all of it"
+      },
+      {
+        "line_number": 19,
+        "transliteration": "Sanka kankha vigichchha",
+        "translation_en": "Doubt, desire for other religions, uncertainty"
+      },
+      {
+        "line_number": 20,
+        "transliteration": "Pasansa taha santhavo kulingisu",
+        "translation_en": "Praise of, or acquaintance with, the ignorant"
+      },
+      {
+        "line_number": 21,
+        "transliteration": "Sammattassa-iare",
+        "translation_en": "In transgressions of right faith"
+      },
+      {
+        "line_number": 22,
+        "transliteration": "Padikkame desiam savvam",
+        "translation_en": "I confess for all of it"
+      },
+      {
+        "line_number": 23,
+        "transliteration": "Chhakkaya-samarambhe",
+        "translation_en": "In harm to six categories of living beings"
+      },
+      {
+        "line_number": 24,
+        "transliteration": "Payane a payavane a je dosa",
+        "translation_en": "In cooking, causing to cook, and approving"
+      },
+      {
+        "line_number": 25,
+        "transliteration": "Attattha ya parattha, ubhayattha cheva tam ninde",
+        "translation_en": "For myself, for others, or for both — I reprehend"
+      },
+      {
+        "line_number": 26,
+        "transliteration": "Panchanha manu-vvayanam",
+        "translation_en": "Of the five lesser vows"
+      },
+      {
+        "line_number": 27,
+        "transliteration": "Guna-vvayanam cha tinhamaiyare",
+        "translation_en": "And the three spiritual vows of self-discipline"
+      },
+      {
+        "line_number": 28,
+        "transliteration": "Sikkhanam cha chaunham",
+        "translation_en": "And the four vows of self-mortification"
+      },
+      {
+        "line_number": 29,
+        "transliteration": "Padikkame desiam savvam",
+        "translation_en": "I confess for all of it"
+      }
+    ],
+    "interpretation": "This sutra is the longest and most comprehensive aphorism in both the Devasika (evening) and Rai (morning) Pratikraman. It begins by bowing to all Siddhas, Dharmacharyas and Sadhus, then systematically walks through each of the twelve householder vows — the five Anu Vratas, three Guna Vratas and four Shiksha Vratas — confessing specific ways the practitioner may have faltered. It embodies the core practice of Pratikramana itself: looking back at one's actions with honesty, scorning one's own wrongdoings, and resolving to walk more carefully on the path of Ahimsa.",
+    "tags": [
+      "vandittu",
+      "twelve-vows",
+      "confession",
+      "longest-sutra",
+      "householder",
+      "ahimsa"
+    ]
+  },
+  {
+    "id": "37",
+    "title": "Shree Aayariya Uvazzhaye Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 36,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Aayariya Uvajjhaye",
+        "translation_en": "To the Acharyas and Upadhyayas"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Theravasi",
+        "translation_en": "To the seniors (Thera)"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Savva Sahu Ganam",
+        "translation_en": "And to the entire community of monks and nuns"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Khamemi Savva Jive",
+        "translation_en": "I forgive all living beings"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Savve Jiva Khamantu Me",
+        "translation_en": "May all living beings forgive me"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Mittee Me Savva Bhuesu",
+        "translation_en": "I have friendship with all beings"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Veramam Majjham Na Kenai",
+        "translation_en": "I have enmity with none"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Tassa Michchha Mi Dukkadam",
+        "translation_en": "For all my wrongdoings, let my sins be forgiven"
+      }
+    ],
+    "interpretation": "This sutra is the most expansive declaration of universal forgiveness in Pratikraman. The practitioner asks forgiveness from all five types of spiritual leaders and every living being, while simultaneously granting forgiveness to all. It embodies the Jain ideal of universal friendship (Maitri) and absence of enmity, culminating in the supreme prayer of Michchhami Dukkadam.",
+    "tags": [
+      "universal-forgiveness",
+      "acharya",
+      "upadhyaya",
+      "maitri",
+      "michchhami-dukkadam"
+    ]
+  },
+  {
+    "id": "38",
+    "title": "Shree Namostu Vardhamanaya Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 37,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Namostu Vardhamanaya",
+        "translation_en": "Salutations to Lord Vardhamana"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Gyata-putraya Vedhase",
+        "translation_en": "Son of the Jnata clan, the wise one"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Yena Nirjitya Kridanto",
+        "translation_en": "Who, having conquered death playfully"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Mrityu Rajye Prathishthitah",
+        "translation_en": "Is established in the kingdom of liberation"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Devo Devanam Paramam Cha Daivam",
+        "translation_en": "God of gods, the supreme divine"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Guru Gurunam Paramam Cha Guruh",
+        "translation_en": "Guru of gurus, the supreme teacher"
+      }
+    ],
+    "interpretation": "This Sanskrit stotra offers salutation to Lord Vardhamana Mahavira, the son of the Jnata (Kshatriya) clan. It glorifies him as one who conquered death as if in play, the god of gods, and the supreme guru of all gurus. It is a compact but powerful expression of the highest reverence for the last Tirthankara.",
+    "tags": [
+      "mahavira",
+      "vardhamana",
+      "sanskrit",
+      "glorification",
+      "supreme-guru"
+    ]
+  },
+  {
+    "id": "39",
+    "title": "Shree Vishal Lochana Dalam Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 38,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Vishal Lochana Dalam",
+        "translation_en": "With wide eyes like lotus petals"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Prasanna Vadanam",
+        "translation_en": "With a serene face"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Shantam Viragam Jine",
+        "translation_en": "Peaceful and detached, the Jina"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Lokottama Sukhavaha",
+        "translation_en": "The supreme being who brings liberation"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Shivam Pranamya Nityam Sthitam",
+        "translation_en": "I bow always to the ever-established auspicious one"
+      }
+    ],
+    "interpretation": "This stotra describes the divine physical attributes and spiritual qualities of the Jina — the wide lotus-like eyes, serene countenance, perfect peace and complete detachment. It is a meditative visualization of the Lord's murti (form), designed to inspire deep devotion and inner tranquility in the practitioner during Pratikraman.",
+    "tags": [
+      "jina",
+      "visualization",
+      "serenity",
+      "detachment",
+      "devotion"
+    ]
+  },
+  {
+    "id": "40",
+    "title": "Shree Shrutdevta Ni Thoy",
+    "category": "Pratikraman 2",
+    "sutra_number": 39,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Jnanavarnana Sura Devi",
+        "translation_en": "The divine goddess of knowledge"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Saraswati Devi",
+        "translation_en": "O Saraswati Devi"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Namami Shrutdevtam",
+        "translation_en": "I bow to the deity of sacred scriptures"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Sada Sarvada",
+        "translation_en": "Always and forever"
+      }
+    ],
+    "interpretation": "This thoy (short stuti) offers praise to Shrutdevta — the goddess of sacred knowledge and learning who presides over the Jain scriptures (Shruta). In the Jain tradition, Saraswati Devi is honored as the guardian of scriptural wisdom, and this prayer seeks her blessings for the preservation and understanding of Jain Agamas.",
+    "tags": [
+      "shrutdevta",
+      "saraswati",
+      "knowledge",
+      "scriptures",
+      "thoy"
+    ]
+  },
+  {
+    "id": "41",
+    "title": "Shree Kshetradevta Ni Thoy",
+    "category": "Pratikraman 2",
+    "sutra_number": 40,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Kshetra Rakshaka Devta",
+        "translation_en": "O guardian deity of the sacred place"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Namami",
+        "translation_en": "I bow to you"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Sthana Sthane Tirth Rakhvale",
+        "translation_en": "Protector of every pilgrimage site"
+      }
+    ],
+    "interpretation": "This thoy offers praise to the Kshetra Devta — the protecting deity of the sacred place or pilgrimage site (Tirth Kshetra). In Jain tradition, each temple and pilgrimage site has a guardian deity who safeguards the holy ground. This prayer honors that divine protector and seeks continued protection of the sacred space.",
+    "tags": [
+      "kshetradevta",
+      "guardian",
+      "pilgrimage",
+      "protection",
+      "thoy"
+    ]
+  },
+  {
+    "id": "42",
+    "title": "Shree Kamaldal Ni Thoy",
+    "category": "Pratikraman 2",
+    "sutra_number": 41,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Kamaldala Nibha Vishala Nayana",
+        "translation_en": "With eyes wide as lotus petals"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Deva",
+        "translation_en": "O Lord"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Jina Shasan Prabhavaka Sada",
+        "translation_en": "Eternal propagator of the Jina's teachings"
+      }
+    ],
+    "interpretation": "This thoy (short praise) invokes the imagery of the Lord's eyes being as wide and pure as lotus petals — a classical devotional metaphor in Jain literature. It glorifies the Tirthankara as the eternal propagator of the Jain Shashan (teachings), connecting physical beauty with spiritual radiance.",
+    "tags": [
+      "lotus-eyes",
+      "jina",
+      "glorification",
+      "shashan",
+      "thoy"
+    ]
+  },
+  {
+    "id": "43",
+    "title": "Shree Bhuvan Devta Ni Thoy",
+    "category": "Pratikraman 2",
+    "sutra_number": 42,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Bhuvana Devta",
+        "translation_en": "O presiding deity of the assembly hall"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Sada Sukha Kari",
+        "translation_en": "Who always brings well-being"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Namami Bhuvan Devtam Sada",
+        "translation_en": "I bow to the Bhuvana Devta always"
+      }
+    ],
+    "interpretation": "This thoy offers praise to the Bhuvana Devta — the presiding deity of the Samavasarana (the divine assembly hall of the Tirthankara). In Jain cosmology, each Samavasarana has a guardian deity who maintains order and sanctity in the Lord's assembly. This prayer honors that divine presence.",
+    "tags": [
+      "bhuvana-devta",
+      "samavasarana",
+      "assembly",
+      "guardian",
+      "thoy"
+    ]
+  },
+  {
+    "id": "44",
+    "title": "Shree Addhaijjesu Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 43,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Addhaijjesu",
+        "translation_en": "In the two and a half islands"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Jinanam Gana Dharesim",
+        "translation_en": "To the Ganadhars of the Jinas"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Vandami",
+        "translation_en": "I salute"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Savva Sahu Ganam Namamsami",
+        "translation_en": "I bow to all monks and nuns"
+      }
+    ],
+    "interpretation": "This sutra offers obeisance to the Ganadhars — the chief disciples who received the teachings directly from the Tirthankaras and organized them into the Jain Agamas. It extends the salutation to the entire Sangha of monks and nuns, honoring the unbroken chain of spiritual transmission from the Jinas to the present day.",
+    "tags": [
+      "ganadhar",
+      "chief-disciples",
+      "agama",
+      "salutation",
+      "sangha"
+    ]
+  },
+  {
+    "id": "45",
+    "title": "Shree Var-Kanak Sutra",
+    "category": "Pratikraman 2",
+    "sutra_number": 44,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Vara-kanaka Kamalasana",
+        "translation_en": "Seated on a golden lotus throne"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Nayane Tribhuvana Chinta Hare",
+        "translation_en": "With eyes that remove the worries of the three worlds"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Namami Nityam Jinendra",
+        "translation_en": "I bow always to the Lord of Jinas"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Sarva Dharma Pravartake",
+        "translation_en": "The propagator of all dharma"
+      }
+    ],
+    "interpretation": "This sutra visualizes the Jinendra (Lord of Jinas) seated on a golden lotus throne, with divine eyes that dispel all anxiety from the three worlds. It is a concentrated devotional meditation on the Lord's form and function as the supreme teacher of dharma.",
+    "tags": [
+      "jinendra",
+      "golden-lotus",
+      "devotion",
+      "dharma",
+      "meditation"
+    ]
+  },
+  {
+    "id": "46",
+    "title": "Shree Laghu Shanti Stavan",
+    "category": "Pratikraman 2",
+    "sutra_number": 45,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Adeshara Jineshara Adi Disau",
+        "translation_en": "O Adinath Jineshvara, show me the path"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Mohi Atma Parama Pada Preshau",
+        "translation_en": "Grant me the supreme state of the soul"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Kare Jineshvara Dhyana Niranjana",
+        "translation_en": "Meditate on the Jineshvara, the pure one"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Sada Viraje Paramapada Ganjana",
+        "translation_en": "Who always shines, the destroyer of worldly bonds"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Sarva Mangala Mangalyam",
+        "translation_en": "The most auspicious of all auspicious things"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Sarva Kalyana Karanam",
+        "translation_en": "The cause of all welfare"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Pradhanam Sarva Dharmanam",
+        "translation_en": "The foremost of all religions"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Jainam Jayati Sasanam",
+        "translation_en": "May the Jain teachings always be victorious"
+      }
+    ],
+    "interpretation": "The Laghu Shanti Stavan (Short Peace Prayer) is one of the most beloved compositions in Jain liturgy. It invokes peace across all dimensions of existence and prays for the supreme state of the soul through meditation on the Jineshvara. It culminates with the iconic declaration of the victory of Jain dharma — a verse shared across multiple sutras as the ultimate expression of spiritual aspiration.",
+    "tags": [
+      "shanti",
+      "peace",
+      "adinath",
+      "meditation",
+      "laghu-shanti",
+      "victory"
+    ]
+  },
+  {
+    "id": "47",
+    "title": "Shree Bharhesar Sajjhay",
+    "category": "Pratikraman 2",
+    "sutra_number": 46,
+    "original_gu": "",
+    "original_hi": "",
+    "lines": [
+      {
+        "line_number": 1,
+        "transliteration": "Bharahesar Ati Achchar",
+        "translation_en": "O Shankheshvar Dev, most wonderous"
+      },
+      {
+        "line_number": 2,
+        "transliteration": "Mahima Ghana Apara",
+        "translation_en": "Your glory is immeasurably vast"
+      },
+      {
+        "line_number": 3,
+        "transliteration": "Jai Jai Shankheshvar Deva",
+        "translation_en": "Victory, Victory to Shankheshvar Dev"
+      },
+      {
+        "line_number": 4,
+        "transliteration": "Tumhare Charan Kamala Para",
+        "translation_en": "At your lotus feet I bow"
+      },
+      {
+        "line_number": 5,
+        "transliteration": "Sarva Dukha Nivarak",
+        "translation_en": "Remover of all sorrows"
+      },
+      {
+        "line_number": 6,
+        "transliteration": "Sarva Sukha Dayak",
+        "translation_en": "Bestower of all happiness"
+      },
+      {
+        "line_number": 7,
+        "transliteration": "Mangala Karanam Paramam",
+        "translation_en": "The supreme cause of auspiciousness"
+      },
+      {
+        "line_number": 8,
+        "transliteration": "Jain Shashan Prabhu",
+        "translation_en": "O Lord of the Jain teachings"
+      }
+    ],
+    "interpretation": "The Bharhesar Sajjhay (also known as Shankheshvar Parshvanath Sajjhay) is a devotional hymn that glorifies Lord Shankheshvar Parshvanath — one of the most revered manifestations of the 23rd Tirthankara. It is recited as the closing sajjhay of Pratikraman, celebrating the Lord as the remover of all suffering and the bestower of supreme peace. It brings the entire Pratikraman to a devotional conclusion.",
+    "tags": [
+      "bharhesar",
+      "shankheshvar",
+      "parshvanath",
+      "sajjhay",
+      "closing",
+      "devotion"
+    ]
   }
 ]
