@@ -36,6 +36,13 @@ function defaultApiUrl(): string {
   return 'http://localhost:8000';
 }
 
-const fromEnv = process.env.EXPO_PUBLIC_API_URL?.trim();
+function resolveApiUrl(): string {
+  const fromEnv = process.env.EXPO_PUBLIC_API_URL?.trim();
+  // EXPO_PUBLIC_API_URL is for physical devices; web always uses localhost.
+  if (Platform.OS !== 'web' && fromEnv) {
+    return stripTrailingSlash(fromEnv);
+  }
+  return defaultApiUrl();
+}
 
-export const API_URL = fromEnv ? stripTrailingSlash(fromEnv) : defaultApiUrl();
+export const API_URL = resolveApiUrl();
