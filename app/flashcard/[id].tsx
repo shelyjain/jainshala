@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import { API_URL } from '../../constants/api';
+import { normalizeForGoogleTts, prepareTtsLineText } from '../../lib/google-cloud-tts';
 import { useProgress } from '../../hooks/use-progress';
 
 type Line = {
@@ -49,7 +50,7 @@ function shouldUseGoogleCloudTts(): boolean {
 }
 
 function getDeviceTtsProsody(): { rate: number; pitch: number } {
-  let rate = 0.66;
+  let rate = 0.82;
   const rEnv = process.env.EXPO_PUBLIC_TTS_RATE?.trim();
   if (rEnv) {
     const n = Number(rEnv);
@@ -104,11 +105,6 @@ async function getGoogleTtsEnabled(): Promise<boolean> {
     googleTtsEnabledCache = false;
   }
   return googleTtsEnabledCache;
-}
-
-/** Single-spaced source text for Cloud TTS (no comma tokens — avoids speaking punctuation literally). */
-function normalizeForGoogleTts(text: string) {
-  return text.replace(/\s+/g, ' ').trim();
 }
 
 function normalizeTtsText(text: string) {
@@ -340,9 +336,9 @@ export default function FlashcardScreen() {
     clearWordTimers();
     setIsSpeaking(true);
     setHighlightedWordIndex(-1);
-    const rawLineText = line.tts_devanagari?.trim() || line.transliteration;
-    const googlePayloadText = normalizeForGoogleTts(rawLineText);
-    const speakTextDevice = normalizeTtsText(rawLineText);
+    const ttsText = prepareTtsLineText(line.transliteration, line.tts_devanagari);
+    const googlePayloadText = normalizeForGoogleTts(ttsText);
+    const speakTextDevice = normalizeTtsText(ttsText);
 
     void (async () => {
       let playedGoogle = false;

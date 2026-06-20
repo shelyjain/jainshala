@@ -37,22 +37,26 @@ app = FastAPI()
 #   GOOGLE_CLOUD_TTS_API_KEY  (preferred)
 # Optional:
 #   GOOGLE_TTS_LANGUAGE_CODE       default hi-IN (closest accent for Devanagari mantra text; Sanskrit has no native GCP voice)
-#   GOOGLE_TTS_VOICE_NAME        default hi-IN-Chirp3-HD-Leda (natural Hindi; less “robot” than Neural2)
-#   GOOGLE_TTS_VOICE_FALLBACKS   comma-separated; default hi-IN-Neural2-D,hi-IN-Wavenet-A if Chirp3 unavailable
-#   GOOGLE_TTS_SPEAKING_RATE     default 0.76 (slightly slower reads clearer for shloka-style lines)
+#   GOOGLE_TTS_VOICE_NAME        default hi-IN-Neural2-D (stable across all sutra lines)
+#   GOOGLE_TTS_VOICE_FALLBACKS   comma-separated; default hi-IN-Wavenet-A
+#   GOOGLE_TTS_SPEAKING_RATE     default 0.92
 #   GOOGLE_TTS_PITCH             default 0.0
 #   GOOGLE_TTS_EFFECTS_PROFILE_IDS  comma-separated; default optimizes playback on headphones then living-room speakers
-#   GOOGLE_TTS_MANTRA_BREAK_MS       pause between words when mantra_style=true (default 130)
-#   GOOGLE_TTS_SSML_PROSODY_RATE     e.g. slow, x-slow, or 82% (default slow)
-#   GOOGLE_TTS_MANTRA_SPEAKING_RATE audioConfig speed for mantra SSML (default 0.70)
+#   GOOGLE_TTS_MANTRA_BREAK_MS       pause between words when mantra_style=true (default 70)
+#   GOOGLE_TTS_SSML_PROSODY_RATE     e.g. medium, 95%, or slow (default 95%)
+#   GOOGLE_TTS_MANTRA_SPEAKING_RATE audioConfig speed for mantra SSML (default 0.88)
+#   GOOGLE_TTS_TAIL_BREAK_MS         silence after last syllable so final nasal (m/ं) is not clipped (default 160)
 _GOOGLE_TTS_KEY = _normalize_google_api_key(
     os.environ.get("GOOGLE_CLOUD_TTS_API_KEY") or os.environ.get("GOOGLE_API_KEY") or "",
 )
 _GOOGLE_TTS_LANG = os.environ.get("GOOGLE_TTS_LANGUAGE_CODE", "hi-IN").strip() or "hi-IN"
 _GOOGLE_TTS_SYNTH_URL = "https://texttospeech.googleapis.com/v1/text:synthesize"
 
-_DEFAULT_PRIMARY_VOICE = "hi-IN-Chirp3-HD-Leda"
-_DEFAULT_FALLBACK_VOICES = ("hi-IN-Neural2-D", "hi-IN-Wavenet-A", "hi-IN-Standard-A")
+_DEFAULT_PRIMARY_VOICE = "hi-IN-Neural2-D"
+_DEFAULT_FALLBACK_VOICES = ("hi-IN-Wavenet-A",)
+
+_pinned_voice: str | None = None
+_pinned_attempt_label: str | None = None
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -69,6 +73,33 @@ def _tts_voice_candidates() -> list[str]:
         if v and v not in out:
             out.append(v)
     return out
+
+
+def _voices_for_request(candidates: list[str]) -> list[str]:
+    if _pinned_voice:
+        rest = [v for v in candidates if v != _pinned_voice]
+        return [_pinned_voice, *rest]
+    return candidates
+
+
+def _pin_synthesis(voice_name: str, attempt_label: str) -> None:
+    global _pinned_voice, _pinned_attempt_label
+    if attempt_label != "tail_ssml":
+        return
+    if _pinned_voice != voice_name or _pinned_attempt_label != attempt_label:
+        logger.info("Pinned Google TTS voice=%s profile=%s", voice_name, attempt_label)
+    _pinned_voice = voice_name
+    _pinned_attempt_label = attempt_label
+
+
+def _order_attempts(
+    attempts: list[tuple[str, dict, float, bool]],
+) -> list[tuple[str, dict, float, bool]]:
+    if not _pinned_attempt_label:
+        return attempts
+    preferred = [a for a in attempts if a[0] == _pinned_attempt_label]
+    rest = [a for a in attempts if a[0] != _pinned_attempt_label]
+    return preferred + rest if preferred else attempts
 
 
 def _tts_effects_profile_ids() -> list[str]:
@@ -125,11 +156,62 @@ def _decode_tts_response(resp: httpx.Response) -> Response:
     return Response(content=raw, media_type="audio/mpeg")
 
 
+def _has_indic_script(text: str) -> bool:
+    return any("\u0900" <= c <= "\u097f" or "\u0a80" <= c <= "\u0aff" for c in text)
+
+
+def _tail_break_ms() -> int:
+    return max(50, min(400, int(os.environ.get("GOOGLE_TTS_TAIL_BREAK_MS", "180"))))
+
+
+def _indic_tail_break_ms() -> int:
+    return max(60, min(450, int(os.environ.get("GOOGLE_TTS_INDIC_TAIL_BREAK_MS", "200"))))
+
+
+def _fix_indic_word_nasal(word: str) -> str:
+    """Turn word-final anusvara (ं) into audible ma (म) for GCP hi-IN."""
+    if not word.endswith("ं"):
+        return word
+    base = word[:-1]
+    if not base:
+        return word
+    return base + "म"
+
+
+def _indic_tts_nasal_fix(text: str) -> str:
+    words = []
+    for token in text.split():
+        trailing = ""
+        core = token
+        while core and core[-1] in ".,;:!?":
+            trailing = core[-1] + trailing
+            core = core[:-1]
+        if core:
+            core = _fix_indic_word_nasal(core)
+        words.append(core + trailing)
+    return " ".join(words)
+
+
+def _prepare_tts_text(text: str) -> str:
+    cleaned = text.strip()
+    if _has_indic_script(cleaned):
+        return _indic_tts_nasal_fix(cleaned)
+    return cleaned
+
+
+def _ssml_with_tail(text: str) -> str:
+    """Full line as one utterance; trailing silence only (no split nasal)."""
+    tail_ms = _indic_tail_break_ms() if _has_indic_script(text) else _tail_break_ms()
+    escaped = xml_esc.escape(text.rstrip())
+    return f"<speak>{escaped}<break time=\"{tail_ms}ms\"/></speak>"
+
+
 def _mantra_ssml(text: str) -> str:
-    """Word-separated pauses + slower SSML prosody — reads closer to shloka/mantra cadence."""
-    break_ms = max(40, min(400, int(os.environ.get("GOOGLE_TTS_MANTRA_BREAK_MS", "130"))))
-    prosody_raw = os.environ.get("GOOGLE_TTS_SSML_PROSODY_RATE", "slow").strip() or "slow"
+    """Word-separated pauses for shloka cadence (roman transliteration)."""
+    break_ms = max(40, min(400, int(os.environ.get("GOOGLE_TTS_MANTRA_BREAK_MS", "70"))))
+    prosody_raw = os.environ.get("GOOGLE_TTS_SSML_PROSODY_RATE", "95%").strip() or "95%"
     prosody_safe = _sanitize_ssml_prosody_rate(prosody_raw)
+    tail_ms = _tail_break_ms()
     tokens = [t for t in text.split() if t]
     if not tokens:
         raise ValueError("no tokens")
@@ -138,6 +220,7 @@ def _mantra_ssml(text: str) -> str:
         parts.append(xml_esc.escape(tok))
         if i < len(tokens) - 1:
             parts.append(f'<break time="{break_ms}ms"/>')
+    parts.append(f'<break time="{tail_ms}ms"/>')
     inner = "".join(parts)
     return f'<speak><prosody rate="{prosody_safe}">{inner}</prosody></speak>'
 
@@ -189,53 +272,58 @@ def google_tts_status():
         "key_length": len(_GOOGLE_TTS_KEY),
         "language_code": _GOOGLE_TTS_LANG,
         "voice_candidates": _tts_voice_candidates(),
+        "pinned_voice": _pinned_voice,
+        "pinned_profile": _pinned_attempt_label,
         "setup_hint": _TTS_KEY_SETUP_HINT,
+        "enable_api_url": "https://console.cloud.google.com/apis/library/texttospeech.googleapis.com",
     }
 
 
 @app.post("/tts/google")
-def google_tts_synthesize(body: GoogleTtsRequest):
+def google_tts_synthesize(body: GoogleTtsRequest, _allow_pin_retry: bool = True):
     """Synthesize speech via Google Cloud Text-to-Speech; returns MP3 bytes."""
+    global _pinned_voice, _pinned_attempt_label
+    if _pinned_attempt_label == "plain_text":
+        _pinned_voice = None
+        _pinned_attempt_label = None
     if not _GOOGLE_TTS_KEY:
         raise HTTPException(status_code=503, detail="Google TTS not configured")
-    text = body.text.strip()
+    text = _prepare_tts_text(body.text.strip())
     if not text:
         raise HTTPException(status_code=400, detail="Empty text")
 
     pitch = float(os.environ.get("GOOGLE_TTS_PITCH", "0.0"))
-    mantra_rate = float(os.environ.get("GOOGLE_TTS_MANTRA_SPEAKING_RATE", "0.68"))
-    plain_rate = float(os.environ.get("GOOGLE_TTS_SPEAKING_RATE", "0.76"))
+    speaking_rate = float(os.environ.get("GOOGLE_TTS_SPEAKING_RATE", "0.92"))
     fx = _tts_effects_profile_ids()
     candidates = _tts_voice_candidates()
+    voices = _voices_for_request(candidates)
 
-    ssml: str | None = None
-    if body.mantra_style:
-        try:
-            ssml = _mantra_ssml(text)
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=str(e)) from e
-        if len(ssml) > 11000:
-            raise HTTPException(status_code=400, detail="Line too long for mantra SSML")
+    tail_ssml: str | None = None
+    try:
+        tail_ssml = _ssml_with_tail(text)
+    except ValueError:
+        pass
 
-    # (label, input dict, speaking_rate, include_effects_profile)
-    attempts: list[tuple[str, dict, float, bool]] = []
-    if ssml is not None:
-        attempts.append(("mantra_ssml+fx", {"ssml": ssml}, mantra_rate, True))
-        attempts.append(("mantra_ssml", {"ssml": ssml}, mantra_rate, False))
-    attempts.append(("plain_text+fx", {"text": text}, plain_rate, True))
-    attempts.append(("plain_text", {"text": text}, plain_rate, False))
+    if not tail_ssml:
+        raise HTTPException(status_code=400, detail="Could not build TTS SSML")
+
+    # Always tail_ssml — plain text clips final nasals and must not be pinned.
+    attempts: list[tuple[str, dict, float, bool]] = [
+        ("tail_ssml", {"ssml": tail_ssml}, speaking_rate, False),
+    ]
+    attempts = _order_attempts(attempts)
 
     last_detail = ""
-    for label, input_block, speaking_rate, use_fx in attempts:
+    for label, input_block, attempt_rate, use_fx in attempts:
         audio_config: dict = {
             "audioEncoding": "MP3",
-            "speakingRate": speaking_rate,
+            "speakingRate": attempt_rate,
             "pitch": pitch,
         }
         if use_fx and fx:
             audio_config["effectsProfileId"] = fx
 
-        for voice_name in candidates:
+        for voice_name in voices:
             payload = {
                 "input": input_block,
                 "voice": {"languageCode": _GOOGLE_TTS_LANG, "name": voice_name},
@@ -252,6 +340,7 @@ def google_tts_synthesize(body: GoogleTtsRequest):
                 raise HTTPException(status_code=502, detail=f"TTS request failed: {e}") from e
 
             if resp.status_code == 200:
+                _pin_synthesis(voice_name, label)
                 return _decode_tts_response(resp)
 
             last_detail = _google_error_summary(resp.text) if resp.text else f"HTTP {resp.status_code}"
@@ -262,6 +351,38 @@ def google_tts_synthesize(body: GoogleTtsRequest):
                 resp.status_code,
                 last_detail[:500],
             )
+
+    # Last resort: plain text (never pinned — clips final nasal on some lines).
+    for voice_name in voices:
+        payload = {
+            "input": {"text": text},
+            "voice": {"languageCode": _GOOGLE_TTS_LANG, "name": voice_name},
+            "audioConfig": {
+                "audioEncoding": "MP3",
+                "speakingRate": speaking_rate,
+                "pitch": pitch,
+            },
+        }
+        try:
+            resp = httpx.post(
+                _GOOGLE_TTS_SYNTH_URL,
+                headers={"x-goog-api-key": _GOOGLE_TTS_KEY},
+                json=payload,
+                timeout=60.0,
+            )
+        except httpx.HTTPError as e:
+            raise HTTPException(status_code=502, detail=f"TTS request failed: {e}") from e
+        if resp.status_code == 200:
+            logger.warning("Google TTS plain_text fallback used for line (no pin)")
+            return _decode_tts_response(resp)
+        last_detail = _google_error_summary(resp.text) if resp.text else f"HTTP {resp.status_code}"
+
+    # Pinned combo failed — clear pin and retry once with full candidate list.
+    if _pinned_voice is not None and _allow_pin_retry:
+        logger.warning("Pinned Google TTS voice failed; clearing pin and retrying")
+        _pinned_voice = None
+        _pinned_attempt_label = None
+        return google_tts_synthesize(body, _allow_pin_retry=False)
 
     hint = " " + _TTS_KEY_SETUP_HINT
     raise HTTPException(

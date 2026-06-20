@@ -7,9 +7,9 @@ import {
   Platform,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Speech from 'expo-speech';
+import { useGoogleIndicTts } from '@/lib/google-cloud-tts';
 
 type VidhiLine = {
   line_number: number;
@@ -108,14 +108,9 @@ export default function VidhiScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [speakingLine, setSpeakingLine] = useState<number | null>(null);
+  const { speak, stop } = useGoogleIndicTts();
 
   const item = VIDHI_DATA[String(id)];
-
-  useEffect(() => {
-    return () => {
-      Speech.stop();
-    };
-  }, []);
 
   if (!item) {
     return (
@@ -132,21 +127,14 @@ export default function VidhiScreen() {
 
   const handleSpeak = (line: VidhiLine) => {
     if (speakingLine === line.line_number) {
-      Speech.stop();
+      void stop();
       setSpeakingLine(null);
     } else {
-      Speech.stop();
+      void stop();
       setSpeakingLine(line.line_number);
-      Speech.speak(line.transliteration, {
-        language: 'hi-IN',
-        rate: 0.72,
-        pitch: 0.98,
-        onDone: () => {
-          setSpeakingLine(null);
-        },
-        onError: () => {
-          setSpeakingLine(null);
-        }
+      void speak(line.transliteration, {
+        onDone: () => setSpeakingLine(null),
+        onError: () => setSpeakingLine(null),
       });
     }
   };

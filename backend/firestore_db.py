@@ -98,31 +98,32 @@ def load_sutras_from_firestore() -> list[dict] | None:
     return items
 
 
+def _apply_tts_overlay(sutras: list[dict]) -> list[dict]:
+    overlay_path = BASE_DIR / "sutra_tts_overlay.json"
+    if not overlay_path.is_file():
+        return sutras
+    with open(overlay_path, "r", encoding="utf-8") as f:
+        tts_overlay = json.load(f)
+    for sutra in sutras:
+        sid = str(sutra.get("id"))
+        overlay_lines = tts_overlay.get(sid)
+        if not isinstance(overlay_lines, list):
+            continue
+        for i, line in enumerate(sutra.get("lines", [])):
+            if i >= len(overlay_lines):
+                break
+            tts_text = str(overlay_lines[i]).strip()
+            if tts_text:
+                line["tts_devanagari"] = tts_text
+    return sutras
+
+
 def load_sutras_from_json() -> list[dict]:
     with open(BASE_DIR / "sutras.json", "r", encoding="utf-8") as f:
-        sutras = json.load(f)
-
-    overlay_path = BASE_DIR / "sutra_tts_overlay.json"
-    if overlay_path.is_file():
-        with open(overlay_path, "r", encoding="utf-8") as f:
-            tts_overlay = json.load(f)
-        for sutra in sutras:
-            sid = str(sutra.get("id"))
-            overlay_lines = tts_overlay.get(sid)
-            if not isinstance(overlay_lines, list):
-                continue
-            for i, line in enumerate(sutra.get("lines", [])):
-                if i >= len(overlay_lines):
-                    break
-                tts_text = str(overlay_lines[i]).strip()
-                if tts_text:
-                    line["tts_devanagari"] = tts_text
-
-    return sutras
+        return json.load(f)
 
 
 def get_sutra_catalog() -> list[dict]:
     from_firestore = load_sutras_from_firestore()
-    if from_firestore:
-        return from_firestore
-    return load_sutras_from_json()
+    catalog = from_firestore if from_firestore else load_sutras_from_json()
+    return _apply_tts_overlay(catalog)
