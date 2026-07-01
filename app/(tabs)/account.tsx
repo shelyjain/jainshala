@@ -20,6 +20,7 @@ import { MASTER_BADGE, hasEarnedMasterBadge } from '../../constants/master-badge
 import { AppLogo } from '@/components/app-logo';
 import { BadgeAboutModal, type BadgeAboutSelection } from '@/components/badge-about-modal';
 import { UserAvatar } from '@/components/user-avatar';
+import { getUserDocSafe } from '../../lib/firestore-user';
 
 type SutraListItem = {
   id: string;
@@ -33,6 +34,20 @@ export default function AccountScreen() {
   const [sutras, setSutras] = useState<SutraListItem[]>([]);
   const [sutrasLoading, setSutrasLoading] = useState(true);
   const [badgeAbout, setBadgeAbout] = useState<BadgeAboutSelection | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+    getUserDocSafe(user.uid).then(snap => {
+      if (snap?.exists()) {
+        const data = snap.data();
+        setIsAdmin(Array.isArray(data?.roles) && data.roles.includes('admin'));
+      }
+    });
+  }, [user]);
 
   useEffect(() => {
     let cancelled = false;
@@ -268,6 +283,14 @@ export default function AccountScreen() {
           </Link>
         </View>
       </View>
+
+      {isAdmin && (
+        <Link href="/admin" asChild>
+          <TouchableOpacity style={styles.adminBtn} activeOpacity={0.88}>
+            <Text style={styles.adminBtnText}>⚙️ Admin Dashboard</Text>
+          </TouchableOpacity>
+        </Link>
+      )}
 
       <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
         <Text style={styles.signOutText}>Sign Out</Text>
@@ -563,4 +586,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signOutText: { color: '#cc3333', fontSize: 16, fontWeight: '600' },
+  adminBtn: {
+    borderWidth: 1.5,
+    borderColor: '#a0522d',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 16,
+    backgroundColor: '#fffaf6',
+  },
+  adminBtnText: { color: '#a0522d', fontSize: 16, fontWeight: '700' },
 });

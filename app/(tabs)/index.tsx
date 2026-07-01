@@ -11,11 +11,119 @@ import {
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { useProgress } from '../../hooks/use-progress';
 import { API_URL } from '../../constants/api';
 import { fetchJson } from '../../lib/fetch-json';
 import { AppLogo } from '@/components/app-logo';
 import { MASTER_BADGE, hasEarnedMasterBadge } from '@/constants/master-badge';
+
+type SongLine = {
+  timestamp_ms: number;
+  gujarati: string;
+  transliteration: string;
+  translation_en: string;
+};
+
+type Song = {
+  id: string;
+  title: string;
+  artist: string;
+  audio_url: string;
+  lines: SongLine[];
+};
+
+const DEFAULT_SONGS: Song[] = [
+  {
+    id: 'aarti',
+    title: 'Shree Adinath Aarti',
+    artist: 'Traditional',
+    audio_url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    lines: [
+      {
+        timestamp_ms: 0,
+        gujarati: 'જય જય આરતી આદિ જિણંદા, નાભિરાયા મરૂદેવીકા નંદા.',
+        transliteration: 'Jaya Jaya Aarti Aadi Jinanda, Naabhiraya Maroodevika Nanda. Jaya Jaya Aarti Aadi Jinanda.',
+        translation_en: 'Victory, victory to the first Jina, Lord Adinath, the beloved son of King Nabhi and Queen Marudevi.'
+      },
+      {
+        timestamp_ms: 6000,
+        gujarati: 'પહેલી આરતી પૂજા કીજે, નર ભવ પામી ને લહાવો લીજે.',
+        transliteration: 'Pehli Aarti Puja Kije, Nar Bhav Paami Ne Lahavo Leeje.',
+        translation_en: 'Perform the first aarti and worship the Lord; having attained this rare human life, earn the spiritual profit.'
+      },
+      {
+        timestamp_ms: 12000,
+        gujarati: 'દુસરી આરતી દિન દયાલા, ધુલેવા મંડપ મા જગ અજવાલા.',
+        transliteration: 'Dusri Aarti Din Dayala, Dhuleva Mandap Ma Jag Ajwala.',
+        translation_en: 'The second aarti is to the merciful Lord of the humble, whose presence illuminates the great temple at Dhuleva.'
+      },
+      {
+        timestamp_ms: 18000,
+        gujarati: 'તીસરી આરતી ત્રિભુવન દેવા, સુર નર ઇન્દ્ર કરે તોરી સેવા.',
+        transliteration: 'Teesri Aarti Tribhuvan Deva, Sur Nar Indra Kare Tori Seva.',
+        translation_en: 'The third aarti is to the Lord of the three worlds, whom gods, humans, and Indras serve with devotion.'
+      },
+      {
+        timestamp_ms: 24000,
+        gujarati: 'ચોથી આરતી ચૌગતિ ચુરે, મન વાંછિત ફલ શિવ સુખ પુરે.',
+        transliteration: 'Chauthi Aarti Chaugati Chure, Mann Vanchhiit Fal Shiv Sukh Pure.',
+        translation_en: 'The fourth aarti destroys the cycle of the four destinies, fulfilling all pure desires and granting the bliss of liberation.'
+      },
+      {
+        timestamp_ms: 30000,
+        gujarati: 'પંચમી આરતી પુણ્ય ઉપાયો, મૂલચંદે ઋષભ ગુણ ગાયો.',
+        transliteration: 'Panchmi Aarti Punya Upaayo, Mulchande Rushabh Gun Gaayo. Jaya Jaya Aarti Aadi Jinanda.',
+        translation_en: 'Through the fifth aarti, spiritual merit is earned. The devotee Mulchand sings the glorious virtues of Lord Rishabhdev.'
+      },
+      {
+        timestamp_ms: 36000,
+        gujarati: 'નાભિરાયા મરૂદેવીકા નંદા.',
+        transliteration: 'Naabhiraya Maroodevika Nanda.',
+        translation_en: 'The beloved son of King Nabhi and Queen Marudevi.'
+      }
+    ]
+  },
+  {
+    id: 'mangal-deevo',
+    title: 'Mangal Deevo',
+    artist: 'Kumarpal',
+    audio_url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    lines: [
+      {
+        timestamp_ms: 0,
+        gujarati: 'દીવો રે દીવો પ્રભુ મંગલીક દીવો, આરતી ઉતારી ને બહુ ચિરંજીવો.',
+        transliteration: 'Deevo re deevo prabhu mangalika deevo, Aarati utari ne bahu chiranjeevo.',
+        translation_en: 'This is the lamp, O Lord, the auspicious lamp. Having performed this waving ritual, may you attain eternal life.'
+      },
+      {
+        timestamp_ms: 7000,
+        gujarati: 'સોહામણું ઘર પર્વ દિવાલી, અંબર ખેલે અમરા બાલી.',
+        transliteration: 'Sohamanu ghar parva dewali, Ambar khele amra bali.',
+        translation_en: 'The festival is as beautiful as Diwali in our homes, and the young gods in heaven celebrate with joy.'
+      },
+      {
+        timestamp_ms: 14000,
+        gujarati: 'દીપાલ ભણે અને એ કલિ કાલે, આરતી ઉતારી રાજા કુમારપાલે.',
+        transliteration: 'Depal bhane ane ae kali kale, Arati utari raja kumarpale.',
+        translation_en: 'The poet Depal sings that in this dark age of Kali-yuga, King Kumarpal performed this auspicious aarti.'
+      },
+      {
+        timestamp_ms: 21000,
+        gujarati: 'અમા ઘર મંગલીક, તુમ ઘર મંગલીક, મંગલીક ચતુર્વિધ સંઘ ને હોજો.',
+        transliteration: 'Ama ghar mangalika, tum ghar mangalika, Mangalika chaturvidha sangh ne hojo.',
+        translation_en: 'May there be auspiciousness in our homes, in your homes, and may there be auspiciousness for the entire four-fold Jain community.'
+      },
+      {
+        timestamp_ms: 28000,
+        gujarati: 'દીવો રે દીવો પ્રભુ મંગલીક દીવો, આરતી ઉતારણા બહુ ચિરંજીવો.',
+        transliteration: 'Divo re divo prabhu magalic divo, Arati utarana bahu chiranjivo.',
+        translation_en: 'This is the lamp, O Lord, the auspicious lamp. Having performed this waving ritual, may you attain eternal life.'
+      }
+    ]
+  }
+];
 
 type Line = {
   line_number: number;
@@ -57,10 +165,11 @@ function countSteps(p: Record<(typeof STEP_KEYS)[number], boolean>): number {
 
 export default function HomeScreen() {
   const [sutras, setSutras] = useState<Sutra[]>([]);
+  const [songs, setSongs] = useState<Song[]>([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [selectedPath, setSelectedPath] = useState<'pratikraman1' | 'pratikraman2' | null>(null);
+  const [selectedPath, setSelectedPath] = useState<'pratikraman1' | 'pratikraman2' | 'songs' | null>(null);
   const router = useRouter();
   const { completed, getStepProgress } = useProgress();
 
@@ -69,21 +178,40 @@ export default function HomeScreen() {
   useEffect(() => {
     let cancelled = false;
     setLoadError(null);
-    fetchJson<Sutra[]>(`${API_URL}/sutras`)
-      .then(data => {
-        if (!cancelled) {
-          setSutras(data);
-          setLoading(false);
+
+    const loadData = async () => {
+      try {
+        const sutraData = await fetchJson<Sutra[]>(`${API_URL}/sutras`);
+        if (!cancelled) setSutras(sutraData);
+
+        try {
+          const snapshot = await getDocs(collection(db, 'songs'));
+          const songList: Song[] = [];
+          snapshot.forEach(doc => {
+            songList.push({ id: doc.id, ...doc.data() } as Song);
+          });
+          if (!cancelled) {
+            setSongs(songList.length ? songList : DEFAULT_SONGS);
+          }
+        } catch (dbErr) {
+          console.warn('Could not load songs from Firestore, using defaults.', dbErr);
+          if (!cancelled) setSongs(DEFAULT_SONGS);
         }
-      })
-      .catch((err: unknown) => {
+
+        if (!cancelled) setLoading(false);
+      } catch (err: unknown) {
         console.error(err);
         if (!cancelled) {
           setLoadError(err instanceof Error ? err.message : 'Failed to load sutras');
           setSutras([]);
+          setSongs(DEFAULT_SONGS);
           setLoading(false);
         }
-      });
+      }
+    };
+
+    void loadData();
+
     return () => {
       cancelled = true;
     };
@@ -91,8 +219,8 @@ export default function HomeScreen() {
 
   useEffect(() => {
     let cancelled = false;
-    // Only search/filter when a path is selected
     if (selectedPath === null) return;
+    if (selectedPath === 'songs') return; // Firestore list is already complete
 
     const url =
       query.trim() === ''
@@ -135,25 +263,54 @@ export default function HomeScreen() {
     });
   }, [ordered, completed, getStepProgress]);
 
-  // Compute stats and lists for paths dynamically
+  const songMilestones = useMemo(() => {
+    return songs.map((song, idx) => {
+      const done = completed.includes(song.id);
+      const stepProgress = getStepProgress(song.id);
+      const stepsDone = (stepProgress.listen ? 1 : 0) +
+                        (stepProgress.learn_fill ? 1 : 0) +
+                        (stepProgress.recite ? 1 : 0);
+      const fullyDone = done || stepsDone >= 3;
+
+      const mappedSutra: Sutra = {
+        id: song.id,
+        title: song.title,
+        category: song.artist || 'Traditional',
+        sutra_number: idx + 1,
+        original_gu: '',
+        original_hi: '',
+        lines: song.lines.map((l, i) => ({
+          line_number: i + 1,
+          transliteration: l.transliteration,
+          translation_en: l.translation_en,
+        })),
+        interpretation: '',
+        tags: [],
+      };
+
+      return { sutra: mappedSutra, stepsDone, fullyDone };
+    });
+  }, [songs, completed, getStepProgress]);
+
   const p1Milestones = useMemo(() => milestones.filter(m => m.sutra.category.includes('Pratikraman 1')), [milestones]);
   const p2Milestones = useMemo(() => milestones.filter(m => m.sutra.category.includes('Pratikraman 2')), [milestones]);
 
   const p1Completed = useMemo(() => p1Milestones.filter(m => m.fullyDone).length, [p1Milestones]);
   const p2Completed = useMemo(() => p2Milestones.filter(m => m.fullyDone).length, [p2Milestones]);
+  const songsCompleted = useMemo(() => songMilestones.filter(m => m.fullyDone).length, [songMilestones]);
 
   const catalogIds = useMemo(() => ordered.map(s => s.id), [ordered]);
   const hasMasterBadge = hasEarnedMasterBadge(catalogIds, completed);
-  const completedCount = milestones.filter(m => m.fullyDone).length;
-  const progressPct = ordered.length ? (completedCount / ordered.length) * 100 : 0;
+  
+  const completedCount = milestones.filter(m => m.fullyDone).length + songMilestones.filter(m => m.fullyDone).length;
+  const progressPct = (ordered.length + songs.length) ? (completedCount / (ordered.length + songs.length)) * 100 : 0;
 
-  // Insert congratulations milestone after the 22nd sutra in the active path
   const milestonesWithCongrats = useMemo(() => {
     if (!selectedPath) return [];
+    if (selectedPath === 'songs') return songMilestones;
     
     const activeList = selectedPath === 'pratikraman1' ? p1Milestones : p2Milestones;
     
-    // If user is searching, do not display the congratulation card in the middle of search results
     if (query.trim() !== '') return activeList;
 
     const list: any[] = [];
@@ -173,7 +330,7 @@ export default function HomeScreen() {
       }
     });
     return list;
-  }, [p1Milestones, p2Milestones, selectedPath, query]);
+  }, [p1Milestones, p2Milestones, songMilestones, selectedPath, query]);
 
   if (loading) {
     return (
@@ -241,38 +398,28 @@ export default function HomeScreen() {
           </View>
 
           {/* Section 2: Vidhi */}
-          <Text style={styles.sectionTitle}>Vidhi & Prayers</Text>
-          <Text style={styles.sectionSubtitle}>Devotional hymns and lamp lighting rituals</Text>
+          <Text style={styles.sectionTitle}>Vidhi & Prayers (Songs)</Text>
+          <Text style={styles.sectionSubtitle}>Devotional hymns and rituals with audio karaoke</Text>
 
-          <View style={styles.selectorGrid}>
-            {/* Aarti Card */}
+          <View style={styles.singleCardContainer}>
+            {/* Devotional Songs Card */}
             <TouchableOpacity
               style={[styles.selectorCard, styles.selectorCardVidhi]}
               activeOpacity={0.85}
-              onPress={() => router.push('/vidhi/aarti')}
+              onPress={() => setSelectedPath('songs')}
             >
               <View style={styles.selectorCardHeader}>
-                <Text style={[styles.selectorCardBadge, styles.selectorCardBadgeVidhi]}>HYMN</Text>
-                <Text style={styles.selectorCardIcon}>🪔</Text>
+                <Text style={[styles.selectorCardBadge, styles.selectorCardBadgeVidhi]}>SONGS PATH</Text>
+                <Text style={styles.selectorCardIcon}>🎵</Text>
               </View>
-              <Text style={styles.selectorCardTitle}>Adinath Aarti</Text>
-              <Text style={styles.selectorCardDesc}>Traditional waving of lamps honoring Adinath Bhagwan with lyrics and audio.</Text>
-              <Text style={styles.selectorCtaText}>Recite & Listen →</Text>
-            </TouchableOpacity>
-
-            {/* Mangal Deevo Card */}
-            <TouchableOpacity
-              style={[styles.selectorCard, styles.selectorCardVidhi]}
-              activeOpacity={0.85}
-              onPress={() => router.push('/vidhi/mangal-deevo')}
-            >
-              <View style={styles.selectorCardHeader}>
-                <Text style={[styles.selectorCardBadge, styles.selectorCardBadgeVidhi]}>RITUAL</Text>
-                <Text style={styles.selectorCardIcon}>🕯️</Text>
+              <Text style={styles.selectorCardTitle}>Devotional Songs</Text>
+              <Text style={styles.selectorCardDesc}>Learn Shree Adinath Aarti and Mangal Deevo with synced karaoke scrolling, word reveal, and quizzes.</Text>
+              <View style={styles.cardProgressRow}>
+                <Text style={styles.cardProgressText}>{songsCompleted} / {songMilestones.length} Done</Text>
+                <View style={styles.cardProgressTrack}>
+                  <View style={[styles.cardProgressFill, { backgroundColor: '#c9a227', width: `${songMilestones.length ? (songsCompleted / songMilestones.length) * 100 : 0}%` }]} />
+                </View>
               </View>
-              <Text style={styles.selectorCardTitle}>Mangal Deevo</Text>
-              <Text style={styles.selectorCardDesc}>Auspicious lamp ritual symbolizing Keval Jnana with transliteration and translation.</Text>
-              <Text style={styles.selectorCtaText}>Recite & Listen →</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -281,8 +428,8 @@ export default function HomeScreen() {
   }
 
   // Timeline Roadmap View (when a path is selected)
-  const currentPathMilestones = selectedPath === 'pratikraman1' ? p1Milestones : p2Milestones;
-  const currentPathCompleted = selectedPath === 'pratikraman1' ? p1Completed : p2Completed;
+  const currentPathMilestones = selectedPath === 'songs' ? songMilestones : (selectedPath === 'pratikraman1' ? p1Milestones : p2Milestones);
+  const currentPathCompleted = selectedPath === 'songs' ? songsCompleted : (selectedPath === 'pratikraman1' ? p1Completed : p2Completed);
   const pathProgressPct = currentPathMilestones.length ? (currentPathCompleted / currentPathMilestones.length) * 100 : 0;
 
   const listHeader = (
@@ -294,10 +441,10 @@ export default function HomeScreen() {
       <View style={styles.titleRow}>
         <AppLogo size={48} />
         <Text style={styles.heading}>
-          {selectedPath === 'pratikraman1' ? 'Pratikraman 1' : 'Pratikraman 2'}
+          {selectedPath === 'songs' ? 'Devotional Songs' : (selectedPath === 'pratikraman1' ? 'Pratikraman 1' : 'Pratikraman 2')}
         </Text>
       </View>
-      {loadError ? (
+      {loadError && selectedPath !== 'songs' ? (
         <Text style={styles.errorText}>
           Could not reach API at {API_URL}. From the project folder run: cd backend then uvicorn main:app --reload
           --host 0.0.0.0 --port 8000. Then reload the app.{'\n'}
@@ -309,20 +456,22 @@ export default function HomeScreen() {
           Path Progress: {currentPathCompleted} / {currentPathMilestones.length} completed
         </Text>
         <View style={styles.progressTrack}>
-          <View style={[styles.progressFill, { width: `${pathProgressPct}%` }]} />
+          <View style={[styles.progressFill, selectedPath === 'songs' ? { backgroundColor: '#c9a227', width: `${pathProgressPct}%` } : { width: `${pathProgressPct}%` }]} />
         </View>
       </View>
       <Text style={styles.pathLabel}>Learning roadmap</Text>
       <Text style={styles.pathHint}>
-        Stops follow sutra order. Progress is on each card. Tap a card to open that sutra.
+        {selectedPath === 'songs' ? 'Stops represent devotional songs. Tap a song to start learning.' : 'Stops follow sutra order. Progress is on each card. Tap a card to open that sutra.'}
       </Text>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search sutras…"
-        placeholderTextColor="#999"
-        value={query}
-        onChangeText={setQuery}
-      />
+      {selectedPath !== 'songs' && (
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search sutras…"
+          placeholderTextColor="#999"
+          value={query}
+          onChangeText={setQuery}
+        />
+      )}
     </>
   );
 
@@ -369,7 +518,7 @@ export default function HomeScreen() {
           <Text style={styles.finishSub}>
             {hasMasterBadge
               ? MASTER_BADGE.subtitle
-              : `Master all ${currentPathMilestones.length} sutras on this path to unlock this jewel.`}
+              : `Master all ${currentPathMilestones.length} ${selectedPath === 'songs' ? 'songs' : 'sutras'} on this path to unlock this jewel.`}
           </Text>
           <Text style={styles.finishCta}>{hasMasterBadge ? 'View badges →' : 'See progress →'}</Text>
         </TouchableOpacity>
@@ -462,7 +611,7 @@ export default function HomeScreen() {
           const card = (
             <TouchableOpacity
               style={[styles.roadCard, fullyDone && styles.roadCardDone, styles.roadCardSpacing]}
-              onPress={() => router.push(`/sutra/${sutra.id}`)}
+              onPress={() => router.push(selectedPath === 'songs' ? `/song/${sutra.id}` : `/sutra/${sutra.id}`)}
               activeOpacity={0.88}
             >
               <View style={styles.cardHeader}>
@@ -473,7 +622,7 @@ export default function HomeScreen() {
                   <Text style={styles.badge}>🏅 Done</Text>
                 ) : stepsDone > 0 ? (
                   <Text style={[styles.badge, styles.badgePartial]}>
-                    {stepsDone}/{TOTAL_STEPS}
+                    {stepsDone}/{selectedPath === 'songs' ? 3 : TOTAL_STEPS}
                   </Text>
                 ) : (
                   <Text style={[styles.badge, styles.badgeLocked]}>🔒 Start</Text>
