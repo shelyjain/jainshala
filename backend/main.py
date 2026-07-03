@@ -183,6 +183,29 @@ def get_sutra(id: str):
     return sutra
 
 
+@app.get("/sutra-audio-proxy/{sutra_number}")
+async def proxy_sutra_audio(sutra_number: int):
+    """Proxy the Drive zip download so web clients avoid CORS restrictions."""
+    sutra = next((s for s in sutras if s.get("sutra_number") == sutra_number), None)
+    if not sutra:
+        raise HTTPException(status_code=404, detail="Sutra not found")
+    drive_id = sutra.get("audio_zip_drive_id")
+    if not drive_id:
+        raise HTTPException(status_code=404, detail="No audio zip for this sutra")
+
+    drive_url = f"https://drive.usercontent.google.com/download?id={drive_id}&export=download&confirm=t"
+    async with httpx.AsyncClient(follow_redirects=True, timeout=120.0) as client:
+        resp = await client.get(drive_url)
+    if resp.status_code != 200:
+        raise HTTPException(status_code=502, detail=f"Drive returned {resp.status_code}")
+
+    return Response(
+        content=resp.content,
+        media_type="application/zip",
+        headers={"Content-Disposition": f"attachment; filename=sutra{sutra_number}_lines.zip"},
+    )
+
+
 class GoogleTtsRequest(BaseModel):
     text: str = Field(..., min_length=1, max_length=8000)
     mantra_style: bool = True

@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useProgress } from '../../hooks/use-progress';
 import { API_URL } from '../../constants/api';
+import { isSutraDownloaded, downloadSutraAudio } from '../../lib/sutra-audio';
 
 type Line = {
   line_number: number;
@@ -29,6 +30,7 @@ type Sutra = {
   lines: Line[];
   interpretation: string;
   tags: string[];
+  audio_zip_drive_id?: string;
 };
 
 const STEPS = [
@@ -45,6 +47,9 @@ export default function SutraDetail() {
   const [sutra, setSutra] = useState<Sutra | null>(null);
   const [loading, setLoading] = useState(true);
   const { isCompleted, markStep, getStepProgress } = useProgress();
+  const [downloaded, setDownloaded] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadPct, setDownloadPct] = useState(0);
 
   useEffect(() => {
     fetch(`${API_URL}/sutra/${id}`)
@@ -52,12 +57,29 @@ export default function SutraDetail() {
       .then(data => {
         setSutra(data);
         setLoading(false);
+        if (data?.sutra_number) {
+          isSutraDownloaded(data.sutra_number).then(setDownloaded);
+        }
       })
       .catch(err => {
         console.error(err);
         setLoading(false);
       });
   }, [id]);
+
+  const handleDownload = async () => {
+    if (!sutra?.audio_zip_drive_id) return;
+    setDownloading(true);
+    setDownloadPct(0);
+    try {
+      await downloadSutraAudio(sutra.sutra_number, sutra.audio_zip_drive_id, setDownloadPct);
+      setDownloaded(true);
+    } catch (e) {
+      console.error('Download failed:', e);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -153,6 +175,23 @@ export default function SutraDetail() {
           <View style={styles.doneBanner}>
             <Text style={styles.doneBannerText}>{`You've completed all steps for this sutra.`}</Text>
           </View>
+        )}
+
+        {sutra.audio_zip_drive_id && (
+          <TouchableOpacity
+            style={[styles.downloadBtn, downloaded && styles.downloadBtnDone, downloading && styles.downloadBtnActive]}
+            onPress={handleDownload}
+            disabled={downloaded || downloading}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.downloadBtnText}>
+              {downloaded
+                ? '✓ Audio Downloaded'
+                : downloading
+                  ? `Downloading… ${Math.round(downloadPct * 100)}%`
+                  : '⬇ Download Audio'}
+            </Text>
+          </TouchableOpacity>
         )}
 
         <TouchableOpacity
@@ -333,6 +372,11 @@ const styles = StyleSheet.create({
     borderColor: '#e8d5a8',
   },
   doneBannerText: { color: '#6d4c41', fontWeight: '600', fontSize: 14, textAlign: 'center' },
+
+  downloadBtn: { backgroundColor: '#eef6ee', borderRadius: 14, padding: 16, alignItems: 'center', marginBottom: 12, borderWidth: 2, borderColor: '#4a9a4a' },
+  downloadBtnDone: { backgroundColor: '#d4edda', borderColor: '#2e7d32' },
+  downloadBtnActive: { backgroundColor: '#e8f5e9', borderColor: '#4a9a4a' },
+  downloadBtnText: { color: '#2e7d32', fontSize: 15, fontWeight: '700' },
 
   secondaryBtn: {
     backgroundColor: '#fff',
