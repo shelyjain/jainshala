@@ -14,6 +14,7 @@
       "infoPlist": {
         "NSSpeechRecognitionUsageDescription": "Used to check your recitation of Jain sutras.",
         "NSMicrophoneUsageDescription": "Used to listen to your recitation.",
+        "NSPhotoLibraryUsageDescription": "Used to allow you to select a profile photo.",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
