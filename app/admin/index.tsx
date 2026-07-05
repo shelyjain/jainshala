@@ -92,6 +92,11 @@ export default function AdminHomeScreen() {
         <Text style={styles.cardBody}>Upload, edit, and assign badges</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.card} onPress={() => router.push('/admin/songs')}>
+        <Text style={styles.cardTitle}>Songs</Text>
+        <Text style={styles.cardBody}>Manage devotional songs and karaoke timing</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.card} onPress={() => router.push('/admin/users')}>
         <Text style={styles.cardTitle}>Users & roles</Text>
         <Text style={styles.cardBody}>Approve admin access for learners</Text>

@@ -13,6 +13,7 @@ export default function AdminLayout() {
       <Stack.Screen name="sutras/index" options={{ title: 'Sutras' }} />
       <Stack.Screen name="sutras/new" options={{ title: 'Upload Sutra' }} />
       <Stack.Screen name="sutras/[id]" options={{ title: 'Edit Sutra' }} />
+      <Stack.Screen name="songs/index" options={{ title: 'Songs' }} />
       <Stack.Screen name="users" options={{ title: 'Users' }} />
     </Stack>
   );

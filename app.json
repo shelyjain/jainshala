@@ -13,7 +13,9 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSSpeechRecognitionUsageDescription": "Used to check your recitation of Jain sutras.",
-        "NSMicrophoneUsageDescription": "Used to listen to your recitation."
+        "NSMicrophoneUsageDescription": "Used to listen to your recitation.",
+        "NSPhotoLibraryUsageDescription": "Used to allow you to select a profile photo.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -52,6 +54,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "27eeeca7-31f6-4d07-8403-462ba2c9d794"
+      }
     }
   }
 }

@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { useAuth } from '../../context/auth';
 import { useUserProfile } from '../../hooks/use-user-profile';
 import { isAdminPortalUnlocked } from '../../lib/admin-unlock';
@@ -32,7 +32,6 @@ type SutraListItem = {
 };
 
 export default function AccountScreen() {
-  const router = useRouter();
   const { user, signOut } = useAuth();
   const { isAdmin } = useUserProfile();
   const { completed } = useProgress();
@@ -281,9 +280,11 @@ export default function AccountScreen() {
       </View>
 
       {adminPortalOpen && isAdmin ? (
-        <TouchableOpacity onPress={() => router.push('/admin')} style={styles.adminLinkWrap}>
-          <Text style={styles.adminLink}>Admin portal</Text>
-        </TouchableOpacity>
+        <Link href="/admin" asChild>
+          <TouchableOpacity style={styles.adminBtn} activeOpacity={0.88}>
+            <Text style={styles.adminBtnText}>Admin portal</Text>
+          </TouchableOpacity>
+        </Link>
       ) : null}
 
       <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
@@ -586,4 +587,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signOutText: { color: '#cc3333', fontSize: 16, fontWeight: '600' },
+  adminBtn: {
+    borderWidth: 1.5,
+    borderColor: '#a0522d',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 16,
+    backgroundColor: '#fffaf6',
+  },
+  adminBtnText: { color: '#a0522d', fontSize: 16, fontWeight: '700' },
 });

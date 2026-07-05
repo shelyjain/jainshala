@@ -1,7 +1,8 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Audio } from 'expo-av';
-import { File, Paths } from 'expo-file-system';
+// File/Paths used only on native for Google TTS temp cache
 import * as Speech from 'expo-speech';
+import { localLinePath, isSutraDownloaded, getWebAudioUri } from '../../lib/sutra-audio';
 import { VoiceQuality } from 'expo-speech';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -27,6 +28,7 @@ type Line = {
 type Sutra = {
   id: string;
   title: string;
+  sutra_number: number;
   lines: Line[];
 };
 
@@ -149,6 +151,7 @@ export default function FlashcardScreen() {
   const { markStep } = useProgress();
 
   const [sutra, setSutra] = useState<Sutra | null>(null);
+  const [localAudioAvailable, setLocalAudioAvailable] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -208,6 +211,9 @@ export default function FlashcardScreen() {
         setSutra(data);
         setCurrentIndex(0);
         setLoading(false);
+        if (data?.sutra_number) {
+          isSutraDownloaded(data.sutra_number).then(setLocalAudioAvailable);
+        }
       })
       .catch(err => {
         console.error(err);
@@ -341,6 +347,43 @@ export default function FlashcardScreen() {
     const speakTextDevice = normalizeTtsText(ttsText);
 
     void (async () => {
+      // Try local pre-recorded audio first
+      if (localAudioAvailable && sutra?.sutra_number) {
+        let localUri: string | null = null;
+        if (Platform.OS === 'web') {
+          localUri = await getWebAudioUri(sutra.sutra_number, line.line_number);
+        } else {
+          const localPath = localLinePath(sutra.sutra_number, line.line_number);
+          // Dynamic import so web bundle never loads expo-file-system
+          const FS = await import('expo-file-system/legacy');
+          const info = await FS.getInfoAsync(localPath);
+          if (info.exists) localUri = localPath;
+        }
+        if (localUri) {
+          try {
+            const { sound } = await Audio.Sound.createAsync(
+              { uri: localUri },
+              { shouldPlay: true },
+              status => {
+                if (status.isLoaded && status.didJustFinish) {
+                  void sound.unloadAsync().catch(() => {});
+                  googleSoundRef.current = null;
+                  if (Platform.OS === 'web' && localUri) URL.revokeObjectURL(localUri);
+                  if (speechToken !== speechTokenRef.current) return;
+                  setHighlightedWordIndex(-1);
+                  setIsSpeaking(false);
+                  onDone?.();
+                }
+              },
+            );
+            googleSoundRef.current = sound;
+            return;
+          } catch (e) {
+            console.warn('Local audio failed, falling back to TTS', e);
+          }
+        }
+      }
+
       let playedGoogle = false;
       if (shouldUseGoogleCloudTts() && (await getGoogleTtsEnabled())) {
         try {
@@ -363,7 +406,8 @@ export default function FlashcardScreen() {
             googleWebUrlRef.current = uri;
           } else {
             const buf = await res.arrayBuffer();
-            const outFile = new File(Paths.cache, `tts-${Date.now()}.mp3`);
+            const { File: EXFile, Paths: EXPaths } = await import('expo-file-system');
+            const outFile = new EXFile(EXPaths.cache, `tts-${Date.now()}.mp3`);
             outFile.write(new Uint8Array(buf));
             uri = outFile.uri;
           }

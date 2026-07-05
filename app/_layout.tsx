@@ -76,6 +76,11 @@ export default function RootLayout() {
             <Stack.Screen name="flashcard/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="recite/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="complete/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="song/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="song/listen/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="song/fill/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="song/quiz/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="admin/index" options={{ headerShown: false }} />
             <Stack.Screen name="badges" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="admin" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
