@@ -42,7 +42,10 @@ export default function SongListenScreen() {
       } catch (err) { console.error(err); }
       finally { setLoading(false); }
     })();
-    return () => { soundRef.current?.unloadAsync(); };
+    return () => {
+      void soundRef.current?.unloadAsync().catch(() => {});
+      soundRef.current = null;
+    };
   }, [id]);
 
   const playLine = async (index: number) => {

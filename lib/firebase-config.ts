@@ -20,8 +20,12 @@ export function assertFirebaseEnv() {
   const missing = ENV_KEYS.filter((key) => !process.env[key]?.trim());
   if (missing.length === 0) return;
 
-  throw new Error(
+  const msg =
     `Missing Firebase config: ${missing.join(', ')}. ` +
-      'Copy .env.example to .env, add your Firebase web app keys, then restart Expo (npm start).',
-  );
+    'Copy .env.example to .env for local dev, or add EXPO_PUBLIC_* vars in EAS Secrets for TestFlight builds.';
+
+  if (__DEV__) {
+    throw new Error(msg);
+  }
+  console.error(msg);
 }
